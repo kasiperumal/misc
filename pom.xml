@@ -1,0 +1,15 @@
+<dependencies>
+    <!-- ... other dependencies ... -->
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-csv</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+</dependencies>
+<dependencies>
+    <dependency>
+        <groupId>com.splunk</groupId>
+        <artifactId>splunk-sdk-java</artifactId>
+        <version>1.6.5</version>
+    </dependency>
+</dependencies>

@@ -54,8 +54,22 @@ public class SplunkQueryExample {
 
                 // Display results for this customer number
                 System.out.println("Results for customer number: " + customerNumber);
-                for (Event event : job.getResults()) {
-                    System.out.println(event.toString());
+                InputStream resultsStream = job.getResults();
+                
+                try {
+                    ResultsReaderXml resultsReader = new ResultsReaderXml(resultsStream);
+                    Event event;
+                    while ((event = resultsReader.getNextEvent()) != null) {
+                        System.out.println(event.toString());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        resultsStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {

@@ -1,0 +1,2 @@
+... | rex field=_raw "\"listfield2\":\s*\"(?<listfield2_value>[^\"]+)\"" max_match=0 | table listfield2_value
+... | spath input=list1{} output=listfield2_value path=listfield2 | table listfield2_value

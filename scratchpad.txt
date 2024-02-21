@@ -1,2 +1,12 @@
 ... | rex field=_raw "\"listfield2\":\s*\"(?<listfield2_value>[^\"]+)\"" max_match=0 | table listfield2_value
 ... | spath input=list1{} output=listfield2_value path=listfield2 | table listfield2_value
+| makeresults 
+| eval yourField="value1,value2,value3,value2" // Example events field values
+| makemv yourField delim="," 
+| mvexpand yourField 
+| eval staticList="value1,value2,value3" // Your static list
+| makemv staticList delim="," 
+| mvexpand staticList 
+| eval match=if(yourField=staticList, 1, 0) 
+| where match=1 
+| stats count by staticList

@@ -11,3 +11,10 @@
 | where match=1 
 | stats count by staticList
 sed -n 's/.*\\"risk\\": \[\(.*?\)\].*/\1/p' your_file.json
+
+
+Title: Leveraging Knowledge Graphs for Enhanced Log Analysis
+
+Abstract:
+
+In the complex landscape of IT systems, application logs are a goldmine of information that often goes underexploited due to their unstructured nature. This presentation proposes a novel approach: constructing a Knowledge Graph from application log files to illuminate the intricate interactions within applications. By transforming raw log data into a structured, relational graph, we unlock new possibilities for monitoring, troubleshooting, and optimizing system performance. We'll cover the process from log parsing and entity recognition to relationship extraction, showcasing how this graph provides a comprehensive view of system dynamics. Practical challenges such as data heterogeneity and scalability will be addressed, alongside strategies to maintain graph accuracy in dynamic environments. Through real-world examples, attendees will learn how Knowledge Graphs can revolutionize system analysis, offering insights beyond traditional log analysis methods and paving the way for future innovations in IT system management.

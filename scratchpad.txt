@@ -10,3 +10,4 @@
 | eval match=if(yourField=staticList, 1, 0) 
 | where match=1 
 | stats count by staticList
+sed -n 's/.*\\"risk\\": \[\(.*?\)\].*/\1/p' your_file.json

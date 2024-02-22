@@ -23,3 +23,8 @@ Title: Building GenAI Applications Using Langchain
 
 Abstract:
 In the fast-paced world of artificial intelligence, Generative AI (GenAI) stands out as a key driver of innovation within enterprises. Leveraging Langchain, a platform that simplifies the integration of AI models into business applications, organizations can unlock new levels of productivity and creativity. This presentation will explore how Langchain enables the development of GenAI applications tailored for enterprise needs, showcasing its potential to automate content generation, enhance decision-making, and streamline data analysis. We will discuss the strategic benefits of GenAI in the enterprise, such as operational efficiency and competitive advantage, while also addressing challenges like data privacy and ethical considerations. Through practical examples, attendees will gain insights into using Langchain to create impactful GenAI solutions, empowering businesses to lead in innovation. This concise overview aims to provide a foundation for understanding the transformative potential of GenAI applications in enterprises, making it an invaluable session for business leaders, developers, and AI enthusiasts
+
+    "chart.js": "3.7.0",
+    "chart.js-plugin-labels-dv": "3.0.6",
+    "chartjs-plugin-datalabels": "2.0.0",
+    "react-chartjs-2": "4.0.1",

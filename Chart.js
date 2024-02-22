@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import { Pie } from 'react-chartjs-2';
-// Import Chart.js components
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
-// import 'chartjs-plugin-datalabels'; // Import the datalabels plugin
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-// import "chart.js-plugin-labels-dv";
-import "./Chart.css";
+import "chart.js-plugin-labels-dv";
+import { useNavigate } from 'react-router-dom';
 
 // Register the components
-Chart.register(ArcElement, Tooltip, Legend);
-Chart.register(ChartDataLabels);
-
-// import axios from 'axios';
+Chart.register(ArcElement, Tooltip, Legend,ChartDataLabels);
 
 const PieChartComponent = () => {
-  const [tableData, setTableData] = useState(null);
+  // const [tableData, setTableData] = useState(null);
+  const navigate = useNavigate();
 
   const data = {
     labels: ['Technical Glitches', 'Password Issues', 'Fraud Victims', 'Duplicate Profiles', 'Biometric Issues', 'RSA Device', 'OTP Issues', 'Accessibility Denial'],
@@ -62,61 +58,10 @@ const PieChartComponent = () => {
     },
     onClick: (evt, element) => {
       if (element.length > 0) {
-        const index = element[0].index;
-        const label = data.labels[index];
-        loadTableData(label);
+        navigate('/graph');
       }
     },
   };
-
-  const loadTableData = async (label) => {
-    alert('You clicked on ' + label);
-    // try {
-    //   const response = await axios.get(`/your-backend-endpoint/${label}`);
-    //   setTableData(response.data);
-    // } catch (error) {
-    //   console.error('Error fetching data: ', error);
-    // }
-  };
-
-//   return (
-//     <div style={{
-//       width: '600px', /* Increase width */
-//       height: '600px', /* Increase height */
-//       display: 'flex',
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       height: '100vh' // This makes the container take up the full viewport height
-//     }}>
-//       <div style={{width: '400px', height: '400px'}}>
-//         <Pie data={data} options={options} plugins={[ChartDataLabels]} />
-//         {/* Render your table data here */}
-//       </div>
-//     </div>
-//   );
-// };
-
-// return (
-//   <div style={{
-//     // width: '600px', /* Increase width */
-//     // height: '600px', /* Increase height */
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     height: '100vh' // This makes the container take up the full viewport height
-//     // width: 'au' // This makes the container take up the full viewport height
-//   }}>
-//   <div className="chart-container">
-//     <Pie data={data} options={options} plugins={[ChartDataLabels]} />
-//   </div>
-//   </div>
-// );
-
-// return (
-  // <div className="chart-container">
-  //   <Pie data={data} options={options} plugins={[ChartDataLabels]} />
-  // </div>
-// );
 
 return (
   <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>

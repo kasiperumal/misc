@@ -28,3 +28,24 @@ In the fast-paced world of artificial intelligence, Generative AI (GenAI) stands
     "chart.js-plugin-labels-dv": "3.0.6",
     "chartjs-plugin-datalabels": "2.0.0",
     "react-chartjs-2": "4.0.1",
+
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.rivancic:asyncapi-generator-gradle-plugin:x.y.z'
+    }
+}
+
+apply plugin: 'org.rivancic.asyncapi'
+
+
+asyncAPI {
+    version = '2.0.0' // Specify the AsyncAPI version you are using
+    sourceDir = file('src/main/resources/asyncapi') // Directory where your AsyncAPI specs are located
+    outputDir = file("$buildDir/generated-sources/asyncapi") // Where to output the generated files
+    generator = 'spring' // Specify the generator to use, e.g., 'spring', 'html', etc.
+}
+
+./gradlew clean asyncApiGenerate

@@ -49,3 +49,27 @@ asyncAPI {
 }
 
 ./gradlew clean asyncApiGenerate
+
+node {
+    // Node.js version to use
+    version = '14.15.4'
+    download = true
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+    yarnWorkDir = file("${project.buildDir}/yarn")
+    nodeModulesDir = file("${project.projectDir}")
+    
+    // Configure proxy settings
+    nodeProxySettings = com.github.nodegradle.NodeExtension.ProxySettings.FORCE
+    npmProxySettings = com.github.nodegradle.NodeExtension.ProxySettings.FORCE
+    
+    // Example proxy configuration (replace with your actual proxy settings)
+    npmProxyUrl = 'http://localhost:3128'
+    npmProxyHttpsUrl = 'http://localhost:3128'
+    
+    // Set environment variables if needed (optional)
+    environment = [
+        'HTTP_PROXY': 'http://localhost:3128',
+        'HTTPS_PROXY': 'http://localhost:3128'
+    ]
+}

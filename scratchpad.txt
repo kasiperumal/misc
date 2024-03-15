@@ -112,3 +112,22 @@ project.getTasks().register(FROM_TEMPLATE_TASK_NAME, NpxTask.class, task -> {
     task.setArgs(args);
     task.getOutputs().dir(getAsyncApiOutputDirectory(asyncApiExtension));
 });
+
+project.getTasks().register("installTemplate", NpmTask.class, npmTask -> {
+    npmTask.setGroup(ASYNCAPI_TASK_GROUP);
+    npmTask.setArgs(Arrays.asList("install", getTemplate(asyncApiExtension)));
+});
+
+project.getTasks().named(FROM_TEMPLATE_TASK_NAME).configure(task -> {
+    task.dependsOn("installTemplate");
+});
+
+project.getTasks().register("installTemplate", NpmTask.class, npmTask -> {
+    npmTask.setGroup(ASYNCAPI_TASK_GROUP);
+    npmTask.setArgs(Arrays.asList("install", getTemplate(asyncApiExtension)));
+});
+
+project.getTasks().named(FROM_TEMPLATE_TASK_NAME).configure(task -> {
+    task.dependsOn("installTemplate");
+});
+

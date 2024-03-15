@@ -73,3 +73,14 @@ node {
         'HTTPS_PROXY': 'http://localhost:3128'
     ]
 }
+
+private static final String VALIDATE_TASK_NAME = "asyncApiValidate";
+
+project.getTasks().register(VALIDATE_TASK_NAME, NpxTask.class, task -> {
+    task.setGroup(ASYNCAPI_TASK_GROUP);
+    task.getCommand().set(ASYNCAPI_CLI_COMMAND);
+    List<String> validateArgs = new ArrayList<>();
+    validateArgs.add("validate");
+    validateArgs.add(getAsyncApiFile(asyncApiExtension));
+    task.setArgs(validateArgs);
+});

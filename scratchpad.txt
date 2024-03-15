@@ -84,3 +84,31 @@ project.getTasks().register(VALIDATE_TASK_NAME, NpxTask.class, task -> {
     validateArgs.add(getAsyncApiFile(asyncApiExtension));
     task.setArgs(validateArgs);
 });
+
+private static final String FROM_TEMPLATE_TASK_NAME = "asyncApiGenerateFromTemplate";
+
+project.getTasks().register(FROM_TEMPLATE_TASK_NAME, NpxTask.class, task -> {
+    task.setGroup(ASYNCAPI_TASK_GROUP);
+    task.getCommand().set(ASYNCAPI_CLI_COMMAND);
+    List<String> args = new ArrayList<>();
+    args.add("generate");
+    args.add("fromTemplate");
+    args.add(getAsyncApiFile(asyncApiExtension)); // ASYNCAPI
+    args.add(getTemplate(asyncApiExtension)); // TEMPLATE
+
+    // Add optional flags based on the AsyncApiExtension configuration
+    if (asyncApiExtension.getOutput().isPresent()) {
+        args.add("-o");
+        args.add(getAsyncApiOutputDirectory(asyncApiExtension));
+    }
+    if (asyncApiExtension.getForceWrite().getOrElse(false)) {
+        args.add("--force-write");
+    }
+    if (asyncApiExtension.getDebug().getOrElse(false)) {
+        args.add("--debug");
+    }
+    // Add more flags as needed
+
+    task.setArgs(args);
+    task.getOutputs().dir(getAsyncApiOutputDirectory(asyncApiExtension));
+});

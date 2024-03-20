@@ -131,3 +131,26 @@ project.getTasks().named(FROM_TEMPLATE_TASK_NAME).configure(task -> {
     task.dependsOn("installTemplate");
 });
 
+{
+  "nodes": [
+    {
+      "type": "Person",
+      "splunkQuery": "search index=\"people\" | fields name, age",
+      "fieldMapping": {
+        "name": "name",
+        "age": "age"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "KNOWS",
+      "splunkQuery": "search index=\"relationships\" | fields relationship",
+       "startNode": "person1",
+       "endNode": "person2"
+      "fieldMapping": {
+            "relationship": "relationship" 
+      }
+    }
+  ]
+}

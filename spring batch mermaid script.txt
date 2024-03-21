@@ -1,0 +1,105 @@
+﻿sequenceDiagram
+   participant BatchJobRunner as BatchJobRunner
+   participant Reader as VOCRecordReader
+   participant Processor as GenericSplunkToNeo4jProcessor
+   participant Writer as GenericNeo4jWriter
+   participant Neo4j as Neo4jDatabase
+   participant Config as Config
+
+
+   BatchJobRunner->>Reader: read()
+   Reader-->>BatchJobRunner: returns VOCRecord
+
+
+   BatchJobRunner->>Processor: process(VOCRecord)
+   activate Processor
+   Processor->>Config: loadNodeConfigurations()
+   Processor->>Config: loadRelationshipConfigurations()
+   Processor->>Processor: executeSplunkQuery(query)
+   Processor->>Processor: mapSplunkDataToEntityObject(data, config)
+   Processor-->>BatchJobRunner: returns List<Object>
+   deactivate Processor
+
+
+   BatchJobRunner->>Writer: write(List<Object>)
+   activate Writer
+   Writer->>Neo4j: persist entities
+   deactivate Writer
+
+
+
+
+classDiagram
+   class VOCRecord {
+       -ecn: String
+       -startTime: LocalDateTime
+       -endTime: LocalDateTime
+       -feedback: String
+   }
+   class VOCRecordReader {
+       -resource: Resource
+       -lineMapper: LineMapper(VOCRecord)
+   }
+   class GenericSplunkToNeo4jProcessor {
+       -nodeConfigurations: List(NodeConfig)
+       -relationshipConfigurations: List(RelationshipConfig)
+       +process(item: VOCRecord): List(Object)
+       -executeSplunkQuery(query: String): List(Map(String, Object))
+       -mapSplunkDataToEntityObject(data: Map(String, Object), config: Map(String, String)): Object
+   }
+   class GenericNeo4jWriter {
+       -neo4jTemplate: Neo4jTemplate
+       -write(items: List(Object)): void
+   }
+   class BatchConfiguration {
+       -vocRecordReader(): VOCRecordReader
+       -genericSplunkToNeo4jProcessor(): GenericSplunkToNeo4jProcessor
+       -genericNeo4jWriter(): GenericNeo4jWriter
+       -job(): Job
+       -step(): Step
+   }
+   class Config {
+       -nodes: List(NodeConfig)
+       -relationships: List(RelationshipConfig)
+   }
+   class NodeConfig {
+       -type: String
+       -splunkQuery: String
+       -fieldMapping: Map(String, String)
+   }
+   class RelationshipConfig {
+       -type: String
+       -splunkQuery: String
+       -startNode: String
+       -endNode: String
+       -fieldMapping: Map(String, String)
+   }
+   class ItemReader {
+       +read(): Object
+   }
+   class ItemProcessor {
+       +process(item: Object): Object
+   }
+   class ItemWriter {
+       +write(items: List(Object)): void
+   }
+   class Job {
+   }
+   class Step {
+   }
+
+
+   VOCRecordReader --> VOCRecord : "reads >>"
+   VOCRecordReader --|> ItemReader : "implements"
+   GenericSplunkToNeo4jProcessor --|> ItemProcessor : "implements"
+   GenericNeo4jWriter --|> ItemWriter : "implements"
+
+
+   BatchConfiguration --> VOCRecordReader : "configures"
+   BatchConfiguration --> GenericSplunkToNeo4jProcessor : "configures"
+   BatchConfiguration --> GenericNeo4jWriter : "configures"
+   BatchConfiguration --> Job : "configures"
+   BatchConfiguration --> Step : "configures"
+
+
+   GenericSplunkToNeo4jProcessor --> Config : "uses"

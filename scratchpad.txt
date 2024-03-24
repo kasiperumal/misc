@@ -154,3 +154,5 @@ project.getTasks().named(FROM_TEMPLATE_TASK_NAME).configure(task -> {
     }
   ]
 }
+
+AsyncAPI is an open-source initiative providing a human and machine-readable specification and a suite of tools for defining, documenting, and generating code for asynchronous APIs. It supports standardizing event-driven API documentation across protocols like MQTT, WebSocket, and Kafka, enabling clear, comprehensive API descriptions and facilitating seamless integration and development in event-driven architectures.

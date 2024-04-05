@@ -156,3 +156,85 @@ project.getTasks().named(FROM_TEMPLATE_TASK_NAME).configure(task -> {
 }
 
 AsyncAPI is an open-source initiative providing a human and machine-readable specification and a suite of tools for defining, documenting, and generating code for asynchronous APIs. It supports standardizing event-driven API documentation across protocols like MQTT, WebSocket, and Kafka, enabling clear, comprehensive API descriptions and facilitating seamless integration and development in event-driven architectures.
+
+Problem:
+Making digital payments is convenient but prone to errors, like accidentally adding extra zeros, which can lead to sending too much money or dealing with time-consuming corrections. The challenge is designing a payment system that helps users avoid these mistakes while keeping the process simple and user-friendly. Such a system would need to gently guide users through the payment process, offering checks and confirmations to catch any errors before they finalize the transaction. Ideally, it should also provide a straightforward way for users to correct mistakes if they occur, minimizing frustration and the potential for financial consequences. The goal is a balance between ease of use and safeguarding against errors, ensuring that digital payments are both accessible and secure. This approach aims to bolster confidence in digital transactions by making them more reliable and error-resistant, enhancing the overall user experience.
+
+Solution:
+The solution integrates an innovative feature into the financial transaction process that displays interesting facts related to the amount entered by the user. This is designed to:
+Engage users by making transactions more interesting and educational.
+Encourage accuracy in entering amounts by adding an interactive check-point.
+Enhance the user experience without disrupting the primary transaction flow.
+Facts are presented in a non-intrusive manner at the transaction confirmation step, designed to be easily dismissible and adaptable to user preferences for a seamless integration into the existing transaction process.
+Transaction Examples
+Example 1: $1,776
+Fact Displayed: "In 1776, the United States Declaration of Independence was adopted."
+Context: As soon as the user enters $1,776 and proceeds to confirm, a small, stylish box appears on the side of the confirmation details, highlighting the fact. The fact is relevant to the amount and offers a piece of historical knowledge.
+Example 2: $3.14
+Fact Displayed: "Pi (π) is approximately equal to 3.14, a fundamental constant in mathematics."
+Context: After entering $3.14 for a payment, a concise fact about Pi appears, tying the amount directly to a universally recognized mathematical concept. This might especially appeal to users with an interest in mathematics or education, providing a quick and interesting tidbit of knowledge.
+Example 3: $20,000
+Fact Displayed: "Did you know? The average cost of a wedding in the United States was around $20,000 in 2021."
+Context: When a user enters an amount of $20,000, they're presented with a relevant societal fact. This can spark interest in social trends and offer perspective on how significant the entered amount is in different contexts.
+Example 4: $10,000,000
+Fact Displayed: "Honey bees must visit about 10 million flowers to produce a single pound of honey."
+Context: For a high-value transaction like $10,000,000, the displayed fact connects the amount to an intriguing aspect of nature, emphasizing the effort of honey bees. It's a reminder of the natural world's wonders and the value of biodiversity.
+How It Works
+Fact Matching: Upon entering an amount and moving to confirm, the system quickly searches the database for a related fact.
+Display: A discrete, visually appealing information box pops up or appears beside the transaction details, sharing the fact.
+Interaction: Users can quickly react to the fact (like or dislike) or dismiss it, without affecting the transaction process.
+Customization: Users have the option in settings to adjust their preferences for these facts, including types of facts they prefer or disabling the feature entirely.
+By blending educational content with financial transactions, this solution aims to enrich the user's experience, providing value beyond the mere transactional. This approach not only fosters greater engagement but also subtly encourages users to double-check their inputs, potentially reducing errors in a novel and enjoyable way.
+
+Usecase:
+Banking Apps: Integrating this feature into mobile banking applications to enhance user engagement and accuracy in fund transfers.
+E-commerce: For checkout processes, providing facts related to purchase amounts to make the shopping experience more engaging and educational.
+Children’s Savings Apps: To teach children the historical or scientific facts related to numbers as they save or spend.
+
+Fact Database: A comprehensive database of facts is associated with a wide range of numbers, each linked to specific transaction amounts. This database includes diverse topics, from historical events to scientific facts.
+Dynamic Matching Algorithm: When a user enters an amount, the system dynamically matches it with a fact from the database, displaying this fact in a non-intrusive manner during the transaction confirmation step.
+User Interaction: Users can interact with the fact by liking it, sharing it, or requesting more information. This interaction also serves as a subtle checkpoint, encouraging users to review the amount they've entered.
+Customization and Feedback: Users can customize the types of facts they are interested in and provide feedback, enabling continuous improvement of the system.
+
+
+graph TD
+    A[Start] --> B[User Enters Transaction Amount]
+    B --> C[Dynamic Matching Algorithm]
+    C --> D[Match Amount with Fact from Database]
+    D --> E[Display Fact in Non-Intrusive Manner]
+    E --> F[User Interaction]
+    F --> G[Like, Share, Request More Info]
+    G --> H[Collect Feedback for Improvement]
+    F --> I[Proceed to Transaction Confirmation]
+    I --> J{Transaction Confirmed?}
+    J -->|Yes| K[Complete Transaction]
+    J -->|No| L[Modify or Cancel Transaction]
+    K --> M[End]
+    L --> M
+    B --> N[Fact Database]
+    N --> D
+    H --> O[Customization Options]
+    O --> P[Adjust Fact Preferences]
+    P --> D
+
+Displaying interesting facts in a non-intrusive manner during the transaction confirmation step is key to ensuring that the educational or gamification elements enhance the user experience without disrupting the primary task of completing a transaction. Here's how this can be effectively implemented:
+1. Timing and Placement
+After Amount Entry: The fact appears after the user inputs the transaction amount but before final confirmation. This timing ensures the user is still engaged in the process and the fact can serve as a final check before submission.
+Side Information: Position the fact to the side of the main transaction details or as a subtle overlay that doesn't obscure crucial information like the amount, recipient, and submit button.
+2. Design Considerations
+Minimalist Style: Use a clean, minimalist design for the fact display to avoid overwhelming the user. A simple text box with a contrasting background color can draw attention without distraction.
+Dismissable: Ensure that the fact can be easily dismissed or fades away after a few seconds, allowing users who are not interested to proceed without any hindrance.
+Adaptive Size: The fact display should be responsive, adapting its size and positioning based on the device's screen to maintain usability across mobile phones, tablets, and desktops.
+3. User Interaction
+Engagement without Interruption: Allow users to interact with the fact (like, share, save for later) without interrupting the transaction process. For example, these interactions can be performed with simple icons or swipe gestures.
+Feedback Option: Include a small, optional feedback icon (such as a thumbs up/down) for users to quickly indicate if they found the fact interesting or useful. This feedback can be collected without requiring any additional steps from the user.
+4. Customization and Accessibility
+User Preferences: Give users the option to customize their experience, such as turning off the facts feature, selecting types of facts they're interested in, or adjusting the visibility and duration of the fact display.
+Accessibility Features: Ensure the fact display complies with accessibility standards, offering readable font sizes, high contrast for visibility, and screen reader compatibility.
+5. Feedback Loop for Improvement
+Iterative Updates: Use user interactions and feedback to continuously improve the relevance and presentation of facts. This could involve refining the database of facts, adjusting the display based on user engagement metrics, and personalizing the experience based on individual user behavior and preferences.
+By considering these aspects, the feature can provide added value without disrupting the core transaction process, striking a balance between educational engagement and transactional efficiency.
+
+Feature SEarch:
+
+This solution uniquely combines gamification, education, and user engagement directly within the financial transaction process. It not only aims to reduce errors in entering transaction amounts but also enhances the user experience by making each transaction an opportunity for learning. This approach stands out by addressing the practical problem of input accuracy through an innovative and interactive method, potentially transforming mundane financial transactions into enriching and engaging experiences.

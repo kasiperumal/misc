@@ -283,3 +283,6 @@ This tool is designed to assess the impact of component failures within an appli
 Anomaly detection in transaction graphs involves comparing nodes and edges in different scenarios, such as successful vs. failed transactions or usual vs. unusual patterns. This use case leverages the graph's ability to encapsulate complex relationships and behaviors in a manageable format. By examining deviations from normal patterns, the system can identify outliers and potential issues proactively. This is particularly useful for spotting fraud, security breaches, or operational inefficiencies. The graph-based approach provides a comprehensive overview, making it easier to diagnose problems and implement corrective measures efficiently.
 
 Each of these use cases demonstrates the versatility and power of using graph-based analyses to derive meaningful insights from complex, unstructured datasets without the need for advanced language-based AI techniques.
+
+The system uniquely generates detailed application component and customer transaction graphs directly from application logs without the need for advanced language-based AI techniques.
+It innovatively uses dynamic, objectless graph mapping to create and update Cypher scripts automatically for real-time graph database creation, avoiding static models.

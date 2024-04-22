@@ -286,3 +286,16 @@ Each of these use cases demonstrates the versatility and power of using graph-ba
 
 The system uniquely generates detailed application component and customer transaction graphs directly from application logs without the need for advanced language-based AI techniques.
 It innovatively uses dynamic, objectless graph mapping to create and update Cypher scripts automatically for real-time graph database creation, avoiding static models.
+
+Problem Statement
+When errors occur in an application, the error logs often do not provide sufficient information to fully understand and troubleshoot the issue, as they are typically set to log only at the "ERROR" level or higher due to performance considerations. However, the more detailed "DEBUG" logs, which do contain valuable troubleshooting information, are not captured in the normal course of operations because the logger's root level is set to "INFO". This discrepancy creates a significant challenge in diagnosing and resolving issues efficiently, as the necessary verbose logs are not available when most needed.
+
+Solution Details
+To address the challenge of capturing detailed logs for troubleshooting without incurring the performance cost of always logging at the "DEBUG" level, a sophisticated logging mechanism using Logback and Redis is implemented. The solution utilizes a unique identifier for each API request, known as a Request ID, which is generated at the beginning of each request and used to tag all logs generated during the lifecycle of that request.
+
+Logs are selectively written to a Redis cache using a custom Logback appender that only stores "DEBUG" logs. These logs are associated with their specific Request ID and are stored with a Time-to-Live (TTL) of 15 seconds to minimize memory usage. The root logging level remains set to "INFO" to ensure that performance is not adversely affected under normal operation conditions.
+
+In the event of an error, the system automatically retrieves all "DEBUG" logs related to the error's Request ID from Redis. This allows developers to access a complete set of logs for the problematic request, providing comprehensive insight into the context and sequence of events leading up to the error, facilitating quicker and more effective troubleshooting.
+
+Novelty of Solution
+This approach innovatively combines the use of Mapped Diagnostic Context (MDC) for log traceability with Redis for efficient, ephemeral log storage. The automatic retrieval of detailed logs on-demand when errors occur enables effective debugging while maintaining high application performance.

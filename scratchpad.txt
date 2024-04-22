@@ -299,3 +299,10 @@ In the event of an error, the system automatically retrieves all "DEBUG" logs re
 
 Novelty of Solution
 This approach innovatively combines the use of Mapped Diagnostic Context (MDC) for log traceability with Redis for efficient, ephemeral log storage. The automatic retrieval of detailed logs on-demand when errors occur enables effective debugging while maintaining high application performance.
+
+Business usecase
+In the banking sector, particularly for online transactions, swiftly detecting and addressing fraud is crucial for maintaining trust and security. This business use case introduces an advanced logging system using Logback and Redis to enhance real-time fraud detection capabilities without compromising system performance.
+
+Each online transaction is assigned a unique Transaction ID, used to log detailed steps such as data validation and balance updates. These debug logs are dynamically stored in Redis with a short TTL (Time-to-Live), rather than the main database, to manage data volume and maintain performance. Upon detecting anomalies that might indicate fraud (e.g., unusual transaction patterns), the system immediately retrieves all relevant logs using the Transaction ID. This allows for quick contextual understanding and actions like reversing transactions or blocking suspicious accounts.
+
+This method ensures rapid response to potential frauds, improves system efficiency, and strengthens customer trust by effectively managing security incidents, making it invaluable for modern digital banking platforms.

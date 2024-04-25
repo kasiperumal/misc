@@ -59,3 +59,22 @@ flowchart TB
     class API,RIDGen,Log,DLog,CA,ErrorAlert,Replay,Analysis process;
     class RedisStore,Retrieve database;
 
+sequenceDiagram
+    participant ApiEndpoint as API Endpoint
+    participant RequestIdFilter as RequestId Filter
+    participant ReplayFramework as Replay Logback Framework
+    participant CentralSystem as Central Logging System
+    participant Developer/Operation/Business as End User
+
+    ApiEndpoint->>ApiEndpoint: API Request received
+    ApiEndpoint->>RequestIdFilter: Generate Request ID
+    RequestIdFilter->>RequestIdFilter: Store Request ID in Logger MDC Context
+    RequestIdFilter->>ApiEndpoint: Return
+    ApiEndpoint->>ReplayFramework: Log Debug information
+    ReplayFramework-->>ReplayFramework: Store Debug Logs in Redis w/ Request ID from Logger MDC
+    ApiEndpoint->> ApiEndpoint: Detect Failure/Error/Unusual/Slow Transaction
+    ApiEndpoint->>ReplayFramework: Log Error information
+    ReplayFramework-->>ReplayFramework: Fetch Debug Logs w/ Request ID from Logger MDC
+    ReplayFramework-->>CentralSystem: Replay Debug Logs
+    ReplayFramework-->>CentralSystem: Log Error information
+    Developer/Operation/Business->>CentralSystem: Detailed Log Analysis

@@ -1,24 +1,3 @@
-CREATE OR REPLACE FUNCTION DetermineType (p_input VARCHAR2)
-RETURN VARCHAR2 IS
-BEGIN
-    -- Check if input is a UUID
-    IF REGEXP_LIKE(p_input, '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$') THEN
-        RETURN 'UUID';
-    -- Check if input is a Number
-    ELSIF REGEXP_LIKE(p_input, '^\d+(\.\d+)?$') THEN
-        RETURN 'Number';
-    ELSE
-        RETURN 'Unknown';
-    END IF;
-END;
-/
-
-BEGIN
-    DBMS_OUTPUT.PUT_LINE(DetermineType('12345678-1234-1234-1234-1234567890AB'));  -- Should return 'UUID'
-    DBMS_OUTPUT.PUT_LINE(DetermineType('1234567890'));                           -- Should return 'Number'
-    DBMS_OUTPUT.PUT_LINE(DetermineType('Not a UUID or Number'));                 -- Should return 'Unknown'
-END;
-
 
 a) Problem Statement:
 
@@ -28,10 +7,13 @@ b) Summary of the Invention:
 
 The proposed solution enables the capture of debug logs for troubleshooting without incurring performance costs by utilizing the existing log library, logback, along with a Redis cache. Each API request generates a unique identifier known as the request ID, which tags all logs produced during the lifecycle of the request. In the logback configuration, a Custom Asynchronous Redis Appender is defined, which stores only debug logs in the Redis cache, using the request ID as a key. These logs are stored with a configurable time to live (TTL) to minimize cache usage and allow customization according to application needs. While the mainstream application continues its usual logging under normal production conditions, this additional custom logback appender captures debug logs without impacting the performance of the mainstream application, thanks to asynchronous logging techniques and cache storage. In the event of an error, such as a failed, unusual, or slow transaction, the system automatically retrieves all corresponding debug logs based on the request ID from Redis and replays them to the mainstream logs. This provides developers, operations teams, or business teams with a complete set of logs for their investigations, offering comprehensive insights into the context and sequence of events leading up to the error, and facilitating quicker and more effective troubleshooting.
 
+The flowchart provides a detailed visual representation of the logging and error handling process within an API service system. The system utilizes a custom asynchronous appender with Redis for efficient log management and error analysis. Here’s a step-by-step breakdown of the flowchart:
+
 flowchart TB
-    subgraph Application [Mainstream Application]
+    subgraph Application [API Service]
         API[API Endpoint] --> RIDGen[Generate Request ID]
-        RIDGen --> Log[2.Error Level Logging]
+        RIDGen --> ErrorDetect[Detect Error/Slow/Unusual Transaction]
+        ErrorDetect --> Log[2.Error Level Logging]
         RIDGen --> DLog[1.Debug Level Logging]
     end
 
@@ -39,25 +21,68 @@ flowchart TB
         DLog --> CA[Custom Asynchronous Redis Appender]
     end
 
-    subgraph RedisCache [Redis Cache]
-        CA --> RedisStore[Store Debug Logs with TTL]
-        RedisStore --> Retrieve[Retrieve Logs on Demand]
+    subgraph ReplayLogFramework [Replay Log Framework]
+        CA --> Store[Store Debug Logs with TTL]
+        Log --> Retrieve[Retrieve Logs on Demand]
+        Retrieve --> Replay[Replay Debug Logs into Central logging System]
     end
 
-    Log --> ErrorAlert[Error/Slow/Unusual Transaction Alert]
-    ErrorAlert --> Retrieve
-    Retrieve --> Replay[Replay Debug Logs into Central logging System]
-    Replay --> Analysis[Detailed Log Analysis performed for Troubleshooting or fraud claim]
+    subgraph RedisCache [Redis]
+        Store --> Cache[Cache]
+        Retrieve --> Cache[Cache]
+    end
 
-    classDef default fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef storage fill:#ccf,stroke:#333,stroke-width:2px;
-    classDef process fill:#cfc,stroke:#333,stroke-width:2px;
-    classDef database fill:#fcf,stroke:#333,stroke-width:2px;
+    Replay --> Analysis[Detailed/Fraud Analysis performed with these Debug logs]
 
-    class Application,Logback process;
+    class Application,Logback,ReplayLogFramework process;
     class RedisCache storage;
-    class API,RIDGen,Log,DLog,CA,ErrorAlert,Replay,Analysis process;
-    class RedisStore,Retrieve database;
+    class API,RIDGen,ErrorDetect,Log,DLog,CA,Store,Retrieve,Replay,Analysis process;
+    class Cache database;
+
+### Subgraph: API Service
+
+1. **API Endpoint**:
+   - The process begins when an API endpoint receives a request. This is the initial interaction point for external requests.
+
+2. **Generate Request ID (RIDGen)**:
+   - A unique Request ID is generated for each incoming request. This ID is crucial for tracking and associating all logs related to this request throughout the system.
+
+3. **Debug Level Logging (DLog)**:
+   - Simultaneously, debug-level logs are recorded. These logs capture detailed information about the application’s operations, which are useful for deep diagnostics and understanding the application's behavior under normal conditions.
+
+4. **Detect Error/Slow/Unusual Transaction (ErrorDetect)**:
+   - This component monitors the transaction for any errors, slow responses, or unusual behavior, ensuring any issues are promptly identified.
+
+5. **Error Level Logging (Log)**:
+   - If any issues are detected, error-level logs are generated. These logs focus on errors or significant events that need attention, providing a streamlined view for quick error spotting and response.
+
+### Subgraph: Logback Configuration
+
+1. **Custom Asynchronous Redis Appender (CA)**:
+   - Debug logs are handled by a custom asynchronous Redis appender configured in the Logback setup. This appender efficiently manages the logging without blocking the application’s main operational flow.
+
+### Subgraph: Replay Log Framework
+
+1. **Store Debug Logs with TTL (Store)**:
+   - Debug logs are stored in Redis with a set Time-to-Live (TTL), ensuring that logs are only kept as long as necessary to conserve storage and prevent data clutter.
+
+2. **Retrieve Logs on Demand (Retrieve)**:
+   - When needed, particularly in response to errors or for analysis, logs are retrieved from Redis.
+
+3. **Replay Debug Logs into Central Logging System (Replay)**:
+   - Retrieved logs are replayed into a central logging system where they can be accessed and reviewed collectively, providing a comprehensive picture for troubleshooting and analysis.
+
+### Subgraph: Redis Cache
+
+1. **Cache**:
+   - Redis serves as a cache for storing and retrieving logs. It acts as a temporary and fast-access data store for log data.
+
+### Final Steps
+
+1. **Detailed/Fraud Analysis Performed with These Debug Logs (Analysis)**:
+   - Once logs are centralized, detailed analysis or fraud detection processes are undertaken. This step is crucial for diagnosing issues, resolving them, and improving the application based on insights gained from the logs.
+
+Each component in this flowchart is designed to ensure efficient log management and error handling within an API service framework. The use of Redis for caching, combined with asynchronous logging, enhances system performance while maintaining robust diagnostics and analysis capabilities.
 
 sequenceDiagram
     participant ApiEndpoint as API Endpoint
@@ -78,3 +103,59 @@ sequenceDiagram
     ReplayFramework-->>CentralSystem: Replay Debug Logs
     ReplayFramework-->>CentralSystem: Log Error information
     Developer/Operation/Business->>CentralSystem: Detailed Log Analysis
+
+The sequence diagram you provided outlines the interaction and flow of logging and error handling in a system with several components. Here's a step-by-step explanation of each step in the diagram:
+
+API Request Received:
+The ApiEndpoint receives an API request from an external source. This is the initial trigger for all subsequent actions.
+Generate Request ID:
+The ApiEndpoint sends a request to the RequestIdFilter to generate a unique Request ID for the current session or transaction. This ID is crucial for tracking the flow of this particular request through the system.
+Store Request ID in Logger MDC Context:
+The RequestIdFilter stores the generated Request ID in the Logger's Mapped Diagnostic Context (MDC). Storing it in the MDC allows this ID to be accessible from anywhere in the application during the current request's lifecycle, ensuring that all logging actions can be correlated to this request.
+Return to API Endpoint:
+Once the Request ID is stored, control returns to the ApiEndpoint.
+Log Debug Information:
+The ApiEndpoint proceeds to log debug information related to the current request. This operation involves sending the debug log details to the ReplayFramework.
+Store Debug Logs in Redis:
+The ReplayFramework asynchronously stores the debug logs in Redis using the Request ID from the Logger MDC as a key. This storage is asynchronous (indicated by the dotted line), implying it doesn't block the main processing thread of the application.
+Detect Failure/Error/Unusual/Slow Transaction:
+The ApiEndpoint continuously monitors the request execution and detects any failures, errors, unusual behavior, or slow performance in the transaction.
+Log Error Information:
+If any issues are detected, the ApiEndpoint logs this error information, which is sent to the ReplayFramework.
+Fetch Debug Logs:
+The ReplayFramework then asynchronously fetches the previously stored debug logs corresponding to the Request ID from Redis. This step is crucial for understanding what happened before the error occurred.
+Replay Debug Logs:
+After fetching, the ReplayFramework replays these debug logs to the CentralSystem. This replay might be used for further analysis or real-time monitoring.
+Log Error Information:
+Additionally, the error information itself is logged to the CentralSystem. This ensures that all relevant data about the incident is centralized.
+Detailed Log Analysis:
+Developers, operations staff, or business analysts (as represented by Developer/Operation/Business) access the CentralSystem to perform detailed log analysis. This analysis helps in diagnosing the issue, understanding its impact, and planning potential fixes or improvements.
+This sequence diagram illustrates a comprehensive logging system designed to capture both routine operations and exceptions. It emphasizes the use of asynchronous processes for logging to enhance performance and the centralization of log data for thorough analysis.
+
+
+business usecase:
+
+Fraud Claim Faster Analysis:
+"Accelerating fraud claim resolution from 25 days to just 5, our advanced logging system with Logback and Redis quickly correlates customer transactions with detailed debug logs, enabling rapid analysis and effective issue resolution, while also reducing unnecessary financial give-aways on small fraud claims."
+
+Pattern Detection and Anomaly Detection:
+"Employing a centralized logging system with pattern and anomaly detection capabilities, our solution proactively identifies and addresses potential fraud, security breaches, and operational inefficiencies, enhancing security and operational performance across financial services."
+
+Fraud claim Faster Analysis:
+In the banking sector, the efficiency of the Fraud Claims Analysis Desk is critical for maintaining customer trust and security, especially in handling and resolving fraud claims swiftly. By leveraging an advanced logging system with Logback and Redis, this desk significantly improves its investigative capabilities.
+
+Upon a customer's transaction, the system assigns a unique Transaction ID and logs detailed steps such as data validation and balance updates at the DEBUG level. These logs are dynamically stored in Redis with a short Time-to-Live (TTL), optimizing data volume management and system performance. When anomalies indicating potential fraud—such as unusual transaction patterns—are detected, the system immediately retrieves all relevant DEBUG logs using the Transaction ID.
+
+When a fraud claim is later raised by a customer, the Fraud Claims Analysis Desk uses the details provided to connect the claim with the specific transaction. Access to detailed DEBUG logs allows for a more thorough analysis, helping to quickly uncover the root cause of the claim. This streamlined process reduces the typical fraud investigation timeline from 25 days to just 5 days. Prompt actions, such as reversing suspicious transactions, can be taken more effectively, thereby minimizing financial losses and enhancing customer satisfaction. Additionally, this enhanced capability helps avoid the common practice of automatically conceding smaller fraud claims under $50, which are typically written off due to the high cost of investigation. By reducing the time and resources needed for each investigation, the bank can afford to scrutinize these smaller claims, potentially saving significant amounts annually that would otherwise be lost to fraud give-aways. This method ensures a rapid response to potential frauds and strengthens the bank's ability to manage security incidents efficiently.
+
+Pattern detection and anamoly detection:
+In the financial services sector, maintaining robust security and operational efficiency is crucial. Utilizing a centralized logging system equipped with pattern detection and anomaly detection capabilities presents a powerful business use case. By aggregating detailed logs from across the organization’s IT infrastructure into a central system, advanced analytics can be employed to scrutinize transaction logs and user behavior patterns continuously.
+
+This system enables the early detection of irregularities such as potential fraud, security breaches, or system performance anomalies. For instance, sudden spikes in transaction volumes, unusual access patterns during off-hours, or unexpected changes in database queries could be quickly identified as anomalies. Employing machine learning algorithms, the system learns from historical data, improving its accuracy and speed in flagging issues over time.
+
+This proactive approach not only enhances security by preventing potential fraud and breaches before they escalate but also optimizes system performance by identifying and addressing inefficiencies swiftly, thus safeguarding both customer trust and operational integrity
+
+Novelty:
+Asynchronous Logging with Redis: Utilizes a custom asynchronous Redis appender to store debug logs efficiently without impacting application performance.
+Automated Log Retrieval for Error Analysis: Automatically fetches and replays detailed logs upon detecting errors, streamlining the troubleshooting and resolution process.
+Integrated Log Lifecycle Management: Implements TTL (Time-to-Live) on stored logs to manage storage space efficiently and ensure data relevance.

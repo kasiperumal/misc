@@ -317,3 +317,44 @@ Automated Anomaly Detection: Implementing machine learning algorithms or rule-ba
 Customizable Alerts and Notifications: Systems should allow for customizable alert thresholds and notification mechanisms that can inform relevant teams immediately when unusual patterns or error levels are detected. This ensures that the right personnel are alerted in real time, facilitating a swift response.
 Root Cause Analysis Capabilities: Enhanced capabilities for root cause analysis through the logging system, enabling deeper insights into the sequence of events leading up to an error. This includes correlation of logs across different systems and components to provide a comprehensive overview.
 Data Visualization Tools: Integration with data visualization tools to make it easier for teams to analyze complex log data. Graphical representations of timelines, error frequencies, and patterns can help in quicker understanding and decision-making.
+
+
+a) Problem Statement:
+
+In the current production environment, logging practices capture only info and error level logs due to performance considerations. However, this limits visibility into the root cause of issues as debug level logs, which provide detailed insights necessary for thorough understanding, troubleshooting, and fraud analysis, are not captured. Consequently, the absence of these detailed logs makes it difficult to swiftly and accurately resolve customer issues, leading to dissatisfaction. There is no existing observability and monitoring product on the market that offers on-demand replay of debug logs. However, such a feature would be extremely useful in cases of failed or error transactions, unusual transactions, and slow transactions.
+
+b) Summary of the Invention:
+
+The proposed solution enables the capture of debug logs for troubleshooting without incurring performance costs by utilizing the existing log library, logback, along with a Redis cache. Each API request generates a unique identifier known as the request ID, which tags all logs produced during the lifecycle of the request. In the logback configuration, a Custom Asynchronous Redis Appender is defined, which stores only debug logs in the Redis cache, using the request ID as a key. These logs are stored with a configurable time to live (TTL) to minimize cache usage and allow customization according to application needs. While the mainstream application continues its usual logging under normal production conditions, this additional custom logback appender captures debug logs without impacting the performance of the mainstream application, thanks to asynchronous logging techniques and cache storage. In the event of an error, such as a failed, unusual, or slow transaction, the system automatically retrieves all corresponding debug logs based on the request ID from Redis and replays them to the mainstream logs. This provides developers, operations teams, or business teams with a complete set of logs for their investigations, offering comprehensive insights into the context and sequence of events leading up to the error, and facilitating quicker and more effective troubleshooting.
+
+flowchart TB
+    subgraph Application [Mainstream Application]
+        API[API Endpoint] --> RIDGen[Generate Request ID]
+        RIDGen --> Log[2.Error Level Logging]
+        RIDGen --> DLog[1.Debug Level Logging]
+    end
+
+    subgraph Logback [Logback Configuration]
+        DLog --> CA[Custom Asynchronous Redis Appender]
+    end
+
+    subgraph RedisCache [Redis Cache]
+        CA --> RedisStore[Store Debug Logs with TTL]
+        RedisStore --> Retrieve[Retrieve Logs on Demand]
+    end
+
+    Log --> ErrorAlert[Error/Slow/Unusual Transaction Alert]
+    ErrorAlert --> Retrieve
+    Retrieve --> Replay[Replay Debug Logs into Central logging System]
+    Replay --> Analysis[Detailed Log Analysis performed for Troubleshooting or fraud claim]
+
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef storage fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef process fill:#cfc,stroke:#333,stroke-width:2px;
+    classDef database fill:#fcf,stroke:#333,stroke-width:2px;
+
+    class Application,Logback process;
+    class RedisCache storage;
+    class API,RIDGen,Log,DLog,CA,ErrorAlert,Replay,Analysis process;
+    class RedisStore,Retrieve database;
+

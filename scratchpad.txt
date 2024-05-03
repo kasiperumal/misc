@@ -1,37 +1,88 @@
-Pre-computing device trust on a daily basis instead of performing real-time assessments during each request presents several challenges that can affect the efficiency and effectiveness of a security system. Here are some notable problems associated with pre-computing device trust:
+flowchart TD
+    A[Receive Device Data at Login] --> B[Static Parameter Analysis]
+    A --> C[Dynamic Parameter Analysis]
+    B --> D[Combined Analyses]
+    C --> D
+    D --> E{Evaluate Risk Level}
+    E -->|Low Risk| F[Assign Trusted Cluster]
+    E -->|Moderate Risk| G[Assign Moderate Risk Cluster]
+    E -->|High Risk| H[Assign High Risk Cluster]
+    F --> I[Output: Trusted Status]
+    I -.-> L[Feedback Learning System]
+    G --> N[Output: Step-Up Authentication]
+    N -->|Success| F
+    N -->|Failure 3 Times| H
+    H --> O[Call Contact Center for Reset]
+    O -->|Reset Approved| F
+    L --> M[Update Risk Assessment Model]
+    M --> R[End]
+    Z[Subsequent In-Session Actions] --> P[Dynamic Parameter Analysis]
+    P --> E
 
-1. **Delayed Response to New Threats**: One of the biggest drawbacks of pre-computing trust levels is the inability to respond quickly to new or emerging threats. If a device's risk profile changes due to new behaviors or threats detected after the trust level has been pre-computed, the system will not reflect these changes until the next computation cycle. This delay can leave systems vulnerable to attacks that exploit these new threats.
+Receive Device Data at Login: Captures device data when a user logs in.
+Static and Dynamic Parameter Analysis: Separately analyzes static and dynamic data from the device.
+Combined Analyses: Merges results from both static and dynamic analyses.
+Evaluate Risk Level: Assesses the overall risk based on combined data.
+Assign Trusted/Moderate/High Risk Cluster: Allocates risk categories based on evaluation.
+Output Trusted Status or Step-Up Authentication: Outputs results leading to trusted status or requires additional authentication.
+Step-Up Authentication Handling: Manages authentication attempts; transitions to high risk upon three failures.
+Call Contact Center for Reset: High-risk users must contact the center for potential reset.
+Update Risk Assessment Model: Updates the risk model with new data.
+Subsequent In-Session Actions: Monitors device using only dynamic parameter analysis during ongoing sessions.
+Dynamic Parameter Analysis: Continues analyzing dynamic parameters for each in-session action.
+Re-evaluate Risk Level: Regularly reassesses the risk level based on dynamic data.
 
-2. **Reduced Accuracy in Risk Assessment**: Device behavior can change frequently and unpredictably. Pre-computing trust levels daily means that any changes in device behavior between computations won't be captured, potentially leading to outdated trust decisions. This can result in higher rates of false positives or negatives—either unnecessarily challenging legitimate users or failing to challenge fraudulent ones.
+sequenceDiagram
+    participant U as Customer
+    participant DE as Device Trust Handler
+    participant SPA as Static Parameter Validator
+    participant DPA as Dynamic Parameter Validator
+    participant RE as Risk Evaluator
+    participant DB as Database (Risk Profiles)
+    participant CC as Contact Center
 
-3. **Resource Intensive**: Pre-computing trust levels for a large number of devices can be resource-intensive, especially for organizations with a significant number of users. This approach requires substantial computational resources to process all device data at once, which can strain IT infrastructure and lead to higher operational costs.
+    U->>DE: Initiates Login Request with device data
+    DE->>SPA: Analyze Static Parameters
+    SPA->>DE: Static Analysis Results
+    DE->>DPA: Analyze Dynamic Parameters
+    DPA->>DE: Dynamic Analysis Results
+    DE->>RE: Combine Analyses Results
+    RE->>DB: Fetch Historical Risk Data
+    DB->>RE: Historical Data
+    RE->>RE: Assess Risk Level
+    RE->>DE: Risk Assessment Outcome
+    alt Low Risk
+        DE->>U: Assign Trusted Cluster
+        Note over DE,U: Normal processing continues
+    else Moderate Risk
+        DE->>U: Require Step-Up Authentication
+        U->>DE: Step-Up Authentication Attempt
+        alt Success
+            DE->>U: Assign Trusted Cluster
+        else Failure 3 Times
+            DE->>U: Assign High Risk Cluster
+        end
+    else High Risk
+        DE->>U: Assign High Risk Cluster
+        U->>CC: Call Contact Center for Reset
+        CC->>DE: Reset Approved
+        DE->>U: Assign Trusted Cluster
+    end
+    DE->>DB: Update Risk Assessment Model
+    U->>DE: Subsequent In-Session Requests
+    DE->>DPA: Dynamic Parameter Analysis
+    DPA->>DE: Dynamic Analysis Results
+    DE->>RE: Re-assess Risk Level
+    DE->>U: Updated Response Based on New Risk Level
 
-4. **Lack of Personalization**: Real-time assessments allow for more personalized security measures based on the immediate context of a request, such as location, time of access, and recent device activity. Pre-computed scores might not adequately reflect the current context or the specific circumstances surrounding a user's request, potentially leading to less effective security decisions.
-
-5. **Inefficient Use of Data**: Real-time analysis allows for the immediate incorporation of the latest data and intelligence about threats and user behavior. In contrast, pre-computed models may not utilize the most current data, reducing the effectiveness of the security measures and potentially ignoring recent trends or attack vectors.
-
-6. **Potential for Data Staleness**: If a device's security posture is only updated daily, there's a significant risk that the information will become stale. Devices that are compromised after the trust level is computed won't be reassessed until the next cycle, allowing malicious activities to continue undetected.
-
-7. **Operational Rigidity**: Pre-computing device trust levels daily creates a rigid operational framework that might not align well with dynamic business environments where access needs and security requirements can change more frequently than the computation schedule allows.
-
-8. **Impact on User Experience**: Users whose devices are falsely assessed due to outdated or inaccurate trust levels may face unnecessary access restrictions or additional authentication challenges, negatively impacting the user experience and potentially affecting productivity.
-
-Given these issues, many organizations prefer real-time or near-real-time trust assessments, which can dynamically adapt to the continuously evolving landscape of user behavior and cyber threats, thus maintaining a more secure and responsive system.
-
-Combining static and dynamic parameter analysis into a single process can introduce several challenges and potential drawbacks, particularly for systems that require rapid and efficient real-time data processing. Here are some of the main problems associated with conducting both analyses together:
-
-1. **Complexity in Data Processing**: When static and dynamic parameters are analyzed together, it can lead to increased complexity in the data processing algorithms. This complexity can make the system slower, more cumbersome to maintain, and more difficult to troubleshoot and update.
-
-2. **Resource Intensiveness**: Dynamic parameter analysis typically requires real-time or near-real-time processing to effectively detect and respond to potential threats. Mixing this with less time-sensitive static parameter analysis can strain system resources, leading to slower overall performance and potentially delaying the response to actual threats.
-
-3. **Reduced Focus on Anomalies**: Dynamic parameters, by their nature, can exhibit rapid changes which may signify security threats or fraudulent activity. When merged with static analysis, the nuances and subtleties of these changes may not be as readily apparent, possibly leading to overlooked anomalies or diluted focus.
-
-4. **Inflexible Security Policies**: Unified analysis might force a one-size-fits-all approach to security policies and responses, which can be less effective than tailored responses. Different types of data often require different security measures; by analyzing them together, the ability to customize responses based on the unique characteristics of each data type is reduced.
-
-5. **Slower Adaptation to New Threats**: Dynamic parameter analysis needs to be agile to adapt quickly to emerging threats. When combined with static analysis, the cycle of updates and iterations can become slower, as changes may require more comprehensive testing and integration efforts to ensure they do not adversely affect the static analysis.
-
-6. **Higher Risk of False Positives/Negatives**: With both sets of parameters being analyzed together, there's a higher chance of misinterpreting data, leading to false positives or negatives. For instance, legitimate dynamic changes might be misjudged as threats due to their association with unchanging static data, or vice versa.
-
-7. **Complicated System Design and Upgrades**: Integrating both analyses into one system complicates the design and subsequent upgrades. Changes to improve the analysis of dynamic parameters may inadvertently affect the handling of static parameters, requiring extensive testing and potentially leading to longer downtimes or deployment cycles.
-
-In summary, while combining static and dynamic parameter analysis might simplify the architectural design at a high level, it often complicates the operational aspects, making the system less efficient and potentially less effective at identifying and responding to security threats. Separating these analyses allows each to operate under conditions optimized for their specific data characteristics and security needs.
+Customer Initiates Login Request: A customer starts the login process by submitting device data.
+Analyze Static and Dynamic Parameters: The Device Trust Handler analyzes both static and dynamic parameters separately.
+Combine Analyses Results: Results from static and dynamic analyses are combined to create a comprehensive profile.
+Fetch and Utilize Historical Risk Data: Fetches historical risk data to aid in accurate risk assessment.
+Assess and Output Risk Level: Risk levels are assessed and results are communicated to the customer.
+Handle Step-Up Authentication: Manages authentication attempts and shifts to a high-risk cluster if step-up authentication fails three times.
+Contact Center Interaction for High Risk: High-risk users are directed to contact the center for a reset.
+Update Risk Assessment Model: The system updates its risk model based on the latest interactions and outcomes.
+Handle Subsequent In-Session Requests: Monitors ongoing in-session requests with dynamic parameter analysis.
+Re-assess Risk Level Based on In-Session Data: Continuously reassesses the risk based on new dynamic data from ongoing sessions.
+Update Customer on New Risk Level: Communicates any changes in risk level to the customer.

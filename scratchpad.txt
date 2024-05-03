@@ -1,88 +1,9 @@
-flowchart TD
-    A[Receive Device Data at Login] --> B[Static Parameter Analysis]
-    A --> C[Dynamic Parameter Analysis]
-    B --> D[Combined Analyses]
-    C --> D
-    D --> E{Evaluate Risk Level}
-    E -->|Low Risk| F[Assign Trusted Cluster]
-    E -->|Moderate Risk| G[Assign Moderate Risk Cluster]
-    E -->|High Risk| H[Assign High Risk Cluster]
-    F --> I[Output: Trusted Status]
-    I -.-> L[Feedback Learning System]
-    G --> N[Output: Step-Up Authentication]
-    N -->|Success| F
-    N -->|Failure 3 Times| H
-    H --> O[Call Contact Center for Reset]
-    O -->|Reset Approved| F
-    L --> M[Update Risk Assessment Model]
-    M --> R[End]
-    Z[Subsequent In-Session Actions] --> P[Dynamic Parameter Analysis]
-    P --> E
+A leading financial services company is upgrading its digital security measures to better protect client data and ensure secure transactions. By implementing a Device Trust Engine, the firm can now manage user authentication adaptively, based on real-time risk assessments of both static and dynamic device parameters such as device ID, location changes, and network behavior.
 
-Receive Device Data at Login: Captures device data when a user logs in.
-Static and Dynamic Parameter Analysis: Separately analyzes static and dynamic data from the device.
-Combined Analyses: Merges results from both static and dynamic analyses.
-Evaluate Risk Level: Assesses the overall risk based on combined data.
-Assign Trusted/Moderate/High Risk Cluster: Allocates risk categories based on evaluation.
-Output Trusted Status or Step-Up Authentication: Outputs results leading to trusted status or requires additional authentication.
-Step-Up Authentication Handling: Manages authentication attempts; transitions to high risk upon three failures.
-Call Contact Center for Reset: High-risk users must contact the center for potential reset.
-Update Risk Assessment Model: Updates the risk model with new data.
-Subsequent In-Session Actions: Monitors device using only dynamic parameter analysis during ongoing sessions.
-Dynamic Parameter Analysis: Continues analyzing dynamic parameters for each in-session action.
-Re-evaluate Risk Level: Regularly reassesses the risk level based on dynamic data.
+Upon user login, the system analyzes these parameters, dynamically categorizing devices into risk clusters:
 
-sequenceDiagram
-    participant U as Customer
-    participant DE as Device Trust Handler
-    participant SPA as Static Parameter Validator
-    participant DPA as Dynamic Parameter Validator
-    participant RE as Risk Evaluator
-    participant DB as Database (Risk Profiles)
-    participant CC as Contact Center
+Low-risk devices are processed through routine authentication, maintaining user convenience and operational efficiency.
+Moderate-risk devices trigger additional verification steps, such as one-time passwords or security questions, to validate access attempts that deviate from the norm yet may still be legitimate.
+High-risk devices, identified either initially or after multiple failures in step-up authentication, require multi-factor authentication and may necessitate direct interaction with a customer contact center for reset approval, significantly enhancing security measures against potential breaches.
+This robust and adaptive approach not only improves security against evolving cyber threats but also builds deeper trust with customers by demonstrating a proactive stance in safeguarding personal and financial information—an essential asset for sustaining a competitive edge in the financial sector. Subsequent in-session transactions continue to assess risk using dynamic parameters only, ensuring continuous security vigilance without repeated checks on static data. This method reduces friction in user interactions while maintaining high security standards throughout the customer journey.
 
-    U->>DE: Initiates Login Request with device data
-    DE->>SPA: Analyze Static Parameters
-    SPA->>DE: Static Analysis Results
-    DE->>DPA: Analyze Dynamic Parameters
-    DPA->>DE: Dynamic Analysis Results
-    DE->>RE: Combine Analyses Results
-    RE->>DB: Fetch Historical Risk Data
-    DB->>RE: Historical Data
-    RE->>RE: Assess Risk Level
-    RE->>DE: Risk Assessment Outcome
-    alt Low Risk
-        DE->>U: Assign Trusted Cluster
-        Note over DE,U: Normal processing continues
-    else Moderate Risk
-        DE->>U: Require Step-Up Authentication
-        U->>DE: Step-Up Authentication Attempt
-        alt Success
-            DE->>U: Assign Trusted Cluster
-        else Failure 3 Times
-            DE->>U: Assign High Risk Cluster
-        end
-    else High Risk
-        DE->>U: Assign High Risk Cluster
-        U->>CC: Call Contact Center for Reset
-        CC->>DE: Reset Approved
-        DE->>U: Assign Trusted Cluster
-    end
-    DE->>DB: Update Risk Assessment Model
-    U->>DE: Subsequent In-Session Requests
-    DE->>DPA: Dynamic Parameter Analysis
-    DPA->>DE: Dynamic Analysis Results
-    DE->>RE: Re-assess Risk Level
-    DE->>U: Updated Response Based on New Risk Level
-
-Customer Initiates Login Request: A customer starts the login process by submitting device data.
-Analyze Static and Dynamic Parameters: The Device Trust Handler analyzes both static and dynamic parameters separately.
-Combine Analyses Results: Results from static and dynamic analyses are combined to create a comprehensive profile.
-Fetch and Utilize Historical Risk Data: Fetches historical risk data to aid in accurate risk assessment.
-Assess and Output Risk Level: Risk levels are assessed and results are communicated to the customer.
-Handle Step-Up Authentication: Manages authentication attempts and shifts to a high-risk cluster if step-up authentication fails three times.
-Contact Center Interaction for High Risk: High-risk users are directed to contact the center for a reset.
-Update Risk Assessment Model: The system updates its risk model based on the latest interactions and outcomes.
-Handle Subsequent In-Session Requests: Monitors ongoing in-session requests with dynamic parameter analysis.
-Re-assess Risk Level Based on In-Session Data: Continuously reassesses the risk based on new dynamic data from ongoing sessions.
-Update Customer on New Risk Level: Communicates any changes in risk level to the customer.

@@ -1,1 +1,40 @@
-Detecting fraud in transaction logs using reinforcement learning involves preparing and labeling data, extracting relevant features, and defining an environment where each transaction is a state. An agent analyzes transactions, receiving rewards for correct fraud identifications and penalties for errors. Using reinforcement learning algorithms, the agent is trained on historical data to optimize its detection strategy. After validation, the model is deployed for real-time monitoring and continuously updated with new data. A feedback loop involving human analysts helps refine the model, ensuring accurate and adaptive fraud detection.
+graph TD;
+    %% Nodes for Customers
+    C1[Customer 1]
+    C2[Customer 2]
+    C3[Customer 3]
+    C4[Customer 4]
+    C5[Customer 5]
+
+    %% Relationships
+    C1 -- "Family" --> C2
+    C1 -- "Friend" --> C3
+    C2 -- "Colleague" --> C4
+    C3 -- "Business Partner" --> C5
+
+    %% Transactions
+    C1 -.-> |"$200 at 10:00"| C2
+    C1 -.-> |"$450 at 14:00"| C4
+    C2 -.-> |"$150 at 09:30"| C3
+    C3 -.-> |"$320 at 15:00"| C5
+    C4 -.-> |"$280 at 11:00"| C1
+    C5 -.-> |"$300 at 15:10
+    This $300 transaction at 15:10 from Customer5 to Customer1 is flagged due to non-relational, unusual timing and amount."| C1
+
+    %% Styles for relationships and transactions
+    classDef rel fill:#fff,stroke:#000,stroke-width:2px;
+    classDef txn fill:#fff,stroke:#000,stroke-width:2px,dashed:true;
+    classDef anomaly fill:#fff,stroke:#f00,stroke-width:3px,dashed:true;
+
+    %% Applying styles
+    class C1,C2,C3,C4,C5 rel;
+    linkStyle 0 stroke:#000,stroke-width:2px;
+    linkStyle 1 stroke:#000,stroke-width:2px;
+    linkStyle 2 stroke:#000,stroke-width:2px;
+    linkStyle 3 stroke:#000,stroke-width:2px;
+    linkStyle 4 stroke:#000,stroke-width:2px,dasharray: 5, 5;
+    linkStyle 5 stroke:#000,stroke-width:2px,dasharray: 5, 5;
+    linkStyle 6 stroke:#000,stroke-width:2px,dasharray: 5, 5;
+    linkStyle 7 stroke:#000,stroke-width:2px,dasharray: 5, 5;
+    linkStyle 8 stroke:#000,stroke-width:3px,dasharray: 5, 5; 
+    linkStyle 9 stroke:#f00,stroke-width:3px,dasharray: 5, 5; 

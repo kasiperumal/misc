@@ -1,40 +1,52 @@
-graph TD;
-    %% Nodes for Customers
-    C1[Customer 1]
-    C2[Customer 2]
-    C3[Customer 3]
-    C4[Customer 4]
-    C5[Customer 5]
+https://medium.com/@Gaurav123/disney-hotstar-system-design-for-43-million-concurrent-users-for-india-vs-nz-cwc-2023-262ae9607e0d
 
-    %% Relationships
-    C1 -- "Family" --> C2
-    C1 -- "Friend" --> C3
-    C2 -- "Colleague" --> C4
-    C3 -- "Business Partner" --> C5
+graph TD
+    A[Live Video Feed] --> B[RTMP Encoding Server]
+    B --> B1[Ingestion & Storage]
+    B1 --> C[RTMP Transcoding Server]
+    C --> D1[1080p @ 5Mbps]
+    C --> D2[720p @ 2.5Mbps]
+    C --> D3[480p @ 1Mbps]
+    C --> D4[360p @ 512kbps]
+    D1 --> E[Streaming Server - Segmenting & DASH/HLS Packing]
+    D2 --> E
+    D3 --> E
+    D4 --> E
+    E --> F[CDN Edge Server]
+    F --> G[User Devices]
 
-    %% Transactions
-    C1 -.-> |"$200 at 10:00"| C2
-    C1 -.-> |"$450 at 14:00"| C4
-    C2 -.-> |"$150 at 09:30"| C3
-    C3 -.-> |"$320 at 15:00"| C5
-    C4 -.-> |"$280 at 11:00"| C1
-    C5 -.-> |"$300 at 15:10
-    This $300 transaction at 15:10 from Customer5 to Customer1 is flagged due to non-relational, unusual timing and amount."| C1
 
-    %% Styles for relationships and transactions
-    classDef rel fill:#fff,stroke:#000,stroke-width:2px;
-    classDef txn fill:#fff,stroke:#000,stroke-width:2px,dashed:true;
-    classDef anomaly fill:#fff,stroke:#f00,stroke-width:3px,dashed:true;
 
-    %% Applying styles
-    class C1,C2,C3,C4,C5 rel;
-    linkStyle 0 stroke:#000,stroke-width:2px;
-    linkStyle 1 stroke:#000,stroke-width:2px;
-    linkStyle 2 stroke:#000,stroke-width:2px;
-    linkStyle 3 stroke:#000,stroke-width:2px;
-    linkStyle 4 stroke:#000,stroke-width:2px,dasharray: 5, 5;
-    linkStyle 5 stroke:#000,stroke-width:2px,dasharray: 5, 5;
-    linkStyle 6 stroke:#000,stroke-width:2px,dasharray: 5, 5;
-    linkStyle 7 stroke:#000,stroke-width:2px,dasharray: 5, 5;
-    linkStyle 8 stroke:#000,stroke-width:3px,dasharray: 5, 5; 
-    linkStyle 9 stroke:#f00,stroke-width:3px,dasharray: 5, 5; 
+https://www.geeksforgeeks.org/the-engine-behind-disney-hotstar-a-peek-into-their-backend-infrastructure/
+
+Hosting with AWS:
+
+Scalable, reliable cloud computing
+Efficient infrastructure management based on demand
+CDN Partner:
+
+Partnered with Akamai for efficient content delivery
+Optimized media files for low latency and high performance
+Data Storage:
+
+Amazon S3 for scalable, cost-effective storage
+Mix of EC2 instances tailored for specific requirements
+Instance Mix:
+
+On-Demand Instances:
+Pay-as-you-go virtual servers for consistent workloads
+Spot Instances:
+Cost-effective bid-based access for interruptible workloads
+Smart Cost Management:
+
+Machine learning and data analytics for adaptive, responsive infrastructure
+Dynamic resource optimization for cost savings and high performance
+Data Processing:
+
+AWS EMR clusters for processing large datasets
+Uses frameworks like Apache Spark and Apache Hadoop
+Scalability Design:
+
+Over 500 AWS CPU instances (C4.4X Large or C4.8X Large) at 75% utilization
+16 TB of RAM, 8000 CPU cores
+Peak data transfer speed of 32Gbps

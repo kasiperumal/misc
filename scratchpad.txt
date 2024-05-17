@@ -1,52 +1,169 @@
-https://medium.com/@Gaurav123/disney-hotstar-system-design-for-43-million-concurrent-users-for-india-vs-nz-cwc-2023-262ae9607e0d
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report
+from nltk.stem import WordNetLemmatizer
+from nltk.stem.porter import PorterStemmer
+from nltk.corpus import stopwords
+import nltk
+import re
 
-graph TD
-    A[Live Video Feed] --> B[RTMP Encoding Server]
-    B --> B1[Ingestion & Storage]
-    B1 --> C[RTMP Transcoding Server]
-    C --> D1[1080p @ 5Mbps]
-    C --> D2[720p @ 2.5Mbps]
-    C --> D3[480p @ 1Mbps]
-    C --> D4[360p @ 512kbps]
-    D1 --> E[Streaming Server - Segmenting & DASH/HLS Packing]
-    D2 --> E
-    D3 --> E
-    D4 --> E
-    E --> F[CDN Edge Server]
-    F --> G[User Devices]
+nltk.download('wordnet')
+nltk.download('stopwords')
 
+# Define a function to handle text preprocessing
+def preprocess_text(text):
+    # Convert text to lowercase
+    text = text.lower()
+    # Remove punctuation
+    text = re.sub(r'[^\w\s]', '', text)
+    # Remove numbers
+    text = re.sub(r'\d+', '', text)
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    text = ' '.join([word for word in text.split() if word not in stop_words])
+    # Initialize the WordNet Lemmatizer
+    lemmatizer = WordNetLemmatizer()
+    # Lemmatize words
+    text = ' '.join([lemmatizer.lemmatize(word) for word in text.split()])
+    # Optionally: you can add stemming (typically choose one: either stemming or lemmatization)
+    # stemmer = PorterStemmer()
+    # text = ' '.join([stemmer.stem(word) for word in text.split()])
+    return text
 
+# Original data
+data = {
+    'short_description': [
+        'App crashes on launch', 'Database timeout error', 'High memory usage', 'Cannot reach server',
+        'Error in transaction process', 'Login failure', 'Data corruption in table', 'Backup failure'
+    ] * 4,  # Replicate original data to increase sample size
+    'description': [
+        'The application fails to start every time it is launched.',
+        'Query execution times out when trying to access the database.',
+        'The system memory usage spikes to over 90% when the application runs.',
+        'Server is unreachable from any client in the network.',
+        'Transactions are not processing correctly, resulting in errors.',
+        'Users are unable to login to the application since the last update.',
+        'Corruption observed in the customer data table, missing many entries.',
+        'Scheduled backup fails to complete successfully.'
+    ] * 4,  # Replicate to match the number of samples
+    'impact': ['high', 'medium', 'high', 'high', 'medium', 'low', 'high', 'medium'] * 4,
+    'root_cause': [
+        'Application failed to initialize', 'Database locked by another service',
+        'Memory leak in software', 'Network configuration issue',
+        'Coding error in transaction logic', 'Authentication services down',
+        'Disk failure', 'Insufficient storage space on server'
+    ] * 4,
+    'resolution': [
+        'Restart the application', 'Restart the database service',
+        'Update the application to the latest version', 'Check network settings',
+        'Fix the code and push an update', 'Restart authentication service',
+        'Replace the hard drive', 'Increase storage capacity'
+    ] * 4,
+    'problem_category': ['application', 'database', 'application', 'infrastructure',
+                         'application', 'application', 'database', 'infrastructure'] * 4
+}
 
-https://www.geeksforgeeks.org/the-engine-behind-disney-hotstar-a-peek-into-their-backend-infrastructure/
+# Additional synthetic data
+additional_data = {
+    'short_description': [
+        'Slow network response', 'Permission denied error', 'Login page not loading', 'Emails not sending',
+        'Print job stuck', 'Unexpected system shutdown', 'Security breach detected', 'Service unavailable',
+        'Hardware failure', 'Performance degradation', 'API connectivity issues', 'License validation failed',
+        'High CPU usage', 'Memory allocation error', 'File system full', 'Database read-only mode',
+        'Application version conflict', 'Server overheating', 'Data sync error', 'Software installation failed',
+        'User profile corruption', 'Access violation', 'VPN connection failed', 'Batch job failure',
+        'Mobile app keeps refreshing', 'Firmware update needed', 'Cloud service downtime', 'Web portal unresponsive',
+        'Container crashed', 'Backup process interrupted'
+    ],
+    'description': [
+        'Network response time is significantly above average thresholds.', 'User receives permission denied errors when attempting to access files.',
+        'The login page remains blank or unresponsive after entering credentials.', 'Emails queued are not being sent to recipients.',
+        'Print jobs are seen in queue but not processing.', 'System shuts down without warning or error message.',
+        'Unauthorized access to sensitive data detected.', 'Critical services are currently unavailable to all users.',
+        'Significant hardware malfunction detected, affecting operations.', 'Gradual decrease in system performance observed over time.',
+        'API calls are failing intermittently leading to connectivity issues.', 'Software license fails to validate despite being active.',
+        'CPU usage exceeds 95% for prolonged periods.', 'Errors reported when trying to allocate memory during operations.',
+        'No space left on the system file system, affecting file operations.', 'Database is stuck in read-only mode, preventing any updates.',
+        'Conflicting application versions causing stability issues.', 'Server temperature has exceeded safe operating limits.',
+        'Data synchronization between systems is failing.', 'Installation of software could not complete successfully.',
+        'User profile does not load correctly, showing corruption.', 'Access violation errors occur randomly in the system logs.',
+        'VPN connections are frequently dropping.', 'Scheduled batch jobs are failing to complete.',
+        'Mobile app refreshes constantly, hindering user activity.', 'Device requires firmware update to continue functioning properly.',
+        'Cloud service has been down for several hours, affecting all users.', 'Web portal is slow or unresponsive during peak usage times.',
+        'Container service crashes shortly after launch.', 'Backup process fails to complete and interrupts at random intervals.'
+    ],
+    'impact': ['medium', 'low', 'high', 'medium', 'low', 'high', 'high', 'high', 'high', 'medium',
+               'medium', 'low', 'high', 'medium', 'high', 'medium', 'low', 'high', 'medium', 'medium',
+               'low', 'low', 'medium', 'medium', 'low', 'low', 'high', 'medium', 'medium', 'medium'],
+    'root_cause': [
+        'Network congestion', 'Incorrect file permissions', 'Web server configuration error', 'SMTP relay issue',
+        'Printer driver conflict', 'Power supply failure', 'Security protocol breach', 'Service dependency failure',
+        'Motherboard failure', 'Resource limits reached', 'API server overload', 'License server downtime',
+        'Overloaded CPU processes', 'Memory chips malfunction', 'Disk space management issues', 'Database lock',
+        'Multiple versions installed', 'Cooling system failure', 'Network inconsistency', 'Corrupt installation files',
+        'Corrupted user profile settings', 'Faulty access control configuration', 'Unstable network', 'Script error',
+        'Mobile app bug', 'Outdated firmware', 'Cloud provider outage', 'High traffic volume', 'Container misconfiguration',
+        'Faulty backup hardware'
+    ],
+    'resolution': [
+        'Optimize network usage', 'Adjust file access permissions', 'Reconfigure web server settings', 'Verify SMTP configurations',
+        'Reinstall printer drivers', 'Check power supply unit', 'Enhance security measures', 'Restart dependent services',
+        'Replace faulty motherboard', 'Increase system resources', 'Scale up API server capacity', 'Check license server status',
+        'Optimize running processes', 'Replace faulty memory', 'Clean up disk space', 'Release database lock',
+        'Uninstall conflicting versions', 'Repair cooling system', 'Resolve network conflicts', 'Reattempt the installation',
+        'Restore user profile from backup', 'Revise access controls', 'Stabilize network connection', 'Debug and fix scripts',
+        'Update mobile application', 'Perform firmware update', 'Contact cloud service provider', 'Increase server capacity',
+        'Fix container setup issues', 'Replace backup hardware'
+    ],
+    'problem_category': [
+        'infrastructure', 'application', 'application', 'infrastructure',
+        'infrastructure', 'infrastructure', 'security', 'infrastructure',
+        'hardware', 'infrastructure', 'application', 'application',
+        'infrastructure', 'hardware', 'infrastructure', 'database',
+        'application', 'infrastructure', 'application', 'application',
+        'application', 'application', 'infrastructure', 'application',
+        'application', 'hardware', 'environment', 'infrastructure',
+        'application', 'infrastructure'
+    ]
+}
 
-Hosting with AWS:
+# Merge the original data with additional data
+full_data = {key: data[key] + additional_data[key] for key in data}
+df = pd.DataFrame(full_data)
 
-Scalable, reliable cloud computing
-Efficient infrastructure management based on demand
-CDN Partner:
+# Apply text preprocessing to the text columns
+text_columns = ['short_description', 'description', 'root_cause', 'resolution']
+for col in text_columns:
+    df[col] = df[col].apply(preprocess_text)
 
-Partnered with Akamai for efficient content delivery
-Optimized media files for low latency and high performance
-Data Storage:
+# Label encoding for the target variable 'problem_category'
+encoder = LabelEncoder()
+df['problem_category_encoded'] = encoder.fit_transform(df['problem_category'])
 
-Amazon S3 for scalable, cost-effective storage
-Mix of EC2 instances tailored for specific requirements
-Instance Mix:
+# Preparing data for training
+X = df.drop(columns=['problem_category', 'problem_category_encoded'])  # features
+y = df['problem_category_encoded']  # target variable
 
-On-Demand Instances:
-Pay-as-you-go virtual servers for consistent workloads
-Spot Instances:
-Cost-effective bid-based access for interruptible workloads
-Smart Cost Management:
+# Combine all text data into one for vectorization
+X_combined = X.apply(lambda x: ' '.join(x.astype(str)), axis=1)
 
-Machine learning and data analytics for adaptive, responsive infrastructure
-Dynamic resource optimization for cost savings and high performance
-Data Processing:
+# Splitting the dataset into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X_combined, y, test_size=0.25, random_state=42)
 
-AWS EMR clusters for processing large datasets
-Uses frameworks like Apache Spark and Apache Hadoop
-Scalability Design:
+# Creating a pipeline to vectorize text data and train classifier
+pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer(stop_words='english')),
+    ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
+])
 
-Over 500 AWS CPU instances (C4.4X Large or C4.8X Large) at 75% utilization
-16 TB of RAM, 8000 CPU cores
-Peak data transfer speed of 32Gbps
+# Training the model
+pipeline.fit(X_train, y_train)
+
+# Making predictions and evaluating the model
+y_pred = pipeline.predict(X_test)
+print(classification_report(y_test, y_pred))

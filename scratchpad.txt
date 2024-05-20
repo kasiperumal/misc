@@ -1,42 +1,67 @@
-spring:
-  datasource:
-    url: jdbc:h2:file:./data/testdb
-    driver-class-name: org.h2.Driver
-    username: 
-    password:
-    initialization-mode: always
-  h2:
-    console:
-      enabled: true
-  batch:
-    jdbc:
-      initialize-schema: always
+### Problem Statement
+Customers using online banking or mobile banking apps often experience session timeouts due to inactivity. This requires them to log back in and navigate to the desired section again, causing frustration and inefficiency. Such interruptions can negatively impact user satisfaction and overall banking experience, especially if the user was in the middle of a crucial transaction or process.
 
-import org.springframework.batch.core.repository.JobRepository;
+### Solution
+Implementing a session management system that allows users to resume their activity from where they left off after logging back in can significantly enhance the banking experience. When a session timeout occurs, the system will save the user's state and, upon re-login, redirect them to the exact point of interruption. This feature can be integrated into both web and mobile banking platforms, ensuring continuity and convenience for the user. By reducing the need to repeatedly navigate through the app or website, users can complete their banking tasks more efficiently, leading to improved customer satisfaction and loyalty.
 
-    @Bean
-    public Step step1(ItemReader<InputType> reader, ItemProcessor<InputType, OutputType> processor, 
-                      ItemWriter<OutputType> writer) {
-        return stepBuilderFactory.get("step1")
-                .<InputType, OutputType>chunk(100)
-                .reader(reader)
-                .processor(processor)
-                .writer(writer)
-                .faultTolerant()
-                .skip(Exception.class)
-                .skipLimit(10)
-                .retry(Exception.class)
-                .retryLimit(3)
-                .taskExecutor(taskExecutor())
-                .build();
-    }
+graph TD
+    User[Customer] -->|Login/Activity| WebApp[Online Banking Application]
+    WebApp -->|Session Management| SessionManager
+    SessionManager -->|State Storage| Database
+    SessionManager -->|State Retrieval| Database
 
-    @Bean
-    public Job job(JobRepository jobRepository, Step step1) {
-        return jobBuilderFactory.get("job")
-                .repository(jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .start(step1)
-                .build();
-    }
-}
+    subgraph Online Banking System
+        WebApp
+        SessionManager
+        Database
+    end
+    
+    User -->|Login/Activity| MobileApp[Mobile Banking Application]
+    MobileApp -->|Session Management| SessionManager
+
+
+
+sequenceDiagram
+    participant User
+    participant BankingApp
+    participant SessionManager
+    participant Database
+
+    User->>BankingApp: Start banking activity
+    BankingApp->>SessionManager: Create session
+    SessionManager->>Database: Save session details
+    User->>BankingApp: Perform actions (e.g., bill payment)
+    BankingApp->>SessionManager: Update session state with current action
+    
+    Note right of User: User gets interrupted
+    
+    BankingApp->>User: Session timeout notification
+    BankingApp->>SessionManager: End session
+    SessionManager->>Database: Save current session state
+    User->>BankingApp: Logs back in
+    BankingApp->>SessionManager: Validate user credentials
+    SessionManager->>Database: Retrieve session details
+    Database-->>SessionManager: Return session state
+    SessionManager-->>BankingApp: Send session state details
+    BankingApp-->>User: Resume previous activity with saved state
+    User->>BankingApp: Complete the interrupted task
+
+
+
+### Banking Business Use Cases
+
+1. **Bill Payment**
+   - **Scenario**: A customer is in the middle of paying a utility bill when they are interrupted and their session times out.
+   - **Enhanced Experience**: When the customer logs back in, they are automatically redirected to the bill payment screen with all previously entered details intact. This allows them to quickly resume and complete the payment without having to start from scratch, ensuring a seamless and efficient transaction process.
+
+2. **Fund Transfer**
+   - **Scenario**: A customer is transferring funds between accounts but gets distracted and the session expires.
+   - **Enhanced Experience**: Upon re-login, the customer is taken directly to the fund transfer page with the details of the transfer already filled in. This enables them to swiftly finalize the transfer, reducing the inconvenience and time spent navigating back through the app.
+
+3. **Loan Application**
+   - **Scenario**: A customer is in the process of filling out a loan application form when they have to step away, leading to a session timeout.
+   - **Enhanced Experience**: After logging back in, the customer is redirected to the loan application form, with all the information they had already entered saved. This ensures a smooth continuation of the application process, enhancing the user experience and increasing the likelihood of completing the application.
+
+### Novelty
+- **Enhanced Continuity**: This solution offers seamless continuation of interrupted tasks, minimizing user frustration and improving the overall user experience.
+- **Increased Efficiency**: By reducing the need for users to repeatedly navigate through the app, this feature saves time and makes the banking process more efficient.

@@ -1,4 +1,138 @@
-Key Differences Highlighted:
-Session Management: Focuses on preserving and restoring the user's exact session state, providing a seamless continuation of activities post-login.
-Deep Linking: Focuses on navigating users to specific sections or features within the app via URLs or links, but without preserving the user's state or previous actions.
-In summary, while both approaches enhance user navigation and experience, the session management solution offers a more granular and stateful continuity, whereas deep linking provides efficient direct access but without state preservation.
+Slide 1:
+The Problem with Traditional Fraud Detection
+* Isolation of Data: Traditional methods often analyze transactional data in isolation.
+* High False Positives: Leads to high false positive rates, causing inefficiencies.
+* Limited Insight: Misses the interconnected nature of fraudulent activities.
+* Impact: Slower detection times and higher operational costs.
+Use diagram
+
+Slide 2:
+Introducing Neo4j and Graph Databases
+* Neo4j Overview: Leading graph database designed to leverage data relationships.
+* Graph Database: Stores data in nodes, edges, and properties to represent entities and relationships.
+* Relevance: Perfect for fraud detection due to its ability to illustrate complex connections.
+Use diagram
+
+Slide 3:
+Title: Combining Transactional and Relational Data
+* Integration Process: How Neo4j integrates transactional and relational data.
+* Comprehensive View: Enables a full view of customer interactions and transactions.
+* Example: A combined graph showing relationships and transactions.
+Use diagram of integrated graph
+
+Slide 4:
+Title: Advanced Graph Analytics with Neo4j GDS
+* Graph Data Science Library: Features of Neo4j’s GDS library.
+* Key Algorithms:
+    * Community Detection: Identifies tightly-knit groups.
+    * Centrality Measures: Pinpoints influential nodes in the network.
+* Application: Real-world scenarios where these algorithms detect fraud.
+
+graph TD;
+    %% Nodes for Customers
+    C1[Customer 1]
+    C2[Customer 2]
+    C3[Customer 3]
+    C4[Customer 4]
+    C5[Customer 5]
+
+    %% Relationships
+    C1 -- "Family" --> C2
+    C1 -- "Friend" --> C3
+    C2 -- "Colleague" --> C4
+    C3 -- "Business Partner" --> C5
+
+    %% Transactions
+    C1 -.-> |"$200 at 10:00"| C2
+    C1 -.-> |"$450 at 14:00"| C4
+    C2 -.-> |"$150 at 09:30"| C3
+    C3 -.-> |"$320 at 15:00"| C5
+    C4 -.-> |"$280 at 11:00"| C1
+    C5 -.-> |"$300 at 15:10"| C1
+
+Slide 5:
+Community Detection:
+graph TD;
+    %% Nodes for Customers
+    subgraph Community 1
+        style Community 1 fill:#ffcccc,stroke:#ff0000,stroke-width:2px;
+        C1[Customer 1]
+        C2[Customer 2]
+        C4[Customer 4]
+    end
+    subgraph Community 2
+        style Community 2 fill:#ffcccc,stroke:#ff0000,stroke-width:2px;
+        C3[Customer 3]
+        C5[Customer 5]
+    end
+
+    %% Relationships
+    C1 -- "Family" --> C2
+    C1 -- "Friend" --> C3
+    C2 -- "Colleague" --> C4
+    C3 -- "Business Partner" --> C5
+
+    %% Transactions
+    C1 -.-> |"$200 at 10:00"| C2
+    C1 -.-> |"$450 at 14:00"| C4
+    C2 -.-> |"$150 at 09:30"| C3
+    C3 -.-> |"$320 at 15:00"| C5
+    C4 -.-> |"$280 at 11:00"| C1
+    C5 -.-> |"$300 at 15:10"| C1
+
+Slide 6:
+Centrality Measures:
+graph TD;
+    %% Nodes for Customers
+    C1[Customer 1]
+    C2[Customer 2]
+    C3[Customer 3]
+    C4[Customer 4]
+    C5[Customer 5]
+
+    %% Relationships
+    C1 -- "Family" --> C2
+    C1 -- "Friend" --> C3
+    C2 -- "Colleague" --> C4
+    C3 -- "Business Partner" --> C5
+
+    %% Transactions
+    C1 -.-> |"$200 at 10:00"| C2
+    C1 -.-> |"$450 at 14:00"| C4
+    C2 -.-> |"$150 at 09:30"| C3
+    C3 -.-> |"$320 at 15:00"| C5
+    C4 -.-> |"$280 at 11:00"| C1
+    C5 -.-> |"$300 at 15:10"| C1
+
+    %% Centrality Measures Notes
+    note1["Centrality Measures:
+    - C1 has the highest degree centrality with the most direct connections.
+    - C1 has high betweenness centrality, acting as a bridge in the network.
+    - C1 has high closeness centrality, indicating quick interaction with all other nodes.
+    - C1 has high eigenvector centrality due to influential neighbors.
+    - C1 has a high PageRank score due to important connections."]
+    
+    note2["C3 also has high eigenvector centrality and PageRank due to its influential connections."]
+    
+    %% Positioning Notes for Visual Clarity
+    note1 --> C1
+    note2 --> C3
+
+Slide 7:
+Benefits chart
+
+Slide 8:
+
+| **Algorithm Name**     | **Application in Fraud Detection**                                                                  | **Example**                            |
+|------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------|
+| Anomaly Detection      | Detect unusual transactions or behaviors that may indicate fraudulent activities                    | Outlier Detection, GBAD                |
+| Pathfinding            | Trace the flow of transactions and identify suspicious paths or routes used in money laundering     | Dijkstra's Algorithm, A* Algorithm     |
+| Link Prediction        | Identify potential future fraudulent connections or previously unnoticed relationships              | Common Neighbors, Jaccard Coefficient  |
+| Similarity Measures    | Detect nodes (e.g., users or accounts) with similar behaviors that may indicate collusion or fraud rings | Cosine Similarity, Structural Similarity|
+| Graph Embedding        | Facilitate machine learning on graph data to detect fraud patterns                                  | Node2Vec, GraphSAGE                    |
+| Subgraph Matching      | Detect known fraud patterns or templates in transaction networks                                    | VF2 Algorithm, CFL-Match               |
+| Flow Algorithms        | Detect bottlenecks or unusual flows indicative of fraudulent activities                             | Maximum Flow, Min-Cut                  |
+| Spectral Clustering    | Identify clusters of fraudulent entities or activities that are not easily visible in the original graph space | Normalized Cuts                        |
+| Random Walk            | Identify nodes frequently visited in random walks, which may indicate key roles in fraudulent networks | Random Walk with Restart (RWR)         |
+
+This table now provides a clear overview of how each algorithm can be applied specifically to fraud detection.

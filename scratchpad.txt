@@ -1,36 +1,38 @@
-graph TD;
-    %% Nodes for Customers
-    subgraph Community 1
-        style Community 1 fill:#ffcccc,stroke:#ff0000,stroke-width:2px;
-        C1[Customer 1]
-        C2[Customer 2]
-        C4[Customer 4]
-        note1["Suspicious Patterns: 
-        - Frequent and high-value transactions between C1 and C4.
-        - Close relationships masking fraudulent transactions."]
-    end
-    subgraph Community 2
-        style Community 2 fill:#ffcccc,stroke:#ff0000,stroke-width:2px;
-        C3[Customer 3]
-        C5[Customer 5]
-        note2["Suspicious Patterns: 
-        - Transactions between business partners C3 and C5.
-        - Transactions between C5 and C1 suggesting money flow obscuration."]
+graph TB;
+    subgraph LLM_Integration
+        langChain[LangChain]
+        gpt[LLM]
+        langInterface[Language-Cypher Translation]
+        gpt --> langChain
+        langChain --> langInterface
     end
 
-    %% Relationships
-    C1 -- "Family" --> C2
-    C1 -- "Friend" --> C3
-    C2 -- "Colleague" --> C4
-    C3 -- "Business Partner" --> C5
+    subgraph Neo4j_Graph_DB
+        neo4j[Neo4j Database]
+        gds[GDS Library]
+        graphData[Combined Customer Relationship/Transaction Graph Data]
+        neo4j --> gds
+        gds --> graphData
+    end
 
-    %% Transactions
-    C1 -.-> |"$200 at 10:00"| C2
-    C1 -.-> |"$450 at 14:00"| C4
-    C2 -.-> |"$150 at 09:30"| C3
-    C3 -.-> |"$320 at 15:00"| C5
-    C4 -.-> |"$280 at 11:00"| C1
-    C5 -.-> |"$300 at 15:10"| C1
+    subgraph User_Interaction
+        user[Fraud Investigator]
+        queryInput[Natural Language Query]
+        results[Result Summary]
+        user --> queryInput
+        queryInput --> langInterface
+        langInterface --> results
+        results --> user
+    end
 
-Detect groups of fraudulent accounts or entities that work together. Louvain Method, 	Girvan-Newman Algorithm, Label Propagation Algorithm, Infomap
-Pinpoint influential individuals, potential ring leaders, or critical intermediaries in a fraudulent network.  Degree Centrality, Betweenness Centrality, Closeness Centrality, Eigenvector Centrality, PageRank
+    langInterface -.-> |Cypher Query| graphData
+    graphData -.-> |Filtered Result| langInterface
+
+    %% Styling
+    classDef database fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef processing fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef userinteract fill:#cff,stroke:#333,stroke-width:2px;
+
+    class neo4j,gds database;
+    class langChain,gpt,langInterface processing;
+    class user,queryInput,results userinteract;

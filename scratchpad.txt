@@ -2,6 +2,9 @@ Fraud Prevention Theme:
 My idea is about behavioural replay prevention in a non-intrusive way.
 Problem: Let's say old person end up installing malicious mobile app in his mobile which captures touchscreen behaviour of the person and replayed the same to monetise at later point of time.
 Solution: To create deep learning model which can be used for liveness detection using ambience context correlation feature. Ambience context includes lighting, orientation, movement. Even other features such as varying pressure sensitivity, non-linear swipe analytics can be combined with ambience context correlation to create deep learning model which can detect this behavioural replay in real-time and interdict for secondary authentication when necessary.
+Novelty:
+- **Multi-dimensional Analysis**: Combines touch interaction data with ambient context for enhanced security.
+- **Non-intrusive Security**: Operates seamlessly without disrupting the user experience.
 
 Personalization Theme:
 My idea is about Digital Onboarding Personalisation using behavioural analytics.
@@ -21,3 +24,7 @@ For example,
   - Additional support with more touchpoints.
   - Simplified instructions to facilitate completion.
 This will reduce the drop-off rate and also make user personas to love our digital experience offered.
+Novelty:
+- **Behavioral Analytics Integration**: Utilizing real-time behavioral data to tailor the onboarding process dynamically.
+- **Adaptive Processes**: Continuously adjusting the onboarding steps based on ongoing user behavior and feedback.
+- **Efficient Resource Allocation**: Directing support resources where they are most needed, based on user segment identification.

@@ -1,126 +1,23 @@
-### Slide 1: What is Integrated ITSM Knowledge Graph
+Fraud Prevention Theme:
+My idea is about behavioural replay prevention in a non-intrusive way.
+Problem: Let's say old person end up installing malicious mobile app in his mobile which captures touchscreen behaviour of the person and replayed the same to monetise at later point of time.
+Solution: To create deep learning model which can be used for liveness detection using ambience context correlation feature. Ambience context includes lighting, orientation, movement. Even other features such as varying pressure sensitivity, non-linear swipe analytics can be combined with ambience context correlation to create deep learning model which can detect this behavioural replay in real-time and interdict for secondary authentication when necessary.
 
-**Integrated ITSM Knowledge Graph:**
-- Combines incident management, change management, and component management into a unified system
-- Provides a comprehensive visualization of IT infrastructure
-- Enhances understanding of interdependencies and impacts across the network
-- Synthesizes data from incidents, changes, and IT assets into one coherent model
-- Improves decision-making and optimizes asset utilization
-
----
-
-### Slide 2: Problem Statement
-
-**Problem Statement:**
-- Fragmented IT management systems lead to inefficiencies
-- Difficulty in understanding interdependencies among incidents, changes, and components
-- Prolonged incident resolution times due to lack of comprehensive data
-- High risk in change management due to insufficient impact analysis
-- Need for proactive problem management to minimize incident occurrence
-
----
-
-### Slide 3: Solution Architecture
-
-**Solution Architecture:**
-
-```mermaid
-graph TD
-    A[Data Sources] --> B[Data Integration Layer]
-    B --> C[Incident Management System]
-    B --> D[Change Management System]
-    B --> E[Components Management System]
-    C --> F[Unified ITSM Knowledge Graph]
-    D --> F
-    E --> F
-    F --> G[Visualization and Analysis Tools]
-    G --> H[Decision Support System]
-    H --> I[IT Operations]
-```
-
----
-
-### Slide 4: Sample ITSM Knowledge Graph Representation
-
-**Sample ITSM Knowledge Graph:**
-
-```mermaid
-graph TD
-    subgraph "ITSM Knowledge Graph"
-        subgraph "Incident Management"
-            IM1(Incident: Login Failure)
-            IM2(Incident: Transaction Timeout)
-            IM3(Incident: Data Sync Error)
-        end
-
-        subgraph "Change Management"
-            CM1(Change: Patch Update)
-            CM2(Change: Server Upgrade)
-            CM3(Change: Configuration Change)
-        end
-
-        subgraph "Components Management"
-            C1(Component: Authentication Server)
-            C2(Component: Database Server)
-            C3(Component: Application Server)
-        end
-
-        IM1 -->|Caused by| C1
-        IM2 -->|Caused by| C3
-        IM3 -->|Caused by| C2
-
-        CM1 -->|Affects| C1
-        CM2 -->|Affects| C2
-        CM3 -->|Affects| C3
-
-        C3 -->|Connects to| C2
-        C3 -->|Connects to| C1
-    end
-
-    IM1 -->|Resolved by| CM3
-    IM2 -->|Resolved by| CM1
-    IM3 -->|Resolved by| CM2
-```
-
----
-
-### Slide 5: Implementation Steps
-
-**Implementation Steps:**
-- **Data Integration:**
-  - Collect data from incident, change, and component management systems
-  - Integrate data into a centralized repository
-- **Knowledge Graph Construction:**
-  - Model relationships between incidents, changes, and components
-  - Create a unified ITSM knowledge graph
-- **Visualization Tools:**
-  - Develop tools for visualizing and analyzing the knowledge graph
-  - Enable interactive exploration of IT infrastructure
-- **Decision Support:**
-  - Implement decision support systems leveraging the knowledge graph
-  - Use historical data for predictive analysis and proactive management
-- **Continuous Improvement:**
-  - Regularly update the knowledge graph with new data
-  - Refine models and tools based on feedback and new requirements
-
----
-
-### Slide 6: Benefits
-
-**Benefits:**
-- **Efficiency:**
-  - 30% reduction in incident resolution times
-- **Proactivity:**
-  - 25% decrease in incident occurrence through proactive management
-- **Reliability:**
-  - 20% improvement in successful change implementation
-- **Comprehensive View:**
-  - Enhanced understanding of IT infrastructure interdependencies
-- **Cost Reduction:**
-  - Reduced operational costs through optimized asset utilization
-- **Service Quality:**
-  - Improved service reliability and customer satisfaction in banking operations
-
----
-
-These slides provide a structured overview of the Integrated ITSM Knowledge Graph concept, highlighting key aspects, problem statements, solutions, implementation steps, and benefits.
+Personalization Theme:
+My idea is about Digital Onboarding Personalisation using behavioural analytics.
+All digital customers are not of same persona then why onboarding forms and process would be same for everyone. Some are tech-savvy who are comfortable with digital interface, Some are frequent online bankers who have good hang of digital online banking services, Some are traditional who prefer in-person assistance or video guidance, some are occasional users who needs more support than others.
+Solution is to capture their behaviour and segment them into one of the above and personalise onboarding accordingly to them. 
+For example,
+- **Tech-Savvy Users**:
+  - Streamlined onboarding process with minimal steps.
+  - Quick navigation options and advanced features access.
+- **Frequent Online Bankers**:
+  - Fast-tracked onboarding process.
+  - Focus on advanced banking features and quick setup.
+- **Traditional Users**:
+  - Onboarding with detailed step-by-step instructions.
+  - Video tutorials and live support options.
+- **Occasional Users**:
+  - Additional support with more touchpoints.
+  - Simplified instructions to facilitate completion.
+This will reduce the drop-off rate and also make user personas to love our digital experience offered.

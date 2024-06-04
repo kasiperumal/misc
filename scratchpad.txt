@@ -1,30 +1,124 @@
-Fraud Prevention Theme:
-My idea is about behavioural replay prevention in a non-intrusive way.
-Problem: Let's say old person end up installing malicious mobile app in his mobile which captures touchscreen behaviour of the person and replayed the same to monetise at later point of time.
-Solution: To create deep learning model which can be used for liveness detection using ambience context correlation feature. Ambience context includes lighting, orientation, movement. Even other features such as varying pressure sensitivity, non-linear swipe analytics can be combined with ambience context correlation to create deep learning model which can detect this behavioural replay in real-time and interdict for secondary authentication when necessary.
-Novelty:
-- **Multi-dimensional Analysis**: Combines touch interaction data with ambient context for enhanced security.
-- **Non-intrusive Security**: Operates seamlessly without disrupting the user experience.
+### Slide 1: Problem Statement
+**Enhancing Incident, Change, and Component Management in Banking with Comprehensive ITSM Knowledge Graphs**
 
-Personalization Theme:
-My idea is about Digital Onboarding Personalisation using behavioural analytics.
-All digital customers are not of same persona then why onboarding forms and process would be same for everyone. Some are tech-savvy who are comfortable with digital interface, Some are frequent online bankers who have good hang of digital online banking services, Some are traditional who prefer in-person assistance or video guidance, some are occasional users who needs more support than others.
-Solution is to capture their behaviour and segment them into one of the above and personalise onboarding accordingly to them. 
-For example,
-- **Tech-Savvy Users**:
-  - Streamlined onboarding process with minimal steps.
-  - Quick navigation options and advanced features access.
-- **Frequent Online Bankers**:
-  - Fast-tracked onboarding process.
-  - Focus on advanced banking features and quick setup.
-- **Traditional Users**:
-  - Onboarding with detailed step-by-step instructions.
-  - Video tutorials and live support options.
-- **Occasional Users**:
-  - Additional support with more touchpoints.
-  - Simplified instructions to facilitate completion.
-This will reduce the drop-off rate and also make user personas to love our digital experience offered.
-Novelty:
-- **Behavioral Analytics Integration**: Utilizing real-time behavioral data to tailor the onboarding process dynamically.
-- **Adaptive Processes**: Continuously adjusting the onboarding steps based on ongoing user behavior and feedback.
-- **Efficient Resource Allocation**: Directing support resources where they are most needed, based on user segment identification.
+- Siloed data in incident, change, and component management.
+- Lack of comprehensive visualization of IT infrastructure.
+- Inefficient decision-making due to fragmented data.
+- Difficulty in understanding interdependencies and impacts.
+- High incident resolution times.
+- Ineffective change management processes.
+- Limited accessibility to advanced data insights.
+
+---
+
+### Slide 2: Proposed Solution
+**Integrated ITSM Knowledge Graph**
+
+- Unification of incident, change, and component management data.
+- Comprehensive visualization of IT infrastructure.
+- Enhanced decision-making with a coherent data model.
+- Improved understanding of interdependencies and impacts.
+- Reduced incident resolution times through predictive analysis.
+- More reliable and less risky change management.
+- Natural language interface for intuitive data interaction.
+
+graph TD
+    A[Incident Management System]
+    B[Change Management System]
+    C[Component Management System]
+    D[Integrated ITSM Knowledge Graph]
+    E[Comprehensive Visualization]
+    F[Enhanced Decision-Making]
+    G[Predictive Analysis]
+    H[Natural Language Interface]
+    
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    D --> F
+    D --> G
+    D --> H
+
+### Slide 3: System Architecture
+
+```mermaid
+graph TD
+    subgraph "Batch Data Processing"
+        A1(Raw Incident Data) --> A2[Load Incidents]
+        B1(Raw Change Data) --> B2[Load Changes]
+        C1(Raw Component Data) --> C2[Load Components]
+    end
+
+    A2 --> D1[GraphDB Store]
+    B2 --> D1[GraphDB Store]
+    C2 --> D1[GraphDB Store]
+
+    subgraph "GraphDB Store"
+        D1[Graph Database]
+    end
+
+    D1 --> E1[LLM Interface]
+
+    subgraph "LLM Interface"
+        E1[LLM for Natural Language Query]
+    end
+
+    E1 --> F1[End Users]
+
+```
+
+---
+
+### Slide 4: Sample ITSM Knowledge Graph Representation
+
+```mermaid
+graph TD
+    subgraph "ITSM Knowledge Graph"
+        subgraph "Incident Management"
+            IM1(Incident: Login Failure)
+            IM2(Incident: Transaction Timeout)
+            IM3(Incident: Data Sync Error)
+        end
+
+        subgraph "Change Management"
+            CM1(Change: Patch Update)
+            CM2(Change: Server Upgrade)
+            CM3(Change: Configuration Change)
+        end
+
+        subgraph "Components Management"
+            C1(Component: Authentication Server)
+            C2(Component: Database Server)
+            C3(Component: Application Server)
+        end
+
+        IM1 -->|Caused by| C1
+        IM2 -->|Caused by| C3
+        IM3 -->|Caused by| C2
+
+        CM1 -->|Affects| C1
+        CM2 -->|Affects| C2
+        CM3 -->|Affects| C3
+
+        C3 -->|Connects to| C2
+        C3 -->|Connects to| C1
+    end
+
+    IM1 -->|Resolved by| CM1
+    IM2 -->|Resolved by| CM3
+    IM3 -->|Resolved by| CM2
+
+
+```
+
+---
+
+### Slide 5: Benefits
+
+Chart along with below text
+- Streamlined IT operations and improved efficiency.
+- Reduced operational costs and increased service reliability.
+- Better asset utilization and decision-making.
+- Deeper understanding of network impacts and interdependencies.
+- Superior customer service and high operational standards.

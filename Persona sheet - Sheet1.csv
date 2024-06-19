@@ -1,0 +1,5 @@
+Persona,Page Views per Session,Average Time on Page,Click-through Rate (CTR),Bounce Rate,Navigation Path,Device Usage,Engagement Metrics
+Tech-savvy User,High (15-25),Short (10-30 sec),High (0.15-0.30),Low (<30%),Extensive (Visits many sections),"Multiple devices (desktop, mobile, tablet)","High (frequent interactions, uses advanced features)"
+Frequent Online Banker,Medium-High (10-20),Moderate (30 sec - 2 min),Medium-High (0.10-0.25),Low (<25%),Focused (Frequent visits to banking sections),"Primarily desktop, some mobile","High (regular transactions, uses financial tools)"
+Traditional User,Low (3-7),Long (2-5 min),Low (0.05-0.10),High (>50%),Limited (Few sections visited),Primarily desktop,Low (minimal online interactions)
+Occasional User,Low (5-10),Short (30 sec - 1 min),Low (0.05-0.10),Medium-High (30-50%),Sporadic (Inconsistent visits),Desktop and mobile,Medium (infrequent interactions)

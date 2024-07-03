@@ -1,39 +1,5 @@
-Customer interacts with the banking website.
-Banking website captures interaction data via the Data Capture Service.
-Data Capture Service stores interaction data in Behavioral Data Storage.
-Data Capture Service sends data to Behavior Analysis Service for analysis.
-Behavior Analysis Service sends behavioral features to AI/ML Model.
-AI/ML Model returns segment classifications to Behavior Analysis Service.
-Behavior Analysis Service sends segment classifications to Personalized Info Layer.
-Personalized Info Layer displays personalized information on the Banking Website.
-
-Customer
-
-Interacts with the digital banking platform.
-Banking Website
-
-Receives interactions from the customer.
-Captures interaction data via the Data Capture Service.
-Data Capture Service
-
-Receives interaction data from the Banking Website.
-Stores interaction data in Behavioral Data Storage.
-Sends the interaction data to the Behavior Analysis Service.
-Behavior Analysis Service
-
-Receives interaction data from the Data Capture Service.
-Analyzes the data and extracts behavioral features.
-Sends behavioral features to the AI/ML Model.
-Receives segment classifications from the AI/ML Model.
-Sends segment classifications to the Personalized Info Layer.
-AI/ML Model
-
-Receives behavioral features from the Behavior Analysis Service.
-Processes the features and returns segment classifications.
-Personalized Info Layer
-
-Receives segment classifications from the Behavior Analysis Service.
-Displays personalized information to the customer via the Banking Website.
-Customer Navigation
-
-Customer navigates through the personalized information displayed on the Banking Website.
+graph TD
+    Start[Traditional User] -->|Learns Basic Online Banking| Occasional[Occasional User]
+    Occasional -->|Uses Banking Services More Frequently| Frequent[Frequent Online Banker]
+    Frequent -->|Explores Advanced Features| TechSavvy[Tech-Savvy User]
+    TechSavvy -->|Reduces Engagement| Occasional

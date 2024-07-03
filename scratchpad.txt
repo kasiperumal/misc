@@ -1,50 +1,39 @@
-sequenceDiagram
-    participant Customer
-    participant BankingWebsite
-    participant DataCaptureService
-    participant BehaviorAnalysisService
-    participant BehavioralDataStorage
-    participant AI_ML_Model
-    participant PersonalizationService
+Customer interacts with the banking website.
+Banking website captures interaction data via the Data Capture Service.
+Data Capture Service stores interaction data in Behavioral Data Storage.
+Data Capture Service sends data to Behavior Analysis Service for analysis.
+Behavior Analysis Service sends behavioral features to AI/ML Model.
+AI/ML Model returns segment classifications to Behavior Analysis Service.
+Behavior Analysis Service sends segment classifications to Personalized Info Layer.
+Personalized Info Layer displays personalized information on the Banking Website.
 
-    Customer->>BankingWebsite: Interacts with Digital Platform
-    BankingWebsite->>DataCaptureService: Captures Interaction Data
-    DataCaptureService->>BehavioralDataStorage: Stores Interaction Data
-    DataCaptureService->>BehaviorAnalysisService: Analyze Behavioral Data
-    BehaviorAnalysisService->>AI_ML_Model: Behavioral Features
-    AI_ML_Model->>BehaviorAnalysisService: Segment Classification
-    BehaviorAnalysisService->>PersonalizationService: Sends Segment Classification
-    PersonalizationService->>BankingWebsite: Displays Personalized Info
-    Customer->>BankingWebsite: Navigates Personalized Info
+Customer
 
- graph TB
-    subgraph End User
-        H[1.Customer]
-    end
-    subgraph User Interface Layer
-        A[2.Banking Website/Online Banking]
-    end
+Interacts with the digital banking platform.
+Banking Website
 
-    subgraph Data Layer
-        F[3.Data Capture Service]
-        G[4.Behavioral Data Storage]
-    end
+Receives interactions from the customer.
+Captures interaction data via the Data Capture Service.
+Data Capture Service
 
-    subgraph Analytics Layer
-        B[5.Behavior Analysis Service]
-        C[6.AI/ML Model]
-    end
+Receives interaction data from the Banking Website.
+Stores interaction data in Behavioral Data Storage.
+Sends the interaction data to the Behavior Analysis Service.
+Behavior Analysis Service
 
-    subgraph Personalization Layer
-        D[7.Personalized Product/Service/Offers/Pricing/Process/Look and Feel]
-    end
+Receives interaction data from the Data Capture Service.
+Analyzes the data and extracts behavioral features.
+Sends behavioral features to the AI/ML Model.
+Receives segment classifications from the AI/ML Model.
+Sends segment classifications to the Personalized Info Layer.
+AI/ML Model
 
-    A -->|User Interactions via Client SDK| F
-    F -->|Stores Data| G
-    F -->|Analyze Behavioral Data| B
-    B -->|Sends Segment Classification| D
-    D -->|Displays Personalized Info| A
-    B -->|Behavioral Features| C
-    H -->|Browse| A
-    C -->|Segment Classification| B
-   
+Receives behavioral features from the Behavior Analysis Service.
+Processes the features and returns segment classifications.
+Personalized Info Layer
+
+Receives segment classifications from the Behavior Analysis Service.
+Displays personalized information to the customer via the Banking Website.
+Customer Navigation
+
+Customer navigates through the personalized information displayed on the Banking Website.

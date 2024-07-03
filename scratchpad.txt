@@ -2,4 +2,6 @@ graph TD
     Start[Traditional User] -->|Learns Basic Online Banking| Occasional[Occasional User]
     Occasional -->|Uses Banking Services More Frequently| Frequent[Frequent Online Banker]
     Frequent -->|Explores Advanced Features| TechSavvy[Tech-Savvy User]
+    Occasional -->|Explores Advanced Features| TechSavvy
     TechSavvy -->|Reduces Engagement| Occasional
+    Frequent -->|Reduces Engagement| Occasional

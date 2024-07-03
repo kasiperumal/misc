@@ -1,8 +1,50 @@
-Page Views per Session: The average number of pages viewed by the user during a single session.
-Average Time on Page: The average amount of time the user spends on a single page.
-Click-through Rate (CTR): The ratio of clicks on specific elements (e.g., buttons, links) to total views.
-Bounce Rate: The percentage of sessions where the user only views one page before leaving the site.
-Navigation Path: Describes the common paths or sequences of pages visited by the user.
-Device Usage: Indicates the types of devices used by the user (e.g., desktop, mobile, tablet).
-Engagement Metrics: A composite measure of user interaction levels, including frequency of interactions, use of advanced features, and regularity of actions like transactions.
+sequenceDiagram
+    participant Customer
+    participant BankingWebsite
+    participant DataCaptureService
+    participant BehaviorAnalysisService
+    participant BehavioralDataStorage
+    participant AI_ML_Model
+    participant PersonalizationService
 
+    Customer->>BankingWebsite: Interacts with Digital Platform
+    BankingWebsite->>DataCaptureService: Captures Interaction Data
+    DataCaptureService->>BehavioralDataStorage: Stores Interaction Data
+    DataCaptureService->>BehaviorAnalysisService: Analyze Behavioral Data
+    BehaviorAnalysisService->>AI_ML_Model: Behavioral Features
+    AI_ML_Model->>BehaviorAnalysisService: Segment Classification
+    BehaviorAnalysisService->>PersonalizationService: Sends Segment Classification
+    PersonalizationService->>BankingWebsite: Displays Personalized Info
+    Customer->>BankingWebsite: Navigates Personalized Info
+
+ graph TB
+    subgraph End User
+        H[1.Customer]
+    end
+    subgraph User Interface Layer
+        A[2.Banking Website/Online Banking]
+    end
+
+    subgraph Data Layer
+        F[3.Data Capture Service]
+        G[4.Behavioral Data Storage]
+    end
+
+    subgraph Analytics Layer
+        B[5.Behavior Analysis Service]
+        C[6.AI/ML Model]
+    end
+
+    subgraph Personalization Layer
+        D[7.Personalized Product/Service/Offers/Pricing/Process/Look and Feel]
+    end
+
+    A -->|User Interactions via Client SDK| F
+    F -->|Stores Data| G
+    F -->|Analyze Behavioral Data| B
+    B -->|Sends Segment Classification| D
+    D -->|Displays Personalized Info| A
+    B -->|Behavioral Features| C
+    H -->|Browse| A
+    C -->|Segment Classification| B
+   

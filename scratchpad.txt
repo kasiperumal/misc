@@ -1,7 +1,214 @@
-graph TD
-    Start[Traditional User] -->|Learns Basic Online Banking| Occasional[Occasional User]
-    Occasional -->|Uses Banking Services More Frequently| Frequent[Frequent Online Banker]
-    Frequent -->|Explores Advanced Features| TechSavvy[Tech-Savvy User]
-    Occasional -->|Explores Advanced Features| TechSavvy
-    TechSavvy -->|Reduces Engagement| Occasional
-    Frequent -->|Reduces Engagement| Occasional
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Innovation - Retail Account Summary</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .indicator {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bank of Innovation - Retail Account Summary</h1>
+    <p><strong>Account Holder:</strong> John Doe</p>
+    <p><strong>Account Number:</strong> XXXXXXX1234</p>
+    <p><strong>Statement Period:</strong> January 1, 2024 - June 30, 2024</p>
+    
+    <h2>Transaction Summary:</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount ($)</th>
+            <th>Car Savings Goal Indicator</th>
+        </tr>
+        <!-- January Transactions -->
+        <tr>
+            <td>01/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>01/10/2024</td>
+            <td>WM SUPERCENTER #5678</td>
+            <td>-150.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>01/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <!-- February Transactions -->
+        <tr>
+            <td>02/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>02/10/2024</td>
+            <td>SHL #1234 FUEL PURCHASE</td>
+            <td>-50.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>02/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <!-- March Transactions -->
+        <tr>
+            <td>03/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>03/10/2024</td>
+            <td>AMZN MKTPLACE PMTS</td>
+            <td>-100.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>03/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <!-- April Transactions -->
+        <tr>
+            <td>04/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>04/10/2024</td>
+            <td>WM SUPERCENTER #5678</td>
+            <td>-150.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>04/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <!-- May Transactions -->
+        <tr>
+            <td>05/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>05/10/2024</td>
+            <td>SHL #1234 FUEL PURCHASE</td>
+            <td>-50.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>05/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <!-- June Transactions -->
+        <tr>
+            <td>06/05/2024</td>
+            <td>XFER TO CAR SAVINGS</td>
+            <td>-6666.67</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>06/10/2024</td>
+            <td>AMZN MKTPLACE PMTS</td>
+            <td>-100.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+        <tr>
+            <td>06/15/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
+        </tr>
+    </table>
+
+    <h2>Account Summary:</h2>
+    <p><strong>Opening Balance:</strong> $1,000.00</p>
+    <p><strong>Total Deposits:</strong> $45,000.00</p>
+    <p><strong>Total Withdrawals:</strong> $45,566.69</p>
+    <p><strong>Closing Balance:</strong> $433.31</p>
+
+    <h2>Deposits:</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount ($)</th>
+            <th>Emoji</th>
+        </tr>
+        <tr>
+            <td>01/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+        <tr>
+            <td>02/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+        <tr>
+            <td>03/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+        <tr>
+            <td>04/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+        <tr>
+            <td>05/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+        <tr>
+            <td>06/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+7,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+    </table>
+
+    <h2>Important Notices:</h2>
+    <p>1. Keep your account secure by regularly updating your password and monitoring your account for any unauthorized transactions.</p>
+    <p>2. For questions or disputes, please contact customer service at 1-800-123-4567 or visit our website.</p>
+
+    <h2>Thank you for banking with us!</h2>
+</body>
+</html>

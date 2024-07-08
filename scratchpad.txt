@@ -1,214 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank of Innovation - Retail Account Summary</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .indicator {
-            width: 20px;
-            height: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Bank of Innovation - Retail Account Summary</h1>
-    <p><strong>Account Holder:</strong> John Doe</p>
-    <p><strong>Account Number:</strong> XXXXXXX1234</p>
-    <p><strong>Statement Period:</strong> January 1, 2024 - June 30, 2024</p>
-    
-    <h2>Transaction Summary:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Car Savings Goal Indicator</th>
-        </tr>
-        <!-- January Transactions -->
-        <tr>
-            <td>01/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>01/10/2024</td>
-            <td>WM SUPERCENTER #5678</td>
-            <td>-150.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>01/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <!-- February Transactions -->
-        <tr>
-            <td>02/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>02/10/2024</td>
-            <td>SHL #1234 FUEL PURCHASE</td>
-            <td>-50.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>02/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <!-- March Transactions -->
-        <tr>
-            <td>03/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>03/10/2024</td>
-            <td>AMZN MKTPLACE PMTS</td>
-            <td>-100.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>03/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <!-- April Transactions -->
-        <tr>
-            <td>04/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>04/10/2024</td>
-            <td>WM SUPERCENTER #5678</td>
-            <td>-150.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>04/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <!-- May Transactions -->
-        <tr>
-            <td>05/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>05/10/2024</td>
-            <td>SHL #1234 FUEL PURCHASE</td>
-            <td>-50.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>05/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <!-- June Transactions -->
-        <tr>
-            <td>06/05/2024</td>
-            <td>XFER TO CAR SAVINGS</td>
-            <td>-6666.67</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Up-icon.png" alt="Green Up Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>06/10/2024</td>
-            <td>AMZN MKTPLACE PMTS</td>
-            <td>-100.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-        <tr>
-            <td>06/15/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td><img src="https://icons.iconarchive.com/icons/visualpharm/must-have/256/Stock-Index-Down-icon.png" alt="Red Down Arrow" class="indicator"></td>
-        </tr>
-    </table>
+Visual Financial Statements with Emoji Categorization
 
-    <h2>Account Summary:</h2>
-    <p><strong>Opening Balance:</strong> $1,000.00</p>
-    <p><strong>Total Deposits:</strong> $45,000.00</p>
-    <p><strong>Total Withdrawals:</strong> $45,566.69</p>
-    <p><strong>Closing Balance:</strong> $433.31</p>
 
-    <h2>Deposits:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Emoji</th>
-        </tr>
-        <tr>
-            <td>01/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-        <tr>
-            <td>02/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-        <tr>
-            <td>03/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-        <tr>
-            <td>04/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-        <tr>
-            <td>05/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-        <tr>
-            <td>06/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+7,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-    </table>
+Generate emoji (using GenAI) for each payment transaction based on the very top category of item purchased in a given merchant invoice or emoji of item purchased (Ex. if only one item in merchant invoice) or emoji for non-merchant transaction(Ex. if its like account to account transfer or zelle etc..) based on transaction purpose entered. When account summary statement is generated, there is emoji against each transaction which helps me to recall the transaction which makes account summary review easy for customer.
+Please elaborate this idea as follows,
+1. Problem statement in 150 words
+2. Solution in 200 words
+3. couple of usecases (in brief)
+4. elaborate same usecases in 150 words each
+5. Mermaid script for system architecture diagram
+6. Elaborate system architecture diagram in bullet points
+7. Mermaid script for sequence diagram
+8. Elaborate sequence diagram in bullet points
+9. Novelty in bullet points
 
-    <h2>Important Notices:</h2>
-    <p>1. Keep your account secure by regularly updating your password and monitoring your account for any unauthorized transactions.</p>
-    <p>2. For questions or disputes, please contact customer service at 1-800-123-4567 or visit our website.</p>
 
-    <h2>Thank you for banking with us!</h2>
-</body>
-</html>
+### 1. Problem Statement (150 words)
+
+Customers often find it challenging to recall details of their past transactions when reviewing account statements. Traditional bank statements provide only textual information, such as merchant names, transaction dates, and amounts, which can be vague and uninformative. This lack of clarity can lead to confusion, increased time spent cross-referencing receipts, and difficulty managing finances. Moreover, this problem is exacerbated for individuals with numerous small transactions, such as frequent purchases at various stores or online platforms. Without an intuitive and quick way to identify the nature of each transaction, customers struggle to maintain a clear overview of their spending habits, potentially impacting their financial planning and budgeting efforts.
+
+### 2. Solution (200 words)
+
+Integrating emojis into transaction summaries can significantly enhance the clarity and user-friendliness of account statements. By automatically generating an emoji based on the top category of items purchased in a given merchant invoice or the specific item in case of single-item purchases, customers can quickly and visually identify the nature of each transaction. For non-merchant transactions, such as account-to-account transfers or services like Zelle, an emoji representing the transaction's purpose can be used. This visual representation can make the review process much more intuitive and efficient.
+
+The solution involves deploying an AI-driven system that analyzes transaction data and assigns appropriate emojis. This system can be integrated with existing banking apps and online platforms. When a customer reviews their account summary, each transaction will be accompanied by an emoji, providing an instant visual cue about the transaction. This method not only saves time but also improves the overall user experience by making financial management simpler and more engaging.
+
+### 3. Couple of Use Cases (in brief)
+
+1. **Retail Purchases**: A customer buys groceries from a supermarket. The transaction is tagged with a grocery bag emoji.
+2. **Utility Payments**: A customer pays their electricity bill. The transaction is tagged with a light bulb emoji.
+
+### 4. Elaborate Same Use Cases (150 words each)
+
+**Retail Purchases**: 
+When a customer purchases items from a supermarket, the transaction data is analyzed to identify the top category of items bought. Suppose the primary items are groceries, an AI-driven system assigns a grocery bag emoji to this transaction. This emoji appears next to the transaction in the account summary. When the customer later reviews their statement, the grocery bag emoji provides an immediate visual indication that the transaction was related to grocery shopping. This helps the customer quickly recall the nature of the purchase without needing to delve into detailed receipts or merchant descriptions, thus enhancing their ability to track and manage their spending.
+
+**Utility Payments**: 
+For a customer paying their electricity bill, the system recognizes the merchant as a utility provider and assigns a light bulb emoji to the transaction. This emoji appears next to the payment entry in the customer's account summary. When the customer checks their statement, the light bulb emoji instantly signifies an electricity bill payment. This visual cue simplifies the review process, making it easier for the customer to differentiate between various types of transactions and ensuring that utility payments are easily identifiable, which can aid in budget planning and financial tracking.
+
+### 5. Mermaid Script for System Architecture Diagram
+
+```mermaid
+graph TD
+    User -->|initiates transaction| PaymentService
+    PaymentService -->|publish transaction event after payment w/ invoice details| Kafka
+    Kafka -->|consumes transaction event| EmojiService
+    EmojiService -->|categorizes and assigns emoji| GenAI
+    EmojiService -->|stores emoji with transaction details| DataStore
+    User -->|requests account statement| AccountStatementService
+    AccountStatementService -->|retrieves data from| DataStore
+    AccountStatementService -->|returns statement with emoji| User
+```
+
+### 6. Elaborate System Architecture Diagram in Bullet Points
+
+User: Initiates a transaction via a banking app or online platform.
+PaymentService: Processes the transaction and publishes a transaction event to Kafka with invoice details.
+Kafka: Acts as a messaging broker, consuming the transaction event and forwarding the details to the EmojiService.
+EmojiService: Consumes the transaction event, analyzes the transaction details to categorize the purchase, and requests an appropriate emoji from GenAI.
+GenAI: Assigns the appropriate emoji based on the categorized transaction.
+EmojiService: Stores the transaction details along with the assigned emoji in the DataStore.
+User: Requests an account statement from the AccountStatementService.
+AccountStatementService: Retrieves transaction data along with emojis from the DataStore and returns the account statement with the emojis included to the user.
+	
+
+### 7. Mermaid Script for Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant PaymentService
+    participant Kafka
+    participant EmojiService
+    participant GenAI
+    participant DataStore
+    participant AccountStatementService
+
+    User ->> PaymentService: Initiate transaction
+    PaymentService ->> Kafka: Publish transaction event with invoice details
+    Kafka ->> EmojiService: Consume transaction event
+    EmojiService ->> GenAI: Identify top category from invoice and generate emoji
+    GenAI ->> EmojiService: Return emoji
+    EmojiService ->> DataStore: Store emoji with transaction details
+    User ->> AccountStatementService: Request account statement
+    AccountStatementService ->> DataStore: Retrieve transaction data with emojis
+    AccountStatementService ->> User: Return account statement with emojis
+```
+
+### 8. Elaborate Sequence Diagram in Bullet Points
+
+User: Initiates a transaction through a banking application.
+PaymentService: Processes the transaction and publishes a transaction event to Kafka with the invoice details.
+Kafka: Consumes the transaction event and forwards the details to the EmojiService.
+EmojiService: Consumes the transaction event and sends the invoice details to GenAI.
+GenAI: Identifies the top category from the invoice and generates an appropriate emoji, then returns the emoji to EmojiService.
+EmojiService: Stores the transaction details along with the assigned emoji in the DataStore.
+User: Later requests an account statement from the AccountStatementService.
+AccountStatementService: Retrieves the transaction data along with the assigned emojis from the DataStore.
+AccountStatementService: Returns the account statement with emojis to the user.
+
+
+### 9. Novelty in Bullet Points
+
+
+
+Visual Financial Tracking: Helps users quickly identify and recall the nature of their transactions through visual cues, aiding in better financial management.
+Enhanced User Experience: Provides a visual summary of transactions, making financial reviews faster and more intuitive.
+Real-time Emoji Assignment: GenAI-driven categorization and emoji assignment ensures timely and accurate representation of transactions.
+- **Engaging Interface**: Adds a fun and engaging element to financial management, potentially increasing user interaction and satisfaction.
+- **Universal Application**: Applicable across various types of transactions, including retail purchases, utility payments, and peer-to-peer transfers.
+
+### Business Benefits
+
+- **Improved User Engagement**: Visual elements like emojis make financial data more engaging, encouraging users to interact more frequently with their account statements.
+  
+- **Enhanced Customer Satisfaction**: Simplified transaction identification leads to a more user-friendly experience, boosting overall customer satisfaction and loyalty.
+
+- **Reduced Support Costs**: Clearer transaction descriptions reduce the number of customer inquiries and support requests related to transaction identification.
+
+- **Competitive Advantage**: Offering an innovative, visually appealing feature can differentiate a financial institution from competitors, attracting new customers.
+
+- **Data-Driven Insights**: Analyzing emoji-based transaction data can provide valuable insights into consumer spending patterns, aiding in the development of targeted financial products and services.
+
+
+Problem statement:
+Difficulty in Transaction Identification: Customers often struggle to remember the details of their past transactions when reviewing account statements, leading to confusion and inefficiency.
+Vague Transaction Descriptions: Traditional text-based transaction descriptions can be ambiguous and unclear, making it hard for users to identify the nature of each transaction.
+Time-Consuming Statement Reviews: Without intuitive visual cues, customers spend more time cross-referencing receipts and statements to understand their spending.
+Increased Support Inquiries: Ambiguous transaction details result in a higher number of customer support inquiries, increasing operational costs and resource allocation for banks.
+Lack of Engagement: Standard account statements do not engage users, leading to less frequent reviews and lower interaction with financial management tools.
+Poor Financial Planning: Difficulty in tracking and identifying transactions hampers effective financial planning and budgeting for customers.
+Low Transparency and Trust: Inadequate transaction descriptions can lead to mistrust and perceived lack of transparency between customers and financial institutions.
+
+Problem statement:
+### Problem Statement (150 words)
+
+Customers often struggle to remember the details of their past transactions when reviewing account statements, leading to confusion and inefficiency. Traditional text-based transaction descriptions can be ambiguous and unclear, making it hard for users to identify the nature of each transaction. Without intuitive visual cues, customers spend more time cross-referencing receipts and statements to understand their spending. This lack of clarity results in increased customer support inquiries, driving up operational costs and resource allocation for banks. Standard account statements also fail to engage users, leading to less frequent reviews and lower interaction with financial management tools. Difficulty in tracking and identifying transactions hampers effective financial planning and budgeting for customers. Additionally, inadequate transaction descriptions can lead to mistrust and a perceived lack of transparency between customers and financial institutions. Addressing these issues is crucial for enhancing user experience, improving financial management, and fostering trust in the banking system.

@@ -1,137 +1,435 @@
-Visual Financial Statements with Emoji Categorization
+Lifesync recommendation & prediction
 
 
-Generate emoji (using GenAI) for each payment transaction based on the very top category of item purchased in a given merchant invoice or emoji of item purchased (Ex. if only one item in merchant invoice) or emoji for non-merchant transaction(Ex. if its like account to account transfer or zelle etc..) based on transaction purpose entered. When account summary statement is generated, there is emoji against each transaction which helps me to recall the transaction which makes account summary review easy for customer.
-Please elaborate this idea as follows,
-1. Problem statement in 150 words
-2. Solution in 200 words
-3. couple of usecases (in brief)
-4. elaborate same usecases in 150 words each
-5. Mermaid script for system architecture diagram
-6. Elaborate system architecture diagram in bullet points
-7. Mermaid script for sequence diagram
-8. Elaborate sequence diagram in bullet points
-9. Novelty in bullet points
+
+
+Car Purchase Savings Goal - $40000 in six months
+
+Please consider the account transaction summary of first month given below,
+1) Recommend transaction category or transaction itself where expense would have reduced or avoided so that car savings goal can be achieved as planned in the span of six months.
+2) Recommend investment or savings need to be offseted in coming five months so that car savings goal can be achieved as planned.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Innovation - Retail Account Summary</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .emoji {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bank of Innovation - Retail Account Summary</h1>
+    <p><strong>Account Holder:</strong> John Doe</p>
+    <p><strong>Account Number:</strong> XXXXXXX1234</p>
+    <p><strong>Statement Period:</strong> June 1, 2024 - June 30, 2024</p>
+    
+    <h2>Transaction Summary:</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount ($)</th>
+            <th>Emoji</th>
+        </tr>
+        <tr>
+            <td>06/02/2024</td>
+            <td>SBX #1234 SEATTLE WA</td>
+            <td>-5.45</td>
+            <td class="emoji">☕</td>
+        </tr>
+        <tr>
+            <td>06/04/2024</td>
+            <td>WM SUPERCENTER #5678</td>
+            <td>-53.89</td>
+            <td class="emoji">🍎</td>
+        </tr>
+        <tr>
+            <td>06/05/2024</td>
+            <td>XFER TO SAV ACT#987654</td>
+            <td>-200.00</td>
+            <td class="emoji">💵</td>
+        </tr>
+        <tr>
+            <td>06/07/2024</td>
+            <td>SHL #1234 FUEL PURCHASE</td>
+            <td>-40.50</td>
+            <td class="emoji">⛽</td>
+        </tr>
+        <tr>
+            <td>06/08/2024</td>
+            <td>BBY#3421 ELEC GOODS</td>
+            <td>-299.99</td>
+            <td class="emoji">💻</td>
+        </tr>
+        <tr>
+            <td>06/09/2024</td>
+            <td>MCY #1234 NY</td>
+            <td>-120.00</td>
+            <td class="emoji">👗</td>
+        </tr>
+        <tr>
+            <td>06/10/2024</td>
+            <td>AMZN MKTPLACE PMTS</td>
+            <td>-23.99</td>
+            <td class="emoji">📦</td>
+        </tr>
+        <tr>
+            <td>06/11/2024</td>
+            <td>SMITH HLTH SVCS</td>
+            <td>-150.00</td>
+            <td class="emoji">🩺</td>
+        </tr>
+        <tr>
+            <td>06/12/2024</td>
+            <td>RENT ACH PMT</td>
+            <td>-1200.00</td>
+            <td class="emoji">🏠</td>
+        </tr>
+        <tr>
+            <td>06/14/2024</td>
+            <td>CHIPOTLE 2345 QSR</td>
+            <td>-12.30</td>
+            <td class="emoji">🌯</td>
+        </tr>
+        <tr>
+            <td>06/15/2024</td>
+            <td>SPKL CW#4567</td>
+            <td>-25.00</td>
+            <td class="emoji">🚿</td>
+        </tr>
+        <tr>
+            <td>06/16/2024</td>
+            <td>TGT #7890 HG</td>
+            <td>-45.67</td>
+            <td class="emoji">🛏️</td>
+        </tr>
+        <tr>
+            <td>06/18/2024</td>
+            <td>SPOTIFYUSA*H4K8J</td>
+            <td>-9.99</td>
+            <td class="emoji">🎵</td>
+        </tr>
+        <tr>
+            <td>06/19/2024</td>
+            <td>AMC 30 THEATRES</td>
+            <td>-30.00</td>
+            <td class="emoji">🎬</td>
+        </tr>
+        <tr>
+            <td>06/20/2024</td>
+            <td>UTIL PMT ACH</td>
+            <td>-150.25</td>
+            <td class="emoji">💡</td>
+        </tr>
+        <tr>
+            <td>06/22/2024</td>
+            <td>ZELLEPAY JANESMITH#XYZ</td>
+            <td>-75.00</td>
+            <td class="emoji">🍽️</td>
+        </tr>
+        <tr>
+            <td>06/23/2024</td>
+            <td>MARRIOTHTL 6789</td>
+            <td>-350.00</td>
+            <td class="emoji">🏨</td>
+        </tr>
+        <tr>
+            <td>06/24/2024</td>
+            <td>FTWRLD GYMMSHP</td>
+            <td>-30.00</td>
+            <td class="emoji">🏋️</td>
+        </tr>
+        <tr>
+            <td>06/25/2024</td>
+            <td>APPL*ITUNES 5678</td>
+            <td>-899.00</td>
+            <td class="emoji">⌚</td>
+        </tr>
+        <tr>
+            <td>06/26/2024</td>
+            <td>WALGREENS #5678</td>
+            <td>-15.80</td>
+            <td class="emoji">💊</td>
+        </tr>
+        <tr>
+            <td>06/27/2024</td>
+            <td>TIF & CO #567</td>
+            <td>-1500.00</td>
+            <td class="emoji">💍</td>
+        </tr>
+        <tr>
+            <td>06/28/2024</td>
+            <td>UBER TRIP 1A2B3C</td>
+            <td>-18.25</td>
+            <td class="emoji">🚗</td>
+        </tr>
+        <tr>
+            <td>06/29/2024</td>
+            <td>MENVY MASSAGE</td>
+            <td>-120.00</td>
+            <td class="emoji">🧖</td>
+        </tr>
+        <tr>
+            <td>06/30/2024</td>
+            <td>WIRE TRF STU</td>
+            <td>-5000.00</td>
+            <td class="emoji">🏫</td>
+        </tr>
+    </table>
+
+    <h2>Account Summary:</h2>
+    <p><strong>Opening Balance:</strong> $8,500.00</p>
+    <p><strong>Total Deposits:</strong> $2,500.00</p>
+    <p><strong>Total Withdrawals:</strong> $8,839.59</p>
+    <p><strong>Closing Balance:</strong> $2,160.41</p>
+
+    <h2>Deposits:</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount ($)</th>
+            <th>Emoji</th>
+        </tr>
+        <tr>
+            <td>06/01/2024</td>
+            <td>DIRECT DEP PAYROLL</td>
+            <td>+2,500.00</td>
+            <td class="emoji">💰</td>
+        </tr>
+    </table>
+
+    <h2>Important Notices:</h2>
+    <p>1. Keep your account secure by regularly updating your password and monitoring your account for any unauthorized transactions.</p>
+    <p>2. For questions or disputes, please contact customer service at 1-800-123-4567 or visit our website.</p>
+
+    <h2>Thank you for banking with us!</h2>
+</body>
+</html>
+
+
+Based on the transaction summary provided, here are recommendations to help achieve the $40,000 car savings goal in six months:
+1. Recommendations for Reducing or Avoiding Expenses:
+Non-essential Expenses:
+* SBX #1234 SEATTLE WA (Coffee): $5.45 Daily or frequent coffee purchases can add up. Consider making coffee at home.
+* BBY#3421 ELEC GOODS (Electronics): $299.99 Avoid purchasing non-essential electronics during the saving period.
+* MCY #1234 NY (Clothing): $120.00 Limit spending on new clothing unless absolutely necessary.
+* Chipotle 2345 QSR (Fast Food): $12.30 Reduce eating out by preparing meals at home.
+* SPOTIFYUSA*H4K8J (Music Subscription): $9.99 Consider pausing subscriptions that are not essential.
+* AMC 30 THEATRES (Entertainment): $30.00 Reduce spending on entertainment by opting for cheaper or free activities.
+* MARRIOTHTL 6789 (Hotel): $350.00 Avoid travel and hotel stays unless necessary.
+* FTWRLD GYMMSHP (Gym Membership): $30.00 Consider home workouts or cheaper alternatives.
+* APPL*ITUNES 5678 (Luxury Items): $899.00 Postpone buying luxury items like smartwatches.
+* TIF & CO #567 (Jewelry): $1500.00 Avoid purchasing high-value luxury items.
+* MENVY MASSAGE (Massage): $120.00 Limit spa and massage sessions to save money.
+Total Potential Savings from Avoidable Expenses in June: $3377.03
+
+
+2. Recommendations for Investment or Savings Adjustments:
+To meet the $40,000 savings goal in the remaining five months, you need to save approximately $40,000 - $2,160.41= $37,839.59
+Monthly Savings Needed:
+$37,839.59 / 5 ≈ $7,567.92 per month.
+Action Plan:
+* Increase Monthly Savings Transfer: Increase the automatic transfer to savings. For example, if you transfer $7,500 per month to savings, this will help reach the target.
+* Budget and Track Spending: Create a monthly budget focusing on necessary expenses. Track all expenditures to ensure adherence to the budget.
+* Cut Non-essential Spending: Review monthly expenses and cut non-essential spending as highlighted above.
+* Additional Income Streams: Consider additional income streams, like freelancing or a part-time job, to boost savings.
+* Invest Wisely: If possible, invest in low-risk, short-term investment options to earn a better return on saved money.
+Implementing these strategies will help you reach your car purchase savings goal within the planned timeframe.
+
+
+Please create sequence diagram with mermaid script for below flow,
+1. User->View List of Goals->Goal Manager Service->Goal Datastore
+2. User->View Expense Reduction Recommendation for Selected Goal->Goal Manager Service->Query Transaction Summary for Accounts associated->Transaction Summary Service->Transaction Datastore. Goal Manager Service->Request Reducing/Avoidable Expense for given transaction summary->Recommendation Engine(GenAI)->Return reducing/avoidable expense. Goal Manager Service->Request Candlestick graph for only reducing/avoidable expense-> Candlestick Chart Generator->Return chart->Goal Manager Service->UI
+3. User->View Savings/Investment Recommendation for Selected Goal->Goal Manager Service->Query Transaction Summary for Accounts associated->Transaction Summary Service->Transaction Datastore. Goal Manager Service->Request Savings/Action plan for given transaction summary->Recommendation Engine(GenAI)->Return savings per month and action plan recommendation. Goal Manager Service->Request Candlestick graph with savings recommended-> Candlestick Chart Generator->Return chart->Goal Manager Service->UI
+
+graph TD
+    User[User Interface] --> GoalManagerService[Goal Manager Service]
+    GoalManagerService --> GoalDatastore[Goal Datastore]
+    GoalManagerService --> TransactionSummaryService[Transaction Summary Service]
+    TransactionSummaryService --> TransactionDatastore[Transaction Datastore]
+    GoalManagerService --> RecommendationEngine[Recommendation Engine (GenAI)]
+    GoalManagerService --> CandlestickChartGenerator[Candlestick Chart Generator]
+    GoalManagerService --> SavingsAutomator[Savings Automator]
+    SavingsAutomator --> BankAPI[Bank API Integration]
+    BankAPI --> SavingsAccount[Savings Account]
+Explanation of the System Architecture Diagrams
+System Architecture Diagram
+1. User Interface (User): Central platform for user interaction.
+2. Goal Manager Service (GoalManagerService): Manages user goals and interacts with other services to provide required data.
+3. Goal Datastore (GoalDatastore): Stores information about user goals.
+4. Transaction Summary Service (TransactionSummaryService): Fetches transaction summaries for accounts associated with user goals.
+5. Transaction Datastore (TransactionDatastore): Stores transaction data.
+6. Recommendation Engine (GenAI) (RecommendationEngine): Provides recommendations for reducing/avoidable expenses and savings/action plans.
+7. Candlestick Chart Generator (CandlestickChartGenerator): Generates candlestick charts for visualizing expense reductions and savings recommendations.
+8. Savings Automator (SavingsAutomator): Automates monthly savings transfers.
+9. Bank API Integration (BankAPI): Facilitates communication with the user's bank for processing savings transactions.
+10. Savings Account (SavingsAccount): Dedicated account for holding user savings.
+
+sequenceDiagram
+    participant User
+    participant UI
+    participant GoalManagerService
+    participant GoalDatastore
+    participant TransactionSummaryService
+    participant TransactionDatastore
+    participant RecommendationEngine
+    participant CandlestickChartGenerator
+
+    User ->> UI: View List of Goals
+    UI ->> GoalManagerService: Request List of Goals
+    GoalManagerService ->> GoalDatastore: Query Goals
+    GoalDatastore ->> GoalManagerService: Return List of Goals
+    GoalManagerService ->> UI: Display List of Goals
+
+    User ->> UI: View Expense Reduction Recommendation for Selected Goal
+    UI ->> GoalManagerService: Request Expense Reduction Recommendation
+    GoalManagerService ->> TransactionSummaryService: Query Transaction Summary for Accounts
+    TransactionSummaryService ->> TransactionDatastore: Fetch Transaction Summary
+    TransactionDatastore ->> TransactionSummaryService: Return Transaction Summary
+    TransactionSummaryService ->> GoalManagerService: Provide Transaction Summary
+    GoalManagerService ->> RecommendationEngine: Request Reducing/Avoidable Expenses
+    RecommendationEngine ->> GoalManagerService: Return Reducing/Avoidable Expenses
+    GoalManagerService ->> CandlestickChartGenerator: Request Candlestick Graph for Reducing/Avoidable Expenses
+    CandlestickChartGenerator ->> GoalManagerService: Return Candlestick Graph
+    GoalManagerService ->> UI: Display Candlestick Graph
+
+    User ->> UI: View Savings/Investment Recommendation for Selected Goal
+    UI ->> GoalManagerService: Request Savings/Investment Recommendation
+    GoalManagerService ->> TransactionSummaryService: Query Transaction Summary for Accounts
+    TransactionSummaryService ->> TransactionDatastore: Fetch Transaction Summary
+    TransactionDatastore ->> TransactionSummaryService: Return Transaction Summary
+    TransactionSummaryService ->> GoalManagerService: Provide Transaction Summary
+    GoalManagerService ->> RecommendationEngine: Request Savings/Action Plan
+    RecommendationEngine ->> GoalManagerService: Return Savings per Month and Action Plan
+    GoalManagerService ->> CandlestickChartGenerator: Request Candlestick Graph with Savings Recommended
+    CandlestickChartGenerator ->> GoalManagerService: Return Candlestick Graph
+    GoalManagerService ->> UI: Display Candlestick Graph
+
+Explanation of the Sequence Diagram in Bullet Points
+1. User Views List of Goals:
+    * User interacts with the UI to view a list of goals.
+    * UI requests the list of goals from the Goal Manager Service.
+    * Goal Manager Service queries the Goal Datastore.
+    * Goal Datastore returns the list of goals to the Goal Manager Service.
+    * Goal Manager Service sends the list of goals back to the UI for display.
+2. User Views Expense Reduction Recommendation for Selected Goal:
+    * User selects a goal and requests expense reduction recommendations via the UI.
+    * UI sends the request to the Goal Manager Service.
+    * Goal Manager Service queries the Transaction Summary Service for the transaction summary of associated accounts.
+    * Transaction Summary Service fetches the transaction summary from the Transaction Datastore.
+    * Transaction Datastore returns the transaction summary to the Transaction Summary Service.
+    * Transaction Summary Service provides the transaction summary to the Goal Manager Service.
+    * Goal Manager Service requests reducing/avoidable expenses from the Recommendation Engine (GenAI).
+    * Recommendation Engine returns the reducing/avoidable expenses to the Goal Manager Service.
+    * Goal Manager Service requests a candlestick graph for the reducing/avoidable expenses from the Candlestick Chart Generator.
+    * Candlestick Chart Generator returns the candlestick graph to the Goal Manager Service.
+    * Goal Manager Service sends the candlestick graph to the UI for display.
+3. User Views Savings/Investment Recommendation for Selected Goal:
+    * User selects a goal and requests savings/investment recommendations via the UI.
+    * UI sends the request to the Goal Manager Service.
+    * Goal Manager Service queries the Transaction Summary Service for the transaction summary of associated accounts.
+    * Transaction Summary Service fetches the transaction summary from the Transaction Datastore.
+    * Transaction Datastore returns the transaction summary to the Transaction Summary Service.
+    * Transaction Summary Service provides the transaction summary to the Goal Manager Service.
+    * Goal Manager Service requests savings per month and an action plan from the Recommendation Engine (GenAI).
+    * Recommendation Engine returns the savings per month and action plan to the Goal Manager Service.
+    * Goal Manager Service requests a candlestick graph with the savings recommended from the Candlestick Chart Generator.
+    * Candlestick Chart Generator returns the candlestick graph to the Goal Manager Service.
+    * Goal Manager Service sends the candlestick graph to the UI for display.
 
 
 ### 1. Problem Statement (150 words)
 
-Customers often find it challenging to recall details of their past transactions when reviewing account statements. Traditional bank statements provide only textual information, such as merchant names, transaction dates, and amounts, which can be vague and uninformative. This lack of clarity can lead to confusion, increased time spent cross-referencing receipts, and difficulty managing finances. Moreover, this problem is exacerbated for individuals with numerous small transactions, such as frequent purchases at various stores or online platforms. Without an intuitive and quick way to identify the nature of each transaction, customers struggle to maintain a clear overview of their spending habits, potentially impacting their financial planning and budgeting efforts.
+Many individuals aim to save a significant amount of money within a specific timeframe, such as $40,000 in six months for a major purchase. However, after the first month, their savings account balance may fall short due to various expenses and withdrawals. Given current savings rates and spending habits, reaching the goal seems challenging. The problem is identifying which expenses to cut down or avoid to maximize savings and determining how much more needs to be saved monthly to meet the goal. Additionally, there is a need for an efficient way to track progress, manage finances, and receive actionable recommendations to ensure individuals stay on track to reach their target without compromising essential needs.
 
-### 2. Solution (200 words)
+### 2. Problem Statement in Bullet Points from Banking
 
-Integrating emojis into transaction summaries can significantly enhance the clarity and user-friendliness of account statements. By automatically generating an emoji based on the top category of items purchased in a given merchant invoice or the specific item in case of single-item purchases, customers can quickly and visually identify the nature of each transaction. For non-merchant transactions, such as account-to-account transfers or services like Zelle, an emoji representing the transaction's purpose can be used. This visual representation can make the review process much more intuitive and efficient.
+- Individuals need to save a significant amount within a specific timeframe (e.g., $40,000 in six months).
+- Current savings after the first month may be insufficient.
+- Total expenses and withdrawals can be substantial.
+- Monthly savings required to reach the goal seem challenging.
+- Need to identify non-essential expenses to cut down.
+- Require a method to track and manage finances efficiently.
+- Need actionable recommendations to achieve the savings goal.
 
-The solution involves deploying an AI-driven system that analyzes transaction data and assigns appropriate emojis. This system can be integrated with existing banking apps and online platforms. When a customer reviews their account summary, each transaction will be accompanied by an emoji, providing an instant visual cue about the transaction. This method not only saves time but also improves the overall user experience by making financial management simpler and more engaging.
+### 3. Solution (200 words)
 
-### 3. Couple of Use Cases (in brief)
+To achieve the savings goal in the remaining timeframe, individuals need a dual strategy of reducing non-essential expenses and increasing monthly savings. By analyzing a transaction summary, individuals can identify avoidable expenses, such as frequent coffee purchases, electronics, clothing, fast food, entertainment, luxury items, and unnecessary subscriptions. Eliminating or reducing these expenses can potentially save a significant amount. Additionally, individuals should increase their monthly savings through automatic transfers to a high-interest savings account or investing in low-risk, short-term options.
 
-1. **Retail Purchases**: A customer buys groceries from a supermarket. The transaction is tagged with a grocery bag emoji.
-2. **Utility Payments**: A customer pays their electricity bill. The transaction is tagged with a light bulb emoji.
+A financial management app can be employed to monitor progress, track income, expenses, and savings. The app can generate personalized recommendations using AI to identify spending patterns and suggest areas for cost reduction. It can also provide a candlestick chart visualization of expense reductions and savings recommendations, enabling users to see the impact of their actions and future projections. Setting monthly goals and receiving alerts for deviations will help maintain financial discipline. Exploring secondary income streams, like freelance work or a part-time job, can further boost savings.
 
-### 4. Elaborate Same Use Cases (150 words each)
+By implementing these strategies, individuals can manage their finances better and stay on track to reach their savings goal within the planned timeframe.
 
-**Retail Purchases**: 
-When a customer purchases items from a supermarket, the transaction data is analyzed to identify the top category of items bought. Suppose the primary items are groceries, an AI-driven system assigns a grocery bag emoji to this transaction. This emoji appears next to the transaction in the account summary. When the customer later reviews their statement, the grocery bag emoji provides an immediate visual indication that the transaction was related to grocery shopping. This helps the customer quickly recall the nature of the purchase without needing to delve into detailed receipts or merchant descriptions, thus enhancing their ability to track and manage their spending.
+### 4. Use Cases (in brief)
 
-**Utility Payments**: 
-For a customer paying their electricity bill, the system recognizes the merchant as a utility provider and assigns a light bulb emoji to the transaction. This emoji appears next to the payment entry in the customer's account summary. When the customer checks their statement, the light bulb emoji instantly signifies an electricity bill payment. This visual cue simplifies the review process, making it easier for the customer to differentiate between various types of transactions and ensuring that utility payments are easily identifiable, which can aid in budget planning and financial tracking.
+1. **Monthly Expense Tracking:** Individuals use a financial management app to categorize and track their monthly expenses, helping them identify non-essential expenditures.
+2. **Automated Savings:** Individuals set up an automatic transfer of a specified amount from their checking account to their savings account every month.
 
-### 5. Mermaid Script for System Architecture Diagram
+### 5. Elaborate Use Cases (150 words each)
 
-```mermaid
-graph TD
-    User -->|initiates transaction| PaymentService
-    PaymentService -->|publish transaction event after payment w/ invoice details| Kafka
-    Kafka -->|consumes transaction event| EmojiService
-    EmojiService -->|categorizes and assigns emoji| GenAI
-    EmojiService -->|stores emoji with transaction details| DataStore
-    User -->|requests account statement| AccountStatementService
-    AccountStatementService -->|retrieves data from| DataStore
-    AccountStatementService -->|returns statement with emoji| User
-```
+**Monthly Expense Tracking:**
+Individuals install a financial management app on their smartphone to keep a detailed record of all their transactions. The app categorizes expenses into various groups such as groceries, entertainment, dining out, utilities, and more. At the end of each month, they review a detailed report generated by the app, highlighting areas where they can cut down on spending. For instance, they may notice that frequent coffee purchases and entertainment expenses are higher than necessary. By setting spending limits within the app, individuals receive notifications when they approach these limits, helping them stay within their budget. The app also provides insights and recommendations on further reducing unnecessary expenses, making it easier for individuals to save more each month towards their savings goal.
 
-### 6. Elaborate System Architecture Diagram in Bullet Points
+**Automated Savings:**
+Individuals set up an automatic transfer system through their bank’s online portal, scheduling a monthly transfer of a specified amount from their checking account to their dedicated savings account. This ensures a disciplined approach to saving, as the money is transferred automatically without having to remember to do it manually. By prioritizing savings before other expenses, individuals can steadily build their savings towards their goal. Additionally, they opt for a savings account with a higher interest rate, maximizing the growth of their funds. This automated system not only simplifies the saving process but also reduces the temptation to spend the money on non-essential items, keeping individuals on track to achieve their financial target.
 
-User: Initiates a transaction via a banking app or online platform.
-PaymentService: Processes the transaction and publishes a transaction event to Kafka with invoice details.
-Kafka: Acts as a messaging broker, consuming the transaction event and forwarding the details to the EmojiService.
-EmojiService: Consumes the transaction event, analyzes the transaction details to categorize the purchase, and requests an appropriate emoji from GenAI.
-GenAI: Assigns the appropriate emoji based on the categorized transaction.
-EmojiService: Stores the transaction details along with the assigned emoji in the DataStore.
-User: Requests an account statement from the AccountStatementService.
-AccountStatementService: Retrieves transaction data along with emojis from the DataStore and returns the account statement with the emojis included to the user.
-	
+### 6. Novelty in Bullet Points
 
-### 7. Mermaid Script for Sequence Diagram
+- Integration of expense tracking, budgeting, and automated savings in one platform.
+- Real-time categorization and notification system for efficient financial management.
+- High-interest savings and investment options to maximize savings growth.
+- Automated savings transfers ensuring financial discipline and goal achievement.
+- AI-powered recommendations for personalized financial advice.
+- Candlestick chart visualization of expense reductions and savings recommendations with future projection.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant PaymentService
-    participant Kafka
-    participant EmojiService
-    participant GenAI
-    participant DataStore
-    participant AccountStatementService
+### 7. Business Benefits in Bullet Points
 
-    User ->> PaymentService: Initiate transaction
-    PaymentService ->> Kafka: Publish transaction event with invoice details
-    Kafka ->> EmojiService: Consume transaction event
-    EmojiService ->> GenAI: Identify top category from invoice and generate emoji
-    GenAI ->> EmojiService: Return emoji
-    EmojiService ->> DataStore: Store emoji with transaction details
-    User ->> AccountStatementService: Request account statement
-    AccountStatementService ->> DataStore: Retrieve transaction data with emojis
-    AccountStatementService ->> User: Return account statement with emojis
-```
+- Enhanced customer satisfaction with comprehensive financial management tools.
+- Increased customer retention through valuable financial planning features.
+- Higher deposit rates due to automated savings and high-interest accounts.
+- Improved financial health and goal achievement for customers, leading to long-term loyalty.
+- Differentiation from competitors by offering advanced, AI-driven financial management solutions.
 
-### 8. Elaborate Sequence Diagram in Bullet Points
+Novelty
+* Candlestick Chart Visualization: Uses candlestick charts to visually represent expenses and savings, providing a clear and intuitive way to track financial goals.
+* Essential vs. Non-essential Categorization: Distinguishes between essential and non-essential expenses, highlighting areas for potential savings.
+* Projection of Future Savings: Projects future savings and investment returns, allowing for proactive financial planning.
+* Annotated Descriptions: Includes annotations for each transaction, making the chart easy to understand and follow.
+* Customized Legend: Uses a customized legend to differentiate between various types of expenses and savings, enhancing clarity.
+Business Benefits
+* Enhanced Financial Planning: Provides users with a clear and detailed overview of their expenses and savings, improving their financial planning capabilities.
+* User Engagement: Engaging and visually appealing charts encourage users to regularly monitor and manage their finances.
+* Informed Decision Making: Helps users make informed decisions about their spending and savings, leading to better financial outcomes.
+* Proactive Savings Strategy: Encourages users to identify non-essential expenses and redirect those funds towards savings, helping them achieve financial goals faster.
+* Customer Retention: By offering advanced financial tools and insights, financial institutions can improve customer satisfaction and retention.
+* Value-added Service: Adds value to the financial services offered, positioning the institution as a helpful partner in customers' financial journeys.
 
-User: Initiates a transaction through a banking application.
-PaymentService: Processes the transaction and publishes a transaction event to Kafka with the invoice details.
-Kafka: Consumes the transaction event and forwards the details to the EmojiService.
-EmojiService: Consumes the transaction event and sends the invoice details to GenAI.
-GenAI: Identifies the top category from the invoice and generates an appropriate emoji, then returns the emoji to EmojiService.
-EmojiService: Stores the transaction details along with the assigned emoji in the DataStore.
-User: Later requests an account statement from the AccountStatementService.
-AccountStatementService: Retrieves the transaction data along with the assigned emojis from the DataStore.
-AccountStatementService: Returns the account statement with emojis to the user.
+Problem Statement
+* High Unnecessary Expenses: Many individuals struggle to distinguish between essential and non-essential expenses, leading to high unnecessary spending.
+* Lack of Savings Planning: Without a clear plan, saving for large goals like a car purchase can be challenging.
+* Inadequate Financial Tracking: Traditional methods of tracking expenses and savings lack visual clarity and engagement.
+* Difficulty in Achieving Financial Goals: Individuals often find it hard to achieve significant financial goals due to poor financial planning and tracking.
+Idea Trigger
+* Need for Visual Financial Tools: The demand for intuitive and engaging tools to help individuals better manage their finances.
+* Importance of Expense Categorization: The realization that categorizing expenses can significantly impact savings and financial planning.
+* Advancements in Data Visualization: Leveraging modern data visualization techniques like candlestick charts to simplify complex financial data.
+* User Demand for Proactive Financial Solutions: Increasing user demand for tools that not only track expenses but also project future savings and suggest ways to meet financial goals.
 
-
-### 9. Novelty in Bullet Points
-
-
-
-Visual Financial Tracking: Helps users quickly identify and recall the nature of their transactions through visual cues, aiding in better financial management.
-Enhanced User Experience: Provides a visual summary of transactions, making financial reviews faster and more intuitive.
-Real-time Emoji Assignment: GenAI-driven categorization and emoji assignment ensures timely and accurate representation of transactions.
-- **Engaging Interface**: Adds a fun and engaging element to financial management, potentially increasing user interaction and satisfaction.
-- **Universal Application**: Applicable across various types of transactions, including retail purchases, utility payments, and peer-to-peer transfers.
-
-### Business Benefits
-
-- **Improved User Engagement**: Visual elements like emojis make financial data more engaging, encouraging users to interact more frequently with their account statements.
-  
-- **Enhanced Customer Satisfaction**: Simplified transaction identification leads to a more user-friendly experience, boosting overall customer satisfaction and loyalty.
-
-- **Reduced Support Costs**: Clearer transaction descriptions reduce the number of customer inquiries and support requests related to transaction identification.
-
-- **Competitive Advantage**: Offering an innovative, visually appealing feature can differentiate a financial institution from competitors, attracting new customers.
-
-- **Data-Driven Insights**: Analyzing emoji-based transaction data can provide valuable insights into consumer spending patterns, aiding in the development of targeted financial products and services.
-
-
-Problem statement:
-Difficulty in Transaction Identification: Customers often struggle to remember the details of their past transactions when reviewing account statements, leading to confusion and inefficiency.
-Vague Transaction Descriptions: Traditional text-based transaction descriptions can be ambiguous and unclear, making it hard for users to identify the nature of each transaction.
-Time-Consuming Statement Reviews: Without intuitive visual cues, customers spend more time cross-referencing receipts and statements to understand their spending.
-Increased Support Inquiries: Ambiguous transaction details result in a higher number of customer support inquiries, increasing operational costs and resource allocation for banks.
-Lack of Engagement: Standard account statements do not engage users, leading to less frequent reviews and lower interaction with financial management tools.
-Poor Financial Planning: Difficulty in tracking and identifying transactions hampers effective financial planning and budgeting for customers.
-Low Transparency and Trust: Inadequate transaction descriptions can lead to mistrust and perceived lack of transparency between customers and financial institutions.
-
-Problem statement:
-### Problem Statement (150 words)
-
-Customers often struggle to remember the details of their past transactions when reviewing account statements, leading to confusion and inefficiency. Traditional text-based transaction descriptions can be ambiguous and unclear, making it hard for users to identify the nature of each transaction. Without intuitive visual cues, customers spend more time cross-referencing receipts and statements to understand their spending. This lack of clarity results in increased customer support inquiries, driving up operational costs and resource allocation for banks. Standard account statements also fail to engage users, leading to less frequent reviews and lower interaction with financial management tools. Difficulty in tracking and identifying transactions hampers effective financial planning and budgeting for customers. Additionally, inadequate transaction descriptions can lead to mistrust and a perceived lack of transparency between customers and financial institutions. Addressing these issues is crucial for enhancing user experience, improving financial management, and fostering trust in the banking system.
+Goal Vision: Achieve Financial Goals with Visual Expense Insights and Recommendations

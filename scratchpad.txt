@@ -1,435 +1,88 @@
-Lifesync recommendation & prediction
-
-
-
-
-Car Purchase Savings Goal - $40000 in six months
-
-Please consider the account transaction summary of first month given below,
-1) Recommend transaction category or transaction itself where expense would have reduced or avoided so that car savings goal can be achieved as planned in the span of six months.
-2) Recommend investment or savings need to be offseted in coming five months so that car savings goal can be achieved as planned.
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank of Innovation - Retail Account Summary</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .emoji {
-            font-size: 1.5em;
-        }
-    </style>
-</head>
-<body>
-    <h1>Bank of Innovation - Retail Account Summary</h1>
-    <p><strong>Account Holder:</strong> John Doe</p>
-    <p><strong>Account Number:</strong> XXXXXXX1234</p>
-    <p><strong>Statement Period:</strong> June 1, 2024 - June 30, 2024</p>
+graph TD
+    A[Customer] -->|Start Car Savings Goal| B[Goal Management System]
+    B -->|Set Target Savings: $40,000<br>Opening Balance: $8,500<br>Timeframe: 6 Months| C[Expense Tracking System]
+    C -->|Identify Essential Expenses<br>Example: Rent $1,500, Groceries $600| D[Expense Tracking System]
     
-    <h2>Transaction Summary:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Emoji</th>
-        </tr>
-        <tr>
-            <td>06/02/2024</td>
-            <td>SBX #1234 SEATTLE WA</td>
-            <td>-5.45</td>
-            <td class="emoji">☕</td>
-        </tr>
-        <tr>
-            <td>06/04/2024</td>
-            <td>WM SUPERCENTER #5678</td>
-            <td>-53.89</td>
-            <td class="emoji">🍎</td>
-        </tr>
-        <tr>
-            <td>06/05/2024</td>
-            <td>XFER TO SAV ACT#987654</td>
-            <td>-200.00</td>
-            <td class="emoji">💵</td>
-        </tr>
-        <tr>
-            <td>06/07/2024</td>
-            <td>SHL #1234 FUEL PURCHASE</td>
-            <td>-40.50</td>
-            <td class="emoji">⛽</td>
-        </tr>
-        <tr>
-            <td>06/08/2024</td>
-            <td>BBY#3421 ELEC GOODS</td>
-            <td>-299.99</td>
-            <td class="emoji">💻</td>
-        </tr>
-        <tr>
-            <td>06/09/2024</td>
-            <td>MCY #1234 NY</td>
-            <td>-120.00</td>
-            <td class="emoji">👗</td>
-        </tr>
-        <tr>
-            <td>06/10/2024</td>
-            <td>AMZN MKTPLACE PMTS</td>
-            <td>-23.99</td>
-            <td class="emoji">📦</td>
-        </tr>
-        <tr>
-            <td>06/11/2024</td>
-            <td>SMITH HLTH SVCS</td>
-            <td>-150.00</td>
-            <td class="emoji">🩺</td>
-        </tr>
-        <tr>
-            <td>06/12/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td class="emoji">🏠</td>
-        </tr>
-        <tr>
-            <td>06/14/2024</td>
-            <td>CHIPOTLE 2345 QSR</td>
-            <td>-12.30</td>
-            <td class="emoji">🌯</td>
-        </tr>
-        <tr>
-            <td>06/15/2024</td>
-            <td>SPKL CW#4567</td>
-            <td>-25.00</td>
-            <td class="emoji">🚿</td>
-        </tr>
-        <tr>
-            <td>06/16/2024</td>
-            <td>TGT #7890 HG</td>
-            <td>-45.67</td>
-            <td class="emoji">🛏️</td>
-        </tr>
-        <tr>
-            <td>06/18/2024</td>
-            <td>SPOTIFYUSA*H4K8J</td>
-            <td>-9.99</td>
-            <td class="emoji">🎵</td>
-        </tr>
-        <tr>
-            <td>06/19/2024</td>
-            <td>AMC 30 THEATRES</td>
-            <td>-30.00</td>
-            <td class="emoji">🎬</td>
-        </tr>
-        <tr>
-            <td>06/20/2024</td>
-            <td>UTIL PMT ACH</td>
-            <td>-150.25</td>
-            <td class="emoji">💡</td>
-        </tr>
-        <tr>
-            <td>06/22/2024</td>
-            <td>ZELLEPAY JANESMITH#XYZ</td>
-            <td>-75.00</td>
-            <td class="emoji">🍽️</td>
-        </tr>
-        <tr>
-            <td>06/23/2024</td>
-            <td>MARRIOTHTL 6789</td>
-            <td>-350.00</td>
-            <td class="emoji">🏨</td>
-        </tr>
-        <tr>
-            <td>06/24/2024</td>
-            <td>FTWRLD GYMMSHP</td>
-            <td>-30.00</td>
-            <td class="emoji">🏋️</td>
-        </tr>
-        <tr>
-            <td>06/25/2024</td>
-            <td>APPL*ITUNES 5678</td>
-            <td>-899.00</td>
-            <td class="emoji">⌚</td>
-        </tr>
-        <tr>
-            <td>06/26/2024</td>
-            <td>WALGREENS #5678</td>
-            <td>-15.80</td>
-            <td class="emoji">💊</td>
-        </tr>
-        <tr>
-            <td>06/27/2024</td>
-            <td>TIF & CO #567</td>
-            <td>-1500.00</td>
-            <td class="emoji">💍</td>
-        </tr>
-        <tr>
-            <td>06/28/2024</td>
-            <td>UBER TRIP 1A2B3C</td>
-            <td>-18.25</td>
-            <td class="emoji">🚗</td>
-        </tr>
-        <tr>
-            <td>06/29/2024</td>
-            <td>MENVY MASSAGE</td>
-            <td>-120.00</td>
-            <td class="emoji">🧖</td>
-        </tr>
-        <tr>
-            <td>06/30/2024</td>
-            <td>WIRE TRF STU</td>
-            <td>-5000.00</td>
-            <td class="emoji">🏫</td>
-        </tr>
-    </table>
+    D -->|Request: Analyze my recent expenses, categorize non-essential ones, and provide reasons.<br>Example: Rent $1,500, Coffee $50, Groceries $600, Entertainment $200| F[GenAI Engine]
+    F -->|Response: Categorized expenses and reasons.Example: Non-Essential - Coffee $50 Reason: Can be reduced by making coffee at home| D
 
-    <h2>Account Summary:</h2>
-    <p><strong>Opening Balance:</strong> $8,500.00</p>
-    <p><strong>Total Deposits:</strong> $2,500.00</p>
-    <p><strong>Total Withdrawals:</strong> $8,839.59</p>
-    <p><strong>Closing Balance:</strong> $2,160.41</p>
+    D -->|Request: Predict the savings needed, investment required, and expense cuts to achieve my goal of $40,000 in 6 months.<br>Starting balance: $8,500| H[GenAI Engine]
+    H -->|Response: Savings needed $7,500 per month, Non-Essential Cuts: Entertainment $200| D
+    
+    D -->|Track Progress and Adjust Plan<br>Example: Monitor savings and adjust monthly plan| B
+    B -->|Achieve $40,000 Savings Goal| I[Customer]
+    I -->|Purchase Car| J[Car Purchase]
 
-    <h2>Deposits:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Emoji</th>
-        </tr>
-        <tr>
-            <td>06/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+2,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-    </table>
-
-    <h2>Important Notices:</h2>
-    <p>1. Keep your account secure by regularly updating your password and monitoring your account for any unauthorized transactions.</p>
-    <p>2. For questions or disputes, please contact customer service at 1-800-123-4567 or visit our website.</p>
-
-    <h2>Thank you for banking with us!</h2>
-</body>
-</html>
-
-
-Based on the transaction summary provided, here are recommendations to help achieve the $40,000 car savings goal in six months:
-1. Recommendations for Reducing or Avoiding Expenses:
-Non-essential Expenses:
-* SBX #1234 SEATTLE WA (Coffee): $5.45 Daily or frequent coffee purchases can add up. Consider making coffee at home.
-* BBY#3421 ELEC GOODS (Electronics): $299.99 Avoid purchasing non-essential electronics during the saving period.
-* MCY #1234 NY (Clothing): $120.00 Limit spending on new clothing unless absolutely necessary.
-* Chipotle 2345 QSR (Fast Food): $12.30 Reduce eating out by preparing meals at home.
-* SPOTIFYUSA*H4K8J (Music Subscription): $9.99 Consider pausing subscriptions that are not essential.
-* AMC 30 THEATRES (Entertainment): $30.00 Reduce spending on entertainment by opting for cheaper or free activities.
-* MARRIOTHTL 6789 (Hotel): $350.00 Avoid travel and hotel stays unless necessary.
-* FTWRLD GYMMSHP (Gym Membership): $30.00 Consider home workouts or cheaper alternatives.
-* APPL*ITUNES 5678 (Luxury Items): $899.00 Postpone buying luxury items like smartwatches.
-* TIF & CO #567 (Jewelry): $1500.00 Avoid purchasing high-value luxury items.
-* MENVY MASSAGE (Massage): $120.00 Limit spa and massage sessions to save money.
-Total Potential Savings from Avoidable Expenses in June: $3377.03
-
-
-2. Recommendations for Investment or Savings Adjustments:
-To meet the $40,000 savings goal in the remaining five months, you need to save approximately $40,000 - $2,160.41= $37,839.59
-Monthly Savings Needed:
-$37,839.59 / 5 ≈ $7,567.92 per month.
-Action Plan:
-* Increase Monthly Savings Transfer: Increase the automatic transfer to savings. For example, if you transfer $7,500 per month to savings, this will help reach the target.
-* Budget and Track Spending: Create a monthly budget focusing on necessary expenses. Track all expenditures to ensure adherence to the budget.
-* Cut Non-essential Spending: Review monthly expenses and cut non-essential spending as highlighted above.
-* Additional Income Streams: Consider additional income streams, like freelancing or a part-time job, to boost savings.
-* Invest Wisely: If possible, invest in low-risk, short-term investment options to earn a better return on saved money.
-Implementing these strategies will help you reach your car purchase savings goal within the planned timeframe.
-
-
-Please create sequence diagram with mermaid script for below flow,
-1. User->View List of Goals->Goal Manager Service->Goal Datastore
-2. User->View Expense Reduction Recommendation for Selected Goal->Goal Manager Service->Query Transaction Summary for Accounts associated->Transaction Summary Service->Transaction Datastore. Goal Manager Service->Request Reducing/Avoidable Expense for given transaction summary->Recommendation Engine(GenAI)->Return reducing/avoidable expense. Goal Manager Service->Request Candlestick graph for only reducing/avoidable expense-> Candlestick Chart Generator->Return chart->Goal Manager Service->UI
-3. User->View Savings/Investment Recommendation for Selected Goal->Goal Manager Service->Query Transaction Summary for Accounts associated->Transaction Summary Service->Transaction Datastore. Goal Manager Service->Request Savings/Action plan for given transaction summary->Recommendation Engine(GenAI)->Return savings per month and action plan recommendation. Goal Manager Service->Request Candlestick graph with savings recommended-> Candlestick Chart Generator->Return chart->Goal Manager Service->UI
 
 graph TD
-    User[User Interface] --> GoalManagerService[Goal Manager Service]
-    GoalManagerService --> GoalDatastore[Goal Datastore]
-    GoalManagerService --> TransactionSummaryService[Transaction Summary Service]
-    TransactionSummaryService --> TransactionDatastore[Transaction Datastore]
-    GoalManagerService --> RecommendationEngine[Recommendation Engine (GenAI)]
-    GoalManagerService --> CandlestickChartGenerator[Candlestick Chart Generator]
-    GoalManagerService --> SavingsAutomator[Savings Automator]
-    SavingsAutomator --> BankAPI[Bank API Integration]
-    BankAPI --> SavingsAccount[Savings Account]
-Explanation of the System Architecture Diagrams
-System Architecture Diagram
-1. User Interface (User): Central platform for user interaction.
-2. Goal Manager Service (GoalManagerService): Manages user goals and interacts with other services to provide required data.
-3. Goal Datastore (GoalDatastore): Stores information about user goals.
-4. Transaction Summary Service (TransactionSummaryService): Fetches transaction summaries for accounts associated with user goals.
-5. Transaction Datastore (TransactionDatastore): Stores transaction data.
-6. Recommendation Engine (GenAI) (RecommendationEngine): Provides recommendations for reducing/avoidable expenses and savings/action plans.
-7. Candlestick Chart Generator (CandlestickChartGenerator): Generates candlestick charts for visualizing expense reductions and savings recommendations.
-8. Savings Automator (SavingsAutomator): Automates monthly savings transfers.
-9. Bank API Integration (BankAPI): Facilitates communication with the user's bank for processing savings transactions.
-10. Savings Account (SavingsAccount): Dedicated account for holding user savings.
+    subgraph Training GenAI
+        K[Training Data: Historical Expense Data<br>Example: Rent $1500, Groceries $600, Entertainment $200]
+        L[Training Data: Categorization Rules<br>Example: Rent is essential, Coffee is non-essential]
+        M[Training Data: Savings and Investment Patterns<br>Example: Save $500/month, Invest $200/month]
+        N[GenAI]
+        O[Validation Data: Recent Expense Data<br>Example: Rent $1600, Groceries $550, Dining Out $150]
+        R[Validation Output: Accuracy Report<br>Example: Correctly categorized 95% of expenses, Predicted savings within 5% of actual]
+
+        K --> N
+        L --> N
+        M --> N
+        N --> O
+        O --> R
+    end
+
+
+
+graph TD
+    Customer -->|1. buys fruits & vegetables, beauty products from Walmart| BillingSoftware
+    BillingSoftware -->|2. invoice generated with items purchased| InvoiceService
+    BillingSoftware -->|3. forwards payment details: merchant category: grocery, item categories: fruits & vegetables, beauty products, amount: $199| PointOfSale
+    PointOfSale -->|4. payment request| PaymentService
+    PaymentService -->|5. confirms payment| PointOfSale
+    PointOfSale -->|6. confirms payment| BillingSoftware
+    PaymentService -->|7. publish payment confirmation event to message broker| MessageBroker
+    MessageBroker -->|8. consumes payment confirmation event| EmojiService
+    EmojiService -->|9. generate prompt: Assign an emoji that best represents a transaction for fruits & vegetables, beauty products items purchased from an GROCERY merchant| GenAI
+    GenAI -->|10. returns emojis: 🍎🥦💄| EmojiService
+    EmojiService -->|11. stores emojis: 🍎🥦💄 for given transaction| TransactionDataStore
+    Customer -->|12. requests account statement| AccountStatementService
+    AccountStatementService -->|13. retrieves data| TransactionDataStore
+    AccountStatementService -->|14. returns statement with emojis: 🍎🥦💄| Customer
 
 sequenceDiagram
-    participant User
-    participant UI
-    participant GoalManagerService
-    participant GoalDatastore
-    participant TransactionSummaryService
-    participant TransactionDatastore
-    participant RecommendationEngine
-    participant CandlestickChartGenerator
-
-    User ->> UI: View List of Goals
-    UI ->> GoalManagerService: Request List of Goals
-    GoalManagerService ->> GoalDatastore: Query Goals
-    GoalDatastore ->> GoalManagerService: Return List of Goals
-    GoalManagerService ->> UI: Display List of Goals
-
-    User ->> UI: View Expense Reduction Recommendation for Selected Goal
-    UI ->> GoalManagerService: Request Expense Reduction Recommendation
-    GoalManagerService ->> TransactionSummaryService: Query Transaction Summary for Accounts
-    TransactionSummaryService ->> TransactionDatastore: Fetch Transaction Summary
-    TransactionDatastore ->> TransactionSummaryService: Return Transaction Summary
-    TransactionSummaryService ->> GoalManagerService: Provide Transaction Summary
-    GoalManagerService ->> RecommendationEngine: Request Reducing/Avoidable Expenses
-    RecommendationEngine ->> GoalManagerService: Return Reducing/Avoidable Expenses
-    GoalManagerService ->> CandlestickChartGenerator: Request Candlestick Graph for Reducing/Avoidable Expenses
-    CandlestickChartGenerator ->> GoalManagerService: Return Candlestick Graph
-    GoalManagerService ->> UI: Display Candlestick Graph
-
-    User ->> UI: View Savings/Investment Recommendation for Selected Goal
-    UI ->> GoalManagerService: Request Savings/Investment Recommendation
-    GoalManagerService ->> TransactionSummaryService: Query Transaction Summary for Accounts
-    TransactionSummaryService ->> TransactionDatastore: Fetch Transaction Summary
-    TransactionDatastore ->> TransactionSummaryService: Return Transaction Summary
-    TransactionSummaryService ->> GoalManagerService: Provide Transaction Summary
-    GoalManagerService ->> RecommendationEngine: Request Savings/Action Plan
-    RecommendationEngine ->> GoalManagerService: Return Savings per Month and Action Plan
-    GoalManagerService ->> CandlestickChartGenerator: Request Candlestick Graph with Savings Recommended
-    CandlestickChartGenerator ->> GoalManagerService: Return Candlestick Graph
-    GoalManagerService ->> UI: Display Candlestick Graph
-
-Explanation of the Sequence Diagram in Bullet Points
-1. User Views List of Goals:
-    * User interacts with the UI to view a list of goals.
-    * UI requests the list of goals from the Goal Manager Service.
-    * Goal Manager Service queries the Goal Datastore.
-    * Goal Datastore returns the list of goals to the Goal Manager Service.
-    * Goal Manager Service sends the list of goals back to the UI for display.
-2. User Views Expense Reduction Recommendation for Selected Goal:
-    * User selects a goal and requests expense reduction recommendations via the UI.
-    * UI sends the request to the Goal Manager Service.
-    * Goal Manager Service queries the Transaction Summary Service for the transaction summary of associated accounts.
-    * Transaction Summary Service fetches the transaction summary from the Transaction Datastore.
-    * Transaction Datastore returns the transaction summary to the Transaction Summary Service.
-    * Transaction Summary Service provides the transaction summary to the Goal Manager Service.
-    * Goal Manager Service requests reducing/avoidable expenses from the Recommendation Engine (GenAI).
-    * Recommendation Engine returns the reducing/avoidable expenses to the Goal Manager Service.
-    * Goal Manager Service requests a candlestick graph for the reducing/avoidable expenses from the Candlestick Chart Generator.
-    * Candlestick Chart Generator returns the candlestick graph to the Goal Manager Service.
-    * Goal Manager Service sends the candlestick graph to the UI for display.
-3. User Views Savings/Investment Recommendation for Selected Goal:
-    * User selects a goal and requests savings/investment recommendations via the UI.
-    * UI sends the request to the Goal Manager Service.
-    * Goal Manager Service queries the Transaction Summary Service for the transaction summary of associated accounts.
-    * Transaction Summary Service fetches the transaction summary from the Transaction Datastore.
-    * Transaction Datastore returns the transaction summary to the Transaction Summary Service.
-    * Transaction Summary Service provides the transaction summary to the Goal Manager Service.
-    * Goal Manager Service requests savings per month and an action plan from the Recommendation Engine (GenAI).
-    * Recommendation Engine returns the savings per month and action plan to the Goal Manager Service.
-    * Goal Manager Service requests a candlestick graph with the savings recommended from the Candlestick Chart Generator.
-    * Candlestick Chart Generator returns the candlestick graph to the Goal Manager Service.
-    * Goal Manager Service sends the candlestick graph to the UI for display.
+    participant Customer
+    participant BillingSoftware
+    participant InvoiceService
+    participant PointOfSale
+    participant PaymentService
+    participant MessageBroker
+    participant EmojiService
+    participant GenAI
+    participant TransactionDataStore
+    participant AccountStatementService
+    
+    Customer ->> BillingSoftware: 1. buys fruits & vegetables, beauty products from Walmart
+    BillingSoftware ->> InvoiceService: 2. invoice generated with items purchased
+    BillingSoftware ->> PointOfSale: 3. forwards payment details: merchant category: grocery, item categories: [fruits & vegetables, beauty products], amount: $199
+    PointOfSale ->> PaymentService: 4. payment request
+    PaymentService ->> PointOfSale: 5. confirms payment
+    PointOfSale ->> BillingSoftware: 6. confirms payment
+    PaymentService ->> MessageBroker: 7. publish payment confirmation event
+    MessageBroker ->> EmojiService: 8. consumes payment confirmation event
+    EmojiService ->> GenAI: 9. generate prompt: "Assign an emoji that best represents a transaction for [fruits & vegetables, beauty products] items purchased from an GROCERY merchant"
+    GenAI ->> EmojiService: 10. returns emojis: 🍎🥦💄
+    EmojiService ->> TransactionDataStore: 11. stores emojis: 🍎🥦💄 for given transaction
+    Customer ->> AccountStatementService: 12. requests account statement
+    AccountStatementService ->> TransactionDataStore: 13. retrieves data
+    AccountStatementService ->> Customer: 14. returns statement with emojis: 🍎🥦💄
 
 
-### 1. Problem Statement (150 words)
+Training process:
 
-Many individuals aim to save a significant amount of money within a specific timeframe, such as $40,000 in six months for a major purchase. However, after the first month, their savings account balance may fall short due to various expenses and withdrawals. Given current savings rates and spending habits, reaching the goal seems challenging. The problem is identifying which expenses to cut down or avoid to maximize savings and determining how much more needs to be saved monthly to meet the goal. Additionally, there is a need for an efficient way to track progress, manage finances, and receive actionable recommendations to ensure individuals stay on track to reach their target without compromising essential needs.
-
-### 2. Problem Statement in Bullet Points from Banking
-
-- Individuals need to save a significant amount within a specific timeframe (e.g., $40,000 in six months).
-- Current savings after the first month may be insufficient.
-- Total expenses and withdrawals can be substantial.
-- Monthly savings required to reach the goal seem challenging.
-- Need to identify non-essential expenses to cut down.
-- Require a method to track and manage finances efficiently.
-- Need actionable recommendations to achieve the savings goal.
-
-### 3. Solution (200 words)
-
-To achieve the savings goal in the remaining timeframe, individuals need a dual strategy of reducing non-essential expenses and increasing monthly savings. By analyzing a transaction summary, individuals can identify avoidable expenses, such as frequent coffee purchases, electronics, clothing, fast food, entertainment, luxury items, and unnecessary subscriptions. Eliminating or reducing these expenses can potentially save a significant amount. Additionally, individuals should increase their monthly savings through automatic transfers to a high-interest savings account or investing in low-risk, short-term options.
-
-A financial management app can be employed to monitor progress, track income, expenses, and savings. The app can generate personalized recommendations using AI to identify spending patterns and suggest areas for cost reduction. It can also provide a candlestick chart visualization of expense reductions and savings recommendations, enabling users to see the impact of their actions and future projections. Setting monthly goals and receiving alerts for deviations will help maintain financial discipline. Exploring secondary income streams, like freelance work or a part-time job, can further boost savings.
-
-By implementing these strategies, individuals can manage their finances better and stay on track to reach their savings goal within the planned timeframe.
-
-### 4. Use Cases (in brief)
-
-1. **Monthly Expense Tracking:** Individuals use a financial management app to categorize and track their monthly expenses, helping them identify non-essential expenditures.
-2. **Automated Savings:** Individuals set up an automatic transfer of a specified amount from their checking account to their savings account every month.
-
-### 5. Elaborate Use Cases (150 words each)
-
-**Monthly Expense Tracking:**
-Individuals install a financial management app on their smartphone to keep a detailed record of all their transactions. The app categorizes expenses into various groups such as groceries, entertainment, dining out, utilities, and more. At the end of each month, they review a detailed report generated by the app, highlighting areas where they can cut down on spending. For instance, they may notice that frequent coffee purchases and entertainment expenses are higher than necessary. By setting spending limits within the app, individuals receive notifications when they approach these limits, helping them stay within their budget. The app also provides insights and recommendations on further reducing unnecessary expenses, making it easier for individuals to save more each month towards their savings goal.
-
-**Automated Savings:**
-Individuals set up an automatic transfer system through their bank’s online portal, scheduling a monthly transfer of a specified amount from their checking account to their dedicated savings account. This ensures a disciplined approach to saving, as the money is transferred automatically without having to remember to do it manually. By prioritizing savings before other expenses, individuals can steadily build their savings towards their goal. Additionally, they opt for a savings account with a higher interest rate, maximizing the growth of their funds. This automated system not only simplifies the saving process but also reduces the temptation to spend the money on non-essential items, keeping individuals on track to achieve their financial target.
-
-### 6. Novelty in Bullet Points
-
-- Integration of expense tracking, budgeting, and automated savings in one platform.
-- Real-time categorization and notification system for efficient financial management.
-- High-interest savings and investment options to maximize savings growth.
-- Automated savings transfers ensuring financial discipline and goal achievement.
-- AI-powered recommendations for personalized financial advice.
-- Candlestick chart visualization of expense reductions and savings recommendations with future projection.
-
-### 7. Business Benefits in Bullet Points
-
-- Enhanced customer satisfaction with comprehensive financial management tools.
-- Increased customer retention through valuable financial planning features.
-- Higher deposit rates due to automated savings and high-interest accounts.
-- Improved financial health and goal achievement for customers, leading to long-term loyalty.
-- Differentiation from competitors by offering advanced, AI-driven financial management solutions.
-
-Novelty
-* Candlestick Chart Visualization: Uses candlestick charts to visually represent expenses and savings, providing a clear and intuitive way to track financial goals.
-* Essential vs. Non-essential Categorization: Distinguishes between essential and non-essential expenses, highlighting areas for potential savings.
-* Projection of Future Savings: Projects future savings and investment returns, allowing for proactive financial planning.
-* Annotated Descriptions: Includes annotations for each transaction, making the chart easy to understand and follow.
-* Customized Legend: Uses a customized legend to differentiate between various types of expenses and savings, enhancing clarity.
-Business Benefits
-* Enhanced Financial Planning: Provides users with a clear and detailed overview of their expenses and savings, improving their financial planning capabilities.
-* User Engagement: Engaging and visually appealing charts encourage users to regularly monitor and manage their finances.
-* Informed Decision Making: Helps users make informed decisions about their spending and savings, leading to better financial outcomes.
-* Proactive Savings Strategy: Encourages users to identify non-essential expenses and redirect those funds towards savings, helping them achieve financial goals faster.
-* Customer Retention: By offering advanced financial tools and insights, financial institutions can improve customer satisfaction and retention.
-* Value-added Service: Adds value to the financial services offered, positioning the institution as a helpful partner in customers' financial journeys.
-
-Problem Statement
-* High Unnecessary Expenses: Many individuals struggle to distinguish between essential and non-essential expenses, leading to high unnecessary spending.
-* Lack of Savings Planning: Without a clear plan, saving for large goals like a car purchase can be challenging.
-* Inadequate Financial Tracking: Traditional methods of tracking expenses and savings lack visual clarity and engagement.
-* Difficulty in Achieving Financial Goals: Individuals often find it hard to achieve significant financial goals due to poor financial planning and tracking.
-Idea Trigger
-* Need for Visual Financial Tools: The demand for intuitive and engaging tools to help individuals better manage their finances.
-* Importance of Expense Categorization: The realization that categorizing expenses can significantly impact savings and financial planning.
-* Advancements in Data Visualization: Leveraging modern data visualization techniques like candlestick charts to simplify complex financial data.
-* User Demand for Proactive Financial Solutions: Increasing user demand for tools that not only track expenses but also project future savings and suggest ways to meet financial goals.
-
-Goal Vision: Achieve Financial Goals with Visual Expense Insights and Recommendations
+graph TD
+    A[Start Training] --> B[Collect and Label Data like Transaction, Emoji etc.]
+    B --> C[Preprocess Data like format, cleanup etc.]
+    C --> E[Fine-tune LLAMA2 GenAI Model]
+    E --> F[Validate Model like Loss, Accuracy etc.]
+    F --> G{Performance Satisfactory?}
+    G -->|No| H[Adjust model weights and Retrain]
+    G -->|Yes| I[Deploy LLAMA2 Model]

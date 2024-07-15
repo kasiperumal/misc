@@ -1,213 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank of Innovation - Retail Account Summary</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .emoji {
-            font-size: 1.5em;
-        }
-    </style>
-</head>
-<body>
-    <h1>Bank of Innovation - Retail Account Summary</h1>
-    <p><strong>Account Holder:</strong> John Doe</p>
-    <p><strong>Account Number:</strong> XXXXXXX1234</p>
-    <p><strong>Statement Period:</strong> June 1, 2024 - June 30, 2024</p>
-    
-    <h2>Transaction Summary:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Emoji</th>
-        </tr>
-        <tr>
-            <td>06/02/2024</td>
-            <td>SBX #1234 SEATTLE WA</td>
-            <td>-5.45</td>
-            <td class="emoji">☕</td>
-        </tr>
-        <tr>
-            <td>06/04/2024</td>
-            <td>WM SUPERCENTER #5678</td>
-            <td>-53.89</td>
-            <td class="emoji">🍎🥦💄</td>
-        </tr>
-        <tr>
-            <td>06/05/2024</td>
-            <td>XFER TO SAV ACT#987654</td>
-            <td>-200.00</td>
-            <td class="emoji">💵</td>
-        </tr>
-        <tr>
-            <td>06/07/2024</td>
-            <td>SHL #1234 FUEL PURCHASE</td>
-            <td>-40.50</td>
-            <td class="emoji">⛽</td>
-        </tr>
-        <tr>
-            <td>06/08/2024</td>
-            <td>BBY#3421 ELEC GOODS</td>
-            <td>-299.99</td>
-            <td class="emoji">💻</td>
-        </tr>
-        <tr>
-            <td>06/09/2024</td>
-            <td>MCY #1234 NY</td>
-            <td>-120.00</td>
-            <td class="emoji">👔👗</td>
-        </tr>
-        <tr>
-            <td>06/10/2024</td>
-            <td>AMZN MKTPLACE PMTS</td>
-            <td>-23.99</td>
-            <td class="emoji">📺📱</td>
-        </tr>
-        <tr>
-            <td>06/11/2024</td>
-            <td>SMITH HLTH SVCS</td>
-            <td>-150.00</td>
-            <td class="emoji">🩺</td>
-        </tr>
-        <tr>
-            <td>06/12/2024</td>
-            <td>RENT ACH PMT</td>
-            <td>-1200.00</td>
-            <td class="emoji">🏠</td>
-        </tr>
-        <tr>
-            <td>06/14/2024</td>
-            <td>CHIPOTLE 2345 QSR</td>
-            <td>-12.30</td>
-            <td class="emoji">🌯🥤</td>
-        </tr>
-        <tr>
-            <td>06/15/2024</td>
-            <td>SPKL CW#4567</td>
-            <td>-25.00</td>
-            <td class="emoji">🚿</td>
-        </tr>
-        <tr>
-            <td>06/16/2024</td>
-            <td>TGT #7890 HG</td>
-            <td>-45.67</td>
-            <td class="emoji">🛏️</td>
-        </tr>
-        <tr>
-            <td>06/18/2024</td>
-            <td>SPOTIFYUSA*H4K8J</td>
-            <td>-9.99</td>
-            <td class="emoji">🎵</td>
-        </tr>
-        <tr>
-            <td>06/19/2024</td>
-            <td>AMC 30 THEATRES</td>
-            <td>-30.00</td>
-            <td class="emoji">🎬</td>
-        </tr>
-        <tr>
-            <td>06/20/2024</td>
-            <td>UTIL PMT ACH</td>
-            <td>-150.25</td>
-            <td class="emoji">💡</td>
-        </tr>
-        <tr>
-            <td>06/22/2024</td>
-            <td>ZELLEPAY JANESMITH#XYZ</td>
-            <td>-75.00</td>
-            <td class="emoji">🍽️</td>
-        </tr>
-        <tr>
-            <td>06/23/2024</td>
-            <td>MARRIOTHTL 6789</td>
-            <td>-350.00</td>
-            <td class="emoji">🏨</td>
-        </tr>
-        <tr>
-            <td>06/24/2024</td>
-            <td>FTWRLD GYMMSHP</td>
-            <td>-30.00</td>
-            <td class="emoji">🏋️</td>
-        </tr>
-        <tr>
-            <td>06/25/2024</td>
-            <td>APPL*ITUNES 5678</td>
-            <td>-899.00</td>
-            <td class="emoji">⌚🎶</td>
-        </tr>
-        <tr>
-            <td>06/26/2024</td>
-            <td>WALGREENS #5678</td>
-            <td>-15.80</td>
-            <td class="emoji">💊</td>
-        </tr>
-        <tr>
-            <td>06/27/2024</td>
-            <td>TIF & CO #567</td>
-            <td>-1500.00</td>
-            <td class="emoji">💍📿</td>
-        </tr>
-        <tr>
-            <td>06/28/2024</td>
-            <td>UBER TRIP 1A2B3C</td>
-            <td>-18.25</td>
-            <td class="emoji">🚗</td>
-        </tr>
-        <tr>
-            <td>06/29/2024</td>
-            <td>MENVY MASSAGE</td>
-            <td>-120.00</td>
-            <td class="emoji">🧖</td>
-        </tr>
-        <tr>
-            <td>06/30/2024</td>
-            <td>WIRE TRF STU</td>
-            <td>-5000.00</td>
-            <td class="emoji">🏫</td>
-        </tr>
-    </table>
+graph TD
+    A[Alex - Tech-Savvy User] --> B[Visits Banking Portal]
+    B --> C[BehavioralSDK Captures Interaction Data]
+    C --> M
+    M[Behavior Parameters:
+     Page Views Per Session:20,
+      Average Time on Page:15s,
+       CTR:0.25, Bounce Rate:20%,
+       Navigation Path:Extensive,
+        Device Usage:Mobile,
+         Engagement Metrics:High]
+    M --> D[Preprocess Data]
+    D --> E[AI/ML Model Analyzes Data]
 
-    <h2>Account Summary:</h2>
-    <p><strong>Opening Balance:</strong> $8,500.00</p>
-    <p><strong>Total Deposits:</strong> $2,500.00</p>
-    <p><strong>Total Withdrawals:</strong> $8,839.59</p>
-    <p><strong>Closing Balance:</strong> $2,160.41</p>
+    E --> F[Identifies as Tech-Savvy User]
+    F --> G[OnboardingUI Customizes Flow]
+    G --> H[Website Displays Auto-Filled Forms]
+    H --> I[Alex Uses Biometric Verification]
+    I --> J[Immediate Access to Advanced Features]
+    J --> K[Alex Explores Automated Savings and Analytics]
+    K --> L[Alex Completes Onboarding]
 
-    <h2>Deposits:</h2>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount ($)</th>
-            <th>Emoji</th>
-        </tr>
-        <tr>
-            <td>06/01/2024</td>
-            <td>DIRECT DEP PAYROLL</td>
-            <td>+2,500.00</td>
-            <td class="emoji">💰</td>
-        </tr>
-    </table>
 
-    <h2>Important Notices:</h2>
-    <p>1. Keep your account secure by regularly updating your password and monitoring your account for any unauthorized transactions.</p>
-    <p>2. For questions or disputes, please contact customer service at 1-800-123-4567 or visit our website.</p>
 
-    <h2>Thank you for banking with us!</h2>
-</body>
-</html>
+
+graph TD
+    subgraph Training and Validation
+        T1[Historical Data w/ Multiple Samples in this range:
+         Page Views Per Session: 10-25,
+         Average Time on Page: 10-120s,
+         CTR: 0.10-0.30,
+         Bounce Rate: 10-50%,
+         Navigation Path: Extensive/Focused/Limited/Sporadic,
+         Device Usage: Desktop/Mobile/Tablet,
+         Engagement Metrics: Low/Medium/High] --> P1[Preprocess Training Data]
+        P1 --> M1[Train AI/ML Model]
+        T2[Validation Data:
+         Page Views Per Session: 8-22,
+         Average Time on Page: 20-90s,
+         CTR: 0.12-0.28,
+         Bounce Rate: 15-45%,
+         Navigation Path: Varied,
+         Device Usage: Mobile/Tablet,
+         Engagement Metrics: Varied] --> P2[Preprocess Validation Data]
+        P2 --> V1[Validate AI/ML Model]
+        V1 --> M1
+    end
+

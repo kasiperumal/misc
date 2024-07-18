@@ -1,48 +1,263 @@
+### Use Case 1: Reducing Incident Resolution Times by Up to 30%
+
+**Objective:** Predict and pinpoint potential issues through historical data analysis and dependency mapping.
+
+**Implementation Steps:**
+1. **Historical Data Analysis:** Store and analyze historical incident data.
+2. **Dependency Mapping:** Create relationships between incidents and components.
+3. **Prediction and Pinpointing:** Use the historical data and dependencies to predict potential issues.
+
+**Synthetic Data Generation using Cypher Script:**
+
+```cypher
+// Create Components
+CREATE (c1:Component {component_id: 1, component_name: 'Authentication Server', component_type: 'Server'});
+CREATE (c2:Component {component_id: 2, component_name: 'Database Server', component_type: 'Server'});
+CREATE (c3:Component {component_id: 3, component_name: 'Application Server', component_type: 'Server'});
+
+// Create Incidents
+CREATE (i1:Incident {incident_id: 1, incident_description: 'Login Failure', created_date: date('2023-01-10'), resolved_date: date('2023-01-11')});
+CREATE (i2:Incident {incident_id: 2, incident_description: 'Transaction Timeout', created_date: date('2023-02-15'), resolved_date: date('2023-02-16')});
+CREATE (i3:Incident {incident_id: 3, incident_description: 'Data Sync Error', created_date: date('2023-03-20'), resolved_date: date('2023-03-21')});
+
+// Create Relationships between Incidents and Components
+CREATE (i1)-[:CAUSED_BY]->(c1);
+CREATE (i2)-[:CAUSED_BY]->(c2);
+CREATE (i3)-[:CAUSED_BY]->(c3);
+```
+
+### Use Case 2: Proactive Problem Management
+
+**Objective:** Decrease incident occurrence by anticipating and mitigating risks before they escalate.
+
+**Implementation Steps:**
+1. **Risk Identification:** Identify potential risks from historical incident data.
+2. **Mitigation Strategies:** Develop and implement strategies to mitigate these risks.
+
+**Synthetic Data Generation using Cypher Script:**
+
+```cypher
+// Create Risk Nodes
+CREATE (r1:Risk {risk_id: 1, risk_description: 'Potential Login Failure'});
+CREATE (r2:Risk {risk_id: 2, risk_description: 'Potential Transaction Timeout'});
+CREATE (r3:Risk {risk_id: 3, risk_description: 'Potential Data Sync Error'});
+
+// Create Mitigation Strategies
+CREATE (m1:Mitigation {mitigation_id: 1, mitigation_description: 'Increase Authentication Server Capacity'});
+CREATE (m2:Mitigation {mitigation_id: 2, mitigation_description: 'Optimize Database Server Performance'});
+CREATE (m3:Mitigation {mitigation_id: 3, mitigation_description: 'Improve Application Server Data Handling'});
+
+// Create Relationships between Risks and Mitigation Strategies
+CREATE (r1)-[:MITIGATED_BY]->(m1);
+CREATE (r2)-[:MITIGATED_BY]->(m2);
+CREATE (r3)-[:MITIGATED_BY]->(m3);
+
+// Link Risks to Components
+CREATE (r1)-[:ASSOCIATED_WITH]->(c1);
+CREATE (r2)-[:ASSOCIATED_WITH]->(c2);
+CREATE (r3)-[:ASSOCIATED_WITH]->(c3);
+```
+
+### Use Case 3: Improved Change Management Processes
+
+**Objective:** Improve the success rate of change implementations by providing precise impact analysis.
+
+**Implementation Steps:**
+1. **Impact Analysis:** Analyze the impact of changes on various components.
+2. **Change Implementation:** Implement changes based on the analysis to reduce risk.
+
+**Synthetic Data Generation using Cypher Script:**
+
+```cypher
+// Create Changes
+CREATE (ch1:Change {change_id: 1, change_description: 'Patch Update', implemented_date: date('2023-04-01')});
+CREATE (ch2:Change {change_id: 2, change_description: 'Server Upgrade', implemented_date: date('2023-05-01')});
+CREATE (ch3:Change {change_id: 3, change_description: 'Configuration Change', implemented_date: date('2023-06-01')});
+
+// Create Impact Analysis Relationships
+CREATE (ch1)-[:AFFECTS]->(c1);
+CREATE (ch2)-[:AFFECTS]->(c2);
+CREATE (ch3)-[:AFFECTS]->(c3);
+
+// Historical Incidents Resolved by Changes
+CREATE (i1)-[:RESOLVED_BY]->(ch1);
+CREATE (i2)-[:RESOLVED_BY]->(ch2);
+CREATE (i3)-[:RESOLVED_BY]->(ch3);
+```
+
+### Full Cypher Script
+
+Below is the full Cypher script combining all the synthetic data generation for the three use cases:
+
+```cypher
+// Create Components
+CREATE (c1:Component {component_id: 1, component_name: 'Authentication Server', component_type: 'Server'});
+CREATE (c2:Component {component_id: 2, component_name: 'Database Server', component_type: 'Server'});
+CREATE (c3:Component {component_id: 3, component_name: 'Application Server', component_type: 'Server'});
+
+// Create Incidents
+CREATE (i1:Incident {incident_id: 1, incident_description: 'Login Failure', created_date: date('2023-01-10'), resolved_date: date('2023-01-11')});
+CREATE (i2:Incident {incident_id: 2, incident_description: 'Transaction Timeout', created_date: date('2023-02-15'), resolved_date: date('2023-02-16')});
+CREATE (i3:Incident {incident_id: 3, incident_description: 'Data Sync Error', created_date: date('2023-03-20'), resolved_date: date('2023-03-21')});
+
+// Create Relationships between Incidents and Components
+CREATE (i1)-[:CAUSED_BY]->(c1);
+CREATE (i2)-[:CAUSED_BY]->(c2);
+CREATE (i3)-[:CAUSED_BY]->(c3);
+
+// Create Risk Nodes
+CREATE (r1:Risk {risk_id: 1, risk_description: 'Potential Login Failure'});
+CREATE (r2:Risk {risk_id: 2, risk_description: 'Potential Transaction Timeout'});
+CREATE (r3:Risk {risk_id: 3, risk_description: 'Potential Data Sync Error'});
+
+// Create Mitigation Strategies
+CREATE (m1:Mitigation {mitigation_id: 1, mitigation_description: 'Increase Authentication Server Capacity'});
+CREATE (m2:Mitigation {mitigation_id: 2, mitigation_description: 'Optimize Database Server Performance'});
+CREATE (m3:Mitigation {mitigation_id: 3, mitigation_description: 'Improve Application Server Data Handling'});
+
+// Create Relationships between Risks and Mitigation Strategies
+CREATE (r1)-[:MITIGATED_BY]->(m1);
+CREATE (r2)-[:MITIGATED_BY]->(m2);
+CREATE (r3)-[:MITIGATED_BY]->(m3);
+
+// Link Risks to Components
+CREATE (r1)-[:ASSOCIATED_WITH]->(c1);
+CREATE (r2)-[:ASSOCIATED_WITH]->(c2);
+CREATE (r3)-[:ASSOCIATED_WITH]->(c3);
+
+// Create Changes
+CREATE (ch1:Change {change_id: 1, change_description: 'Patch Update', implemented_date: date('2023-04-01')});
+CREATE (ch2:Change {change_id: 2, change_description: 'Server Upgrade', implemented_date: date('2023-05-01')});
+CREATE (ch3:Change {change_id: 3, change_description: 'Configuration Change', implemented_date: date('2023-06-01')});
+
+// Create Impact Analysis Relationships
+CREATE (ch1)-[:AFFECTS]->(c1);
+CREATE (ch2)-[:AFFECTS]->(c2);
+CREATE (ch3)-[:AFFECTS]->(c3);
+
+// Historical Incidents Resolved by Changes
+CREATE (i1)-[:RESOLVED_BY]->(ch1);
+CREATE (i2)-[:RESOLVED_BY]->(ch2);
+CREATE (i3)-[:RESOLVED_BY]->(ch3);
+```
+
+This Cypher script will set up the synthetic data in your Neo4j database, allowing you to explore and test the three use cases described.
+
+Use Case 1: Reducing Incident Resolution Times
 graph TD
-    A[Alex - Tech-Savvy User] --> B[Visits Banking Portal]
-    B --> C[BehavioralSDK Captures Interaction Data]
-    C --> M
-    M[Behavior Parameters:
-     Page Views Per Session:20,
-      Average Time on Page:15s,
-       CTR:0.25, Bounce Rate:20%,
-       Navigation Path:Extensive,
-        Device Usage:Mobile,
-         Engagement Metrics:High]
-    M --> D[Preprocess Data]
-    D --> E[AI/ML Model Analyzes Data]
-
-    E --> F[Identifies as Tech-Savvy User]
-    F --> G[OnboardingUI Customizes Flow]
-    G --> H[Website Displays Auto-Filled Forms]
-    H --> I[Alex Uses Biometric Verification]
-    I --> J[Immediate Access to Advanced Features]
-    J --> K[Alex Explores Automated Savings and Analytics]
-    K --> L[Alex Completes Onboarding]
-
-
-
-
-graph TD
-    subgraph Training and Validation
-        T1[Historical Data w/ Multiple Samples in this range:
-         Page Views Per Session: 10-25,
-         Average Time on Page: 10-120s,
-         CTR: 0.10-0.30,
-         Bounce Rate: 10-50%,
-         Navigation Path: Extensive/Focused/Limited/Sporadic,
-         Device Usage: Desktop/Mobile/Tablet,
-         Engagement Metrics: Low/Medium/High] --> P1[Preprocess Training Data]
-        P1 --> M1[Train AI/ML Model]
-        T2[Validation Data:
-         Page Views Per Session: 8-22,
-         Average Time on Page: 20-90s,
-         CTR: 0.12-0.28,
-         Bounce Rate: 15-45%,
-         Navigation Path: Varied,
-         Device Usage: Mobile/Tablet,
-         Engagement Metrics: Varied] --> P2[Preprocess Validation Data]
-        P2 --> V1[Validate AI/ML Model]
-        V1 --> M1
+    subgraph "Historical Data Analysis"
+        A1(Raw Incident Data) --> A2[Analyze Historical Incidents]
+        A3(Raw Change Data) --> A4[Analyze Historical Changes]
+        A5(Raw Component Data) --> A6[Analyze Historical Components]
     end
 
+    subgraph "Dependency Mapping"
+        A2 --> B1[Map Incidents to Components]
+        A4 --> B1
+        A6 --> B1
+    end
+
+    B1 --> C1[Predict and Pinpoint Potential Issues]
+
+    subgraph "Incident Resolution"
+        C1 --> D1[Reduced Resolution Time]
+    end
+
+Use Case 2: Proactive Problem Management
+graph TD
+    subgraph "Risk Identification"
+        A1(Raw Incident Data) --> A2[Identify Potential Risks]
+        A3(Raw Component Data) --> A4[Identify Component Risks]
+    end
+
+    A2 --> B1[Document Risks]
+    A4 --> B1
+
+    subgraph "Mitigation Strategies"
+        B1 --> C1[Develop Mitigation Strategies]
+        C1 --> C2[Implement Mitigation Strategies]
+    end
+
+    subgraph "Proactive Problem Management"
+        C2 --> D1[Decreased Incident Occurrence]
+    end
+
+Use Case 3: Improved Change Management Processes
+graph TD
+    subgraph "Impact Analysis"
+        A1(Raw Change Data) --> A2[Analyze Impact on Components]
+        A3(Raw Component Data) --> A4[Identify Affected Components]
+    end
+
+    A2 --> B1[Impact Analysis Report]
+    A4 --> B1
+
+    subgraph "Change Implementation"
+        B1 --> C1[Plan Change Implementation]
+        C1 --> C2[Implement Changes]
+        C2 --> C3[Monitor Change Impact]
+    end
+
+    subgraph "Improved Change Management"
+        C3 --> D1[Increased Success Rate]
+    end
+
+graph TD
+    subgraph "Use Case 1: Reducing Incident Resolution Times"
+        subgraph "Historical Data Analysis"
+            U1A1(Raw Incident Data) --> U1A2[Analyze Historical Incidents]
+            U1A3(Raw Change Data) --> U1A4[Analyze Historical Changes]
+            U1A5(Raw Component Data) --> U1A6[Analyze Historical Components]
+        end
+
+        subgraph "Dependency Mapping"
+            U1A2 --> U1B1[Map Incidents to Components]
+            U1A4 --> U1B1
+            U1A6 --> U1B1
+        end
+
+        U1B1 --> U1C1[Predict and Pinpoint Potential Issues]
+
+        subgraph "Incident Resolution"
+            U1C1 --> U1D1[Reduced Resolution Time]
+        end
+    end
+
+    subgraph "Use Case 2: Proactive Problem Management"
+        subgraph "Risk Identification"
+            U2A1(Raw Incident Data) --> U2A2[Identify Potential Risks]
+            U2A3(Raw Component Data) --> U2A4[Identify Component Risks]
+        end
+
+        U2A2 --> U2B1[Document Risks]
+        U2A4 --> U2B1
+
+        subgraph "Mitigation Strategies"
+            U2B1 --> U2C1[Develop Mitigation Strategies]
+            U2C1 --> U2C2[Implement Mitigation Strategies]
+        end
+
+        subgraph "Proactive Problem Management"
+            U2C2 --> U2D1[Decreased Incident Occurrence]
+        end
+    end
+
+    subgraph "Use Case 3: Improved Change Management Processes"
+        subgraph "Impact Analysis"
+            U3A1(Raw Change Data) --> U3A2[Analyze Impact on Components]
+            U3A3(Raw Component Data) --> U3A4[Identify Affected Components]
+        end
+
+        U3A2 --> U3B1[Impact Analysis Report]
+        U3A4 --> U3B1
+
+        subgraph "Change Implementation"
+            U3B1 --> U3C1[Plan Change Implementation]
+            U3C1 --> U3C2[Implement Changes]
+            U3C2 --> U3C3[Monitor Change Impact]
+        end
+
+        subgraph "Improved Change Management"
+            U3C3 --> U3D1[Increased Success Rate]
+        end
+    end

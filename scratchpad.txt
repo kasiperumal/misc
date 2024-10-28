@@ -1,38 +1,71 @@
-1.Event-Driven Finance: Seamless Financial Actions from Personal Events (Ramya, Ramesh)
+import java.io.*;
+import java.util.Base64;
+import java.util.ArrayList;
+import java.util.List;
 
-Problem Statement
-Managing financial actions related to personal events manually is cumbersome and error-prone, often leading to missed deadlines, insufficient funds, or overlooked financial obligations. Current systems lack integration between personal calendars and financial planning tools, resulting in inefficient financial management and a disjointed user experience.
-Solution
-The proposed system is a “Banking Calendar” that syncs with a user’s personal calendar. When personal events such as “University Fee Payment” or “Italy Vacation” are scheduled, the system automatically generates corresponding financial actions. For example, a “University Fee Payment” event in the personal calendar will trigger a “Wire Payment” action in the banking calendar. If funds are unavailable, the system initiates a “Loan Application” action before the payment date. Similarly, a “Vacation to Italy” event would generate actions such as “FOREX Request” and “Travel Credit Card Application” well in advance. These actions are tracked with statuses like “Scheduled,” “In Progress,” and “Completed” to ensure timely execution.
-Business Use Cases
-1. Automated Financial Management: Reduces manual effort by automating payments, loan applications, and other financial actions based on personal events.
-2. Enhanced User Experience: Provides a cohesive financial planning experience, reducing the risk of missed payments or insufficient funds.
-3. Proactive Financial Services: Offers proactive banking services, like pre-approved loans or travel benefits, based on user’s upcoming events.
-Novelty
-This system ensures that personal events remain private on the user’s device, leveraging on-device intelligence for event recognition, while only financial actions are shared with the bank. Financial actions requiring customer approval—such as large payments or high-risk transactions—would prompt user consent based on risk and regulatory compliance. In some cases, auto-approval can be configured through a personal assistant agent (e.g., Apple intelligence), enabling seamless execution of routine actions. The integration of personal and banking calendars with automated action initiation, status tracking, and personalized approval mechanisms is a novel approach that bridges the gap between personal planning and financial management, ensuring both security and efficiency.
+public class CsvProcessor {
+    
+    public static void main(String[] args) {
+        String inputCsvFile = "input.csv";  // Input CSV file path
+        String outputCsvFile = "output.csv";  // Output CSV file path
+        String outputSqlFile = "query_output.txt";  // Output SQL file path
 
+        List<String> columnDValues = new ArrayList<>();  // Store decoded values for query generation
 
-2.Adaptive Contextual Banking: Personalized Services And Security Wherever You Go (Ramesh, Mohan, Ramya)
+        try (BufferedReader br = new BufferedReader(new FileReader(inputCsvFile));
+             BufferedWriter bwCsv = new BufferedWriter(new FileWriter(outputCsvFile));
+             BufferedWriter bwSql = new BufferedWriter(new FileWriter(outputSqlFile))) {
+             
+            String line;
+            boolean isFirstLine = true;
 
-Problem Statement: Banking systems today require manual updates to preferences based on a customer’s current activities, such as travel, shopping, or work. Customers must actively update card limits, switch currencies, adjust security settings, and search for applicable offers when traveling or changing their spending habits. This often leads to inconvenience, overlooked opportunities, or even security risks due to outdated settings.
-Solution: We propose an intelligent banking system that introduces user modes like Domestic Travel, International Travel, Shopping, Vacation, Work, and Home. These modes are automatically activated based on cues such as geo-location, IP address, transaction merchant location, social media activity, and more. When a mode is triggered, banking preferences are automatically configured to suit the user's situation. For example, when International Travel mode is detected through geo-location, card limits are adjusted, applicable international offers are shown, FOREX services are suggested, and authentication methods shift to face recognition for added security.
-Business Use Cases:
-1. Domestic Travel: Adjust card limits, offer travel insurance, activate OTP for secure transactions, and provide local travel offers.
-2. International Travel: Suggest currency conversion options, show discounts on cross-border payments, and offer tailored international services.
-3. Shopping Mode: Trigger behavior-based biometrics, display card-specific offers, and adjust spending categories for rewards.
-4. Work Mode: Show corporate banking services, adjust card limits for work-related expenses, and apply advanced security methods.
-Novelty: The novelty lies in the automatic, real-time configuration of banking preferences based on external cues without user input. This seamless integration of geo-location, social media, and transactional data to personalize banking services is a unique innovation that enhances user experience, security, and convenience.
+            // Read the input CSV line by line
+            while ((line = br.readLine()) != null) {
+                String[] columns = line.split(",");
+                
+                // Write header to output CSV
+                if (isFirstLine) {
+                    bwCsv.write(line + ",ColumnD\n");
+                    isFirstLine = false;
+                    continue;
+                }
+                
+                // Column C (index 2) base64 decoding and token extraction
+                String columnCValue = columns[2];
+                String decodedValue = new String(Base64.getDecoder().decode(columnCValue));
+                String token = extractToken(decodedValue);
+                
+                // Create formatted Column D value and write to output CSV
+                String columnDValue = "%" + token + "%";
+                columnDValues.add(columnDValue);  // Add to list for query generation
+                
+                // Write the line with Column D appended
+                bwCsv.write(String.join(",", columns) + "," + columnDValue + "\n");
+            }
 
-3.Instant Financial Advisor: Autonomous System for Managing Urgent Expenses(Ramesh)
+            // Generate the SQL query and write it to the output text file
+            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM table WHERE ");
+            for (int i = 0; i < columnDValues.size(); i++) {
+                queryBuilder.append("value LIKE '").append(columnDValues.get(i)).append("'");
+                if (i < columnDValues.size() - 1) {
+                    queryBuilder.append(" OR ");
+                }
+            }
+            queryBuilder.append(" AND a=b;");
+            
+            // Write the SQL query to output file
+            bwSql.write(queryBuilder.toString());
+            
+            System.out.println("Process completed successfully. Output files generated.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-Problem Statement:
-Unexpected expenses, such as emergency medical bills or last-minute travel, can disrupt financial stability and cause stress. Individuals and businesses often struggle to quickly assess available funds across various accounts and choose the best financial option to cover these costs. The process of manually evaluating savings, obligations, and potential loan options can be cumbersome and time-consuming, leading to delays in accessing needed funds.
-Solution:
-The Instant Financial Advisor (IFA) is an autonomous system designed to swiftly address urgent financial needs. It aggregates data from the user’s checking, savings, and investment accounts, calculating available funds while considering obligations like bills, loan payments, and future savings goals. If the available funds are insufficient, IFA intelligently suggests optimal solutions, such as using investment funds, applying for new loans, or top-up loans, based on criteria like interest rates, approval time, and financial impact. This ensures that users can meet their urgent expenses quickly and efficiently, with minimal manual effort.
-Business Use Cases:
-1. Emergency Medical Expenses: A user needs $5,000 for an unplanned medical procedure. IFA instantly reviews all accounts, identifying $3,000 in accessible savings. It then recommends a top-up loan of $2,000 from a preferred partner, chosen for its quick approval process and favorable terms.
-2. Unexpected Travel Costs: A user requires $2,000 for a sudden family emergency trip. IFA finds $1,500 available in a checking account and proposes liquidating $500 from a low-risk investment, ensuring immediate access to the required funds.
-3. Business Cash Flow Management: A small business owner faces an unexpected $10,000 equipment repair expense. IFA evaluates the company’s cash reserves and outstanding obligations, identifying $7,000 in available funds. It then recommends a short-term business loan of $3,000 with the best terms, ensuring uninterrupted business operations.
-4. High-Net-Worth Individual Portfolio Adjustment: A high-net-worth individual requires $50,000 for an unexpected real estate opportunity. IFA analyzes all assets, suggesting a strategic liquidation of underperforming investments and recommending a short-term bridge loan with low interest to cover the remaining amount, minimizing disruption to the individual's portfolio.
-Novelty:
-The IFA system is unique in its ability to autonomously provide real-time financial guidance and solutions for urgent expenses. By seamlessly integrating fund analysis, financial planning, and automated decision-making, it offers users—from everyday individuals to high-net-worth clients and businesses—a streamlined, stress-free approach to managing unexpected costs, optimizing both speed and financial health.
+    // Method to extract token from decoded string between "token=" and "&"
+    private static String extractToken(String decodedValue) {
+        int start = decodedValue.indexOf("token=") + 6;
+        int end = decodedValue.indexOf("&", start);
+        return (start > 5 && end > start) ? decodedValue.substring(start, end) : "";
+    }
+}

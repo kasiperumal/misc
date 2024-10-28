@@ -1,62 +1,84 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URL;
 
 public class CsvProcessor {
     
     public static void main(String[] args) {
-        String inputCsvFile = "input.csv";  // Input CSV file path
+        // Specify the filenames in the resources directory
+        String inputCsvFile = "/input.csv";  // Input CSV file in resources
         String outputCsvFile = "output.csv";  // Output CSV file path
         String outputSqlFile = "query_output.txt";  // Output SQL file path
 
         List<String> columnDValues = new ArrayList<>();  // Store decoded values for query generation
 
-        try (BufferedReader br = new BufferedReader(new FileReader(inputCsvFile));
-             BufferedWriter bwCsv = new BufferedWriter(new FileWriter(outputCsvFile));
-             BufferedWriter bwSql = new BufferedWriter(new FileWriter(outputSqlFile))) {
-             
-            String line;
-            boolean isFirstLine = true;
-
-            // Read the input CSV line by line
-            while ((line = br.readLine()) != null) {
-                String[] columns = line.split(",");
-                
-                // Write header to output CSV
-                if (isFirstLine) {
-                    bwCsv.write(line + ",ColumnD\n");
-                    isFirstLine = false;
-                    continue;
-                }
-                
-                // Column C (index 2) base64 decoding and token extraction
-                String columnCValue = columns[2];
-                String decodedValue = new String(Base64.getDecoder().decode(columnCValue));
-                String token = extractToken(decodedValue);
-                
-                // Create formatted Column D value and write to output CSV
-                String columnDValue = "%" + token + "%";
-                columnDValues.add(columnDValue);  // Add to list for query generation
-                
-                // Write the line with Column D appended
-                bwCsv.write(String.join(",", columns) + "," + columnDValue + "\n");
+        try {
+            // Get input file from resources folder
+            URL resource = CsvProcessor.class.getResource(inputCsvFile);
+            if (resource == null) {
+                throw new FileNotFoundException("Input file not found in resources folder.");
             }
+            Path inputPath = Paths.get(resource.toURI());
 
-            // Generate the SQL query and write it to the output text file
-            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM table WHERE ");
-            for (int i = 0; i < columnDValues.size(); i++) {
-                queryBuilder.append("value LIKE '").append(columnDValues.get(i)).append("'");
-                if (i < columnDValues.size() - 1) {
-                    queryBuilder.append(" OR ");
+            // Define output paths in resources folder
+            Path outputCsvPath = Paths.get("src/main/resources", outputCsvFile);
+            Path outputSqlPath = Paths.get("src/main/resources", outputSqlFile);
+
+            // Ensure the output directories exist
+            Files.createDirectories(outputCsvPath.getParent());
+
+            // Read from input CSV and write to output CSV and SQL files
+            try (BufferedReader br = Files.newBufferedReader(inputPath);
+                 BufferedWriter bwCsv = Files.newBufferedWriter(outputCsvPath);
+                 BufferedWriter bwSql = Files.newBufferedWriter(outputSqlPath)) {
+                 
+                String line;
+                boolean isFirstLine = true;
+
+                // Read the input CSV line by line
+                while ((line = br.readLine()) != null) {
+                    String[] columns = line.split(",");
+                    
+                    // Write header to output CSV
+                    if (isFirstLine) {
+                        bwCsv.write(line + ",ColumnD\n");
+                        isFirstLine = false;
+                        continue;
+                    }
+                    
+                    // Column C (index 2) base64 decoding and token extraction
+                    String columnCValue = columns[2];
+                    String decodedValue = new String(Base64.getDecoder().decode(columnCValue));
+                    String token = extractToken(decodedValue);
+                    
+                    // Create formatted Column D value and write to output CSV
+                    String columnDValue = "%" + token + "%";
+                    columnDValues.add(columnDValue);  // Add to list for query generation
+                    
+                    // Write the line with Column D appended
+                    bwCsv.write(String.join(",", columns) + "," + columnDValue + "\n");
                 }
+
+                // Generate the SQL query and write it to the output text file
+                StringBuilder queryBuilder = new StringBuilder("SELECT * FROM table WHERE ");
+                for (int i = 0; i < columnDValues.size(); i++) {
+                    queryBuilder.append("value LIKE '").append(columnDValues.get(i)).append("'");
+                    if (i < columnDValues.size() - 1) {
+                        queryBuilder.append(" OR ");
+                    }
+                }
+                queryBuilder.append(" AND a=b;");
+                
+                // Write the SQL query to output file
+                bwSql.write(queryBuilder.toString());
+                
+                System.out.println("Process completed successfully. Output files generated in resources folder.");
             }
-            queryBuilder.append(" AND a=b;");
-            
-            // Write the SQL query to output file
-            bwSql.write(queryBuilder.toString());
-            
-            System.out.println("Process completed successfully. Output files generated.");
         } catch (Exception e) {
             e.printStackTrace();
         }

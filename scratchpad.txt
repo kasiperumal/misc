@@ -1,19 +1,20 @@
 index=x 
 | timechart span=1h max(VOLUME) as volume                             
 | predict volume as prediction algorithm="LLP5" future_timespan=24 holdback=1440 period=24 lower95=lower95 upper95=upper95
-| where _time >= relative_time(now(), "-24h")  // Filter for the last 24 hours only
-| eval is_anomaly=if(volume < lower95 OR volume > upper95, 1, 0)      // Flag anomalies as 1 or 0
-| stats count(eval(is_anomaly == 1)) as outlier_count                // Count outliers in the last 24 hours
-| eventstats avg(volume) as avg_volume                               // Calculate mean of actual volume
+| where _time >= relative_time(now(), "-24h")                        // Filter for the last 24 hours only
+| where isnotnull(volume) AND volume > 0                             // Exclude incomplete or missing data
+| eval is_anomaly=if(volume < lower95 OR volume > upper95, 1, 0)     // Flag anomalies as 1 or 0
+| eventstats count(eval(is_anomaly == 1)) as total_outlier_count     // Calculate total outlier count for all rows
+| eventstats avg(volume) as avg_volume                               // Calculate average volume for all rows
 | eval abs_error = abs(volume - prediction)                         // Absolute error
 | eval sq_error = pow(volume - prediction, 2)                       // Squared error for RMSE
 | eval pct_error = abs((volume - prediction) / volume) * 100        // Percentage error for MAPE
 | eval total_var = pow(volume - avg_volume, 2)                      // Total variance for R-Squared
 | eval explained_var = pow(prediction - avg_volume, 2)              // Explained variance for R-Squared
-| stats sum(abs_error) as sum_abs_error sum(sq_error) as sum_sq_error sum(pct_error) as sum_pct_error count as n sum(total_var) as sum_total_var sum(explained_var) as sum_explained_var
+| stats sum(abs_error) as sum_abs_error sum(sq_error) as sum_sq_error sum(pct_error) as sum_pct_error count as n sum(total_var) as sum_total_var sum(explained_var) as sum_explained_var first(total_outlier_count) as outlier_count first(avg_volume) as avg_volume
 | eval MAE = sum_abs_error / n                                      // Mean Absolute Error
 | eval RMSE = sqrt(sum_sq_error / n)                                // Root Mean Squared Error
 | eval MAPE = sum_pct_error / n                                     // Mean Absolute Percentage Error
 | eval RSQUARED = sum_explained_var / sum_total_var                 // R-Squared
 | eval _time = now()                                                // Add current timestamp
-| table _time, outlier_count, MAE, RMSE, MAPE, RSQUARED
+| table _time, outlier_count, avg_volume, MAE, RMSE, MAPE, RSQUARED

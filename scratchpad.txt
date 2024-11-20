@@ -1,6 +1,8 @@
-| eval SSE=pow($actual$ - $prediction$, 2)
-| stats count as n sum(SSE) as ss_res sum($actual$) as sum_y sum($prediction$) as sum_yhat sum($actual$ * $actual$) as sum_y2 sum($prediction$ * $prediction$) as sum_yhat2
-| eval RMSE=sqrt(ss_res/n)
-| eval MAPE=100 * sum(abs($actual$ - $prediction$) / abs($actual$)) / n
-| eval R2=1 - (ss_res / (sum_y2 - (sum_y^2 / n)))
-| table R2 RMSE MAPE
+index=x 
+| timechart span=1h max(VOLUME) as volume                             // Aggregate hourly data
+| predict volume as prediction algorithm="LLP5" future_timespan=24 holdback=1440 period=24 lower95=lower95 upper95=upper95
+| eval is_anomaly=if(volume < lower95 OR volume > upper95, "yes", "no")  // Initial anomaly detection
+| eval adjusted_upper95=if(is_anomaly=="yes", prediction * 1.5, upper95)  // Dynamically adjust upper bound
+| eval adjusted_lower95=if(is_anomaly=="yes", prediction * 0.5, lower95)  // Dynamically adjust lower bound
+| eval is_anomaly_adjusted=if(volume < adjusted_lower95 OR volume > adjusted_upper95, "yes", "no")  // Reassess anomalies using adjusted bounds
+| table _time, volume, prediction, lower95, upper95, adjusted_lower95, adjusted_upper95, is_anomaly, is_anomaly_adjusted

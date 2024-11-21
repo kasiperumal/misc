@@ -1,20 +1,40 @@
-index=x 
-| timechart span=1h max(VOLUME) as volume                             
-| predict volume as prediction algorithm="LLP5" future_timespan=24 holdback=1440 period=24 lower95=lower95 upper95=upper95
-| where _time >= relative_time(now(), "-24h")                        // Filter for the last 24 hours only
-| where isnotnull(volume) AND volume > 0                             // Exclude incomplete or missing data
-| eval is_anomaly=if(volume < lower95 OR volume > upper95, 1, 0)     // Flag anomalies as 1 or 0
-| eventstats count(eval(is_anomaly == 1)) as total_outlier_count     // Calculate total outlier count for all rows
-| eventstats avg(volume) as avg_volume                               // Calculate average volume for all rows
-| eval abs_error = abs(volume - prediction)                         // Absolute error
-| eval sq_error = pow(volume - prediction, 2)                       // Squared error for RMSE
-| eval pct_error = abs((volume - prediction) / volume) * 100        // Percentage error for MAPE
-| eval total_var = pow(volume - avg_volume, 2)                      // Total variance for R-Squared
-| eval explained_var = pow(prediction - avg_volume, 2)              // Explained variance for R-Squared
-| stats sum(abs_error) as sum_abs_error sum(sq_error) as sum_sq_error sum(pct_error) as sum_pct_error count as n sum(total_var) as sum_total_var sum(explained_var) as sum_explained_var first(total_outlier_count) as outlier_count first(avg_volume) as avg_volume
-| eval MAE = sum_abs_error / n                                      // Mean Absolute Error
-| eval RMSE = sqrt(sum_sq_error / n)                                // Root Mean Squared Error
-| eval MAPE = sum_pct_error / n                                     // Mean Absolute Percentage Error
-| eval RSQUARED = sum_explained_var / sum_total_var                 // R-Squared
-| eval _time = now()                                                // Add current timestamp
-| table _time, outlier_count, avg_volume, MAE, RMSE, MAPE, RSQUARED
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from skmultilearn.problem_transform import BinaryRelevance
+from sklearn.metrics import classification_report
+
+# Load the Excel data (Excel will pass the table to the Python script)
+data = pd.DataFrame(CurrentWorkbook["IrisData"])
+
+# Specify feature and label columns
+feature_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+target_columns = ['label_1', 'label_2', 'label_3']  # Replace with actual label column names
+
+# Split features and targets
+X = data[feature_columns]
+y = data[target_columns]
+
+# Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
+
+# Initialize and train the model using Binary Relevance
+model = BinaryRelevance(RandomForestClassifier(random_state=42))
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+report = classification_report(y_test, y_pred.toarray(), output_dict=True)
+
+# Create a dataframe for the classification report
+report_df = pd.DataFrame(report).transpose()
+
+# Output the report back to Excel
+CurrentWorkbook["ClassificationReport"] = report_df

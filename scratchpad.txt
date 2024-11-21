@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.multioutput import MultiOutputClassifier
@@ -31,10 +32,39 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Evaluate the model
-report = classification_report(y_test, y_pred, output_dict=True)
+report = classification_report(y_test, y_pred, target_names=target_columns, output_dict=True)
 
 # Create a dataframe for the classification report
 report_df = pd.DataFrame(report).transpose()
 
 # Output the report back to Excel
 CurrentWorkbook["ClassificationReport"] = report_df
+
+# Visualization: Scatter plot for the species
+plt.figure(figsize=(10, 6))
+
+# Create scatter plot for each label
+colors = ['red', 'blue', 'green']  # Colors for each label
+markers = ['o', 's', '^']  # Markers for each label
+
+for i, label in enumerate(target_columns):
+    # Plot true positive predictions (correctly classified)
+    plt.scatter(
+        X_test[:, 0],  # First feature (e.g., sepal_length)
+        X_test[:, 1],  # Second feature (e.g., sepal_width)
+        c=[colors[i] if y_pred[j, i] == y_test.iloc[j, i] else 'gray' for j in range(len(y_test))],
+        marker=markers[i],
+        label=f"{label} (correct)",
+        alpha=0.6,
+    )
+
+# Customize plot
+plt.title("Scatter Plot of Multi-Label Classification")
+plt.xlabel("Sepal Length (standardized)")
+plt.ylabel("Sepal Width (standardized)")
+plt.legend(title="Species Labels")
+plt.grid(True)
+plt.tight_layout()
+
+# Show the plot
+plt.show()

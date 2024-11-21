@@ -1,8 +1,8 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
-from skmultilearn.problem_transform import BinaryRelevance
 from sklearn.metrics import classification_report
 
 # Load the Excel data (Excel will pass the table to the Python script)
@@ -10,7 +10,7 @@ data = pd.DataFrame(CurrentWorkbook["IrisData"])
 
 # Specify feature and label columns
 feature_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
-target_columns = ['label_1', 'label_2', 'label_3']  # Replace with actual label column names
+target_columns = ['label_1', 'label_2', 'label_3']  # Replace with your actual label column names
 
 # Split features and targets
 X = data[feature_columns]
@@ -23,15 +23,15 @@ X_scaled = scaler.fit_transform(X)
 # Split into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
 
-# Initialize and train the model using Binary Relevance
-model = BinaryRelevance(RandomForestClassifier(random_state=42))
+# Multi-label classification using MultiOutputClassifier with RandomForestClassifier
+model = MultiOutputClassifier(RandomForestClassifier(random_state=42))
 model.fit(X_train, y_train)
 
 # Make predictions
 y_pred = model.predict(X_test)
 
 # Evaluate the model
-report = classification_report(y_test, y_pred.toarray(), output_dict=True)
+report = classification_report(y_test, y_pred, output_dict=True)
 
 # Create a dataframe for the classification report
 report_df = pd.DataFrame(report).transpose()

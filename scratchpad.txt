@@ -1,8 +1,8 @@
 index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
 | bin _time span=1h
-| stats count as count by _time
-| appendcols [ search index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
+| stats count as hourly_count by _time
+| join _time [ search index=your_index_for_total_count sourcetype=your_sourcetype_for_total_count earliest=-2mon@mon latest=@now
                | bin _time span=1h
-               | stats sum(count) as total_count ]
-| eval percentage = (count / total_count) * 100
-| table _time, count, total_count, percentage
+               | stats count as total_count by _time ]
+| eval percentage = (hourly_count / total_count) * 100
+| table _time, hourly_count, total_count, percentage

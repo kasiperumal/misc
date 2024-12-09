@@ -1,5 +1,8 @@
-index=your_index sourcetype=your_sourcetype
-| stats count as count
-| eval total_count=[ search index=your_index sourcetype=your_sourcetype | stats count as total_count | return $total_count ]
+index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
+| bin _time span=1h
+| stats count as count by _time
+| appendcols [ search index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
+               | bin _time span=1h
+               | stats sum(count) as total_count ]
 | eval percentage = (count / total_count) * 100
-| table count, total_count, percentage
+| table _time, count, total_count, percentage

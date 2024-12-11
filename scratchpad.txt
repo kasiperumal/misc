@@ -1,8 +1,1 @@
-index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
-| bin _time span=1h
-| stats count as count by _time
-| appendcols [ search index=your_index sourcetype=your_sourcetype earliest=-2mon@mon latest=@now
-               | bin _time span=1h
-               | stats sum(count) as total_count ]
-| eval percentage = (count / total_count) * 100
-| table _time, count, total_count, percentage
+| rex field=BoundaryRanges "-Infinity:(?<lowerBound>\d+):\d+(\.\d+)?;\s*(?<upperBound>\d+):Infinity:\d+(\.\d+)?"

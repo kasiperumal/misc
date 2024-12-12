@@ -1,1 +1,1 @@
-%Y-%m-%dT%H:%M:%S.%3Q%z
+| eval _time=strptime(your_custom_time_field, "%Y-%m-%d %H:%M:%S")

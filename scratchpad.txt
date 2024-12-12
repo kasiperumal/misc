@@ -1,1 +1,1 @@
-| rex field=BoundaryRanges "-Infinity:(?<lowerBound>\d+):\d+(\.\d+)?;\s*(?<upperBound>\d+):Infinity:\d+(\.\d+)?"
+%Y-%m-%dT%H:%M:%S.%3Q%z

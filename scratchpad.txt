@@ -1,1 +1,19 @@
-| eval _time=strptime(your_custom_time_field, "%Y-%m-%d %H:%M:%S")
+<dashboard>
+  <!-- Your existing dashboard code -->
+
+  <row>
+    <panel>
+      <table>
+        <!-- Your table search and options -->
+
+        <!-- Define color formatting for the 'x' field -->
+        <format type="color" field="x">
+          <scale type="threshold">5,10</scale>
+          <colorPalette type="list">#65A637,#F7BC38,#D93F3C</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+
+  <!-- Your existing dashboard code -->
+</dashboard>

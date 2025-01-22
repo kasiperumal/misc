@@ -1,19 +1,12 @@
-<dashboard>
-  <!-- Your existing dashboard code -->
+<panel depends="$alwaysHideCSS$">
+    <html>
+        <style>
+            #myTableStyle {
+                font-size: 12px !important; /* Adjust the font size as needed */
+                width: 100% !important;     /* Ensure the table uses the full width of the panel */
+            }
+        </style>
+    </html>
+</panel>
 
-  <row>
-    <panel>
-      <table>
-        <!-- Your table search and options -->
-
-        <!-- Define color formatting for the 'x' field -->
-        <format type="color" field="x">
-          <scale type="threshold">5,10</scale>
-          <colorPalette type="list">#65A637,#F7BC38,#D93F3C</colorPalette>
-        </format>
-      </table>
-    </panel>
-  </row>
-
-  <!-- Your existing dashboard code -->
-</dashboard>
+<panel id="myTableStyle">

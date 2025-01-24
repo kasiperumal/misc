@@ -1,2 +1,24 @@
-https://www.activeloop.ai/resources/conversation-intelligence-gong-io-open-source-alternative-ai-sales-assistant/
+| makeresults
+| eval _time=strptime("2025-01-24T10:00:00", "%Y-%m-%dT%H:%M:%S") 
+| eval range_start=_time, range_end=_time+3600
+| map search="| gentimes start=$range_start$ end=$range_end$ increment=1h
+    | join type=outer _time [
+        search index=\"x\" earliest=$range_start$ latest=$range_end$
+| rex field=message.x..Apologies, I think there was an error in the previous reply. Let me refine the query to ensure it works for a single-hour range even when no events are present. Here's the corrected and complete solution:
 
+### Correct Approach
+We can use the `| makeresults` and `| gentimes` commands to explicitly create a continuous time range, ensuring `_time` and `total` fields are displayed even if no events exist in the queried hour.
+
+```spl
+| makeresults 
+| eval earliest=strptime("2025-01-24T10:00:00", "%Y-%m-%dT%H:%M:%S"), latest=earliest + 3600
+| gentimes start=earliest end=latest increment=1h
+| eval total=0
+| append [
+    search index="x" earliest=earliest latest=latest
+    | rex field=msg.message "stone=\"(?<stone>[^\"]+)"
+    | eval total=if(stone="abc", 1, 0)
+    | timechart span=1h sum(total) as total
+]
+| stats sum(total) as total by _time
+| fillnull value=0 total

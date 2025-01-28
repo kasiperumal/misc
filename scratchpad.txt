@@ -19,6 +19,40 @@ Developers write explicit instructions for interaction.
 
 Image: Diagram of traditional API architecture showing client-server interaction.
 
+Mermaid script:
+
+graph TD
+    subgraph Client Side
+        ClientA[Client A - Web App]
+        ClientB[Client B - Mobile App]
+        ClientC[Client C - Third-party App]
+    end
+
+    subgraph API Layer
+        ExperienceAPI[Experience API Layer]
+        ProcessAPI[Process API Layer]
+        CoreAPI[Core API Layer]
+    end
+
+    subgraph Backend Systems
+        SystemA[(System A - Legacy System)]
+        SystemB[(System B - Database)]
+        SystemC[(System C - Third-party Service)]
+    end
+
+    ClientA -->|Request| ExperienceAPI
+    ClientB -->|Request| ExperienceAPI
+    ClientC -->|Request| ExperienceAPI
+
+    ExperienceAPI -->|Orchestrate| ProcessAPI
+
+    ProcessAPI -->|Access Data| CoreAPI
+    ProcessAPI -->|Integrate| SystemC
+
+    CoreAPI -->|CRUD Operations| SystemA
+    CoreAPI -->|Query| SystemB
+
+
 Slide 3: Complication
 
 Title: Challenges with Traditional APIs
@@ -32,6 +66,15 @@ Usability: Learning curves for developers and third-party integrations.
 Maintenance: Versioning and breaking changes cause disruptions.
 
 Chart: Bar chart showing increasing cost and time for API maintenance over time.
+
+1-2 year: Minor bug fixes or adjustments based on user feedback.
+3-5 year: Adding new features, Addressing scaling issues, more integrations changes
+5+ year: Handling deprecated features, Optimizing for performance, Supporting multiple API versions, Enhancing security
+Scaling Complexity
+Versioning
+Security
+Integration Efforts
+Documentation and Support
 
 Slide 4: Implication
 

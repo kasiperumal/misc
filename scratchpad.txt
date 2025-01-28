@@ -287,11 +287,23 @@ Cost-Effective: Reduces development and maintenance overhead.
 
 Chart: Pie chart comparing the cost distribution of API maintenance vs AI-driven systems.
 
+API Maintenance (40%):
+
+Includes costs for updates, debugging, scaling, and monitoring.
+Ensures the reliability, compatibility, and performance of APIs.
+Typically less resource-intensive compared to AI systems.
+
+AI-Driven Systems (60%):
+
+Covers infrastructure (e.g., cloud computing), data processing, and model training.
+Involves operational maintenance and ongoing model improvements.
+Represents a larger share due to the computational and developmental demands of AI.
+
 Slide 8: Action Plan (Details)
 
 Title: Building AI-Driven Interfaces
 
-Leverage large language models like GPT-based systems.
+Leverage Small language models for every business.
 
 Ensure robust training on domain-specific data.
 
@@ -300,6 +312,21 @@ Develop fallback mechanisms for critical tasks.
 Collaborate with stakeholders to ensure seamless adoption.
 
 Image: Illustration of an AI agent lifecycle, from training to deployment.
+
+graph TD
+    Start[Start] --> DataPreparation[Data Collection & Preparation]
+    DataPreparation --> Preprocessing[Data Preprocessing]
+    Preprocessing --> ModelSelection[Model Selection]
+    ModelSelection --> Training[Model Training]
+    Training --> Evaluation[Model Evaluation]
+    Evaluation -->|Meets Requirements?| Deployment[Deployment]
+    Evaluation -->|Doesn't Meet Requirements| FineTuning[Model Fine-tuning]
+    FineTuning --> Training
+    Deployment --> Integration[System Integration]
+    Integration --> Monitoring[Monitoring & Maintenance]
+    Monitoring --> Feedback[User Feedback & Model Retraining]
+    Feedback --> DataPreparation
+    Feedback -->|End of Lifecycle| End[End]
 
 Slide 9: Closing Slide
 

@@ -88,6 +88,27 @@ Integration Overhead: Cost and time to implement new features grow exponentially
 
 Image: Flowchart depicting the ripple effect of API challenges on business processes.
 
+flowchart TD
+    A[API Challenges] --> B[Inconsistent Data]
+    A --> C[Slower Response Times]
+    A --> D[Downtime or Outages]
+
+    B --> E[Incorrect Analytics]
+    C --> F[Customer Frustration]
+    D --> G[Operational Delays]
+
+    E --> H[Poor Decision-Making]
+    F --> I[Customer Attrition]
+    G --> J[Revenue Loss]
+
+    H --> K[Decreased Business Performance]
+    I --> K
+    J --> K
+
+    style A fill:#f77,stroke:#333,stroke-width:2px
+    style K fill:#fa0,stroke:#333,stroke-width:2px
+
+
 Slide 5: Position
 
 Title: AI Agents as an Alternative
@@ -99,6 +120,32 @@ Act as intermediaries to understand, process, and respond to requests.
 Can replace static APIs with dynamic, conversational interfaces.
 
 Image: Conceptual diagram of AI agents handling multiple client interactions dynamically.
+
+Mermaid Script:
+flowchart TD
+    
+    subgraph Client Side
+        A1[Client - Dynamic Request]
+    end
+
+    subgraph AI Agent Layer
+        B[AI Agent - Context Aware]
+    end
+
+    subgraph Backend Systems
+        C1[Database]
+        C2[Microservices]
+        C3[External APIs]
+    end
+
+    A1 -->|Natural Language Requests| B
+    B -->|Processes| C1
+    B -->|Processes| C2
+    B -->|Processes| C3
+    C1 -->|Data| B
+    C2 -->|Services| B
+    C3 -->|External Data| B
+    B -->|Dynamic Responses| A1
 
 Slide 6: Action
 
@@ -113,6 +160,118 @@ Step 3: Build hybrid systems to gradually phase out traditional APIs.
 Step 4: Monitor performance and user satisfaction.
 
 Diagram: Roadmap diagram illustrating the transition phases from APIs to AI agents.
+
+First Diagram:
+
+graph TD
+    subgraph Business Domains
+        ClientA[Client A - Web App]
+        ClientB[Client B - Mobile App]
+        ClientC[Client C - Third-party App]
+    end
+
+    subgraph Backend Layer
+        AIExperienceLayer[AI Copilot Layer]
+        ProcessAPI[Process API Layer]
+        CoreAPI[Core API Layer]
+    end
+
+    subgraph Backend Systems
+        SystemA[(System A - Legacy System)]
+        SystemB[(System B - Database)]
+        SystemC[(System C - Third-party Service)]
+    end
+
+    ClientA -->|Natural Language Request| AIExperienceLayer
+    ClientB -->|Natural Language Request| AIExperienceLayer
+    ClientC -->|Natural Language Request| AIExperienceLayer
+
+    AIExperienceLayer -->|Orchestrate| ProcessAPI
+
+    ProcessAPI -->|Access Data| CoreAPI
+    ProcessAPI -->|Integrate| SystemC
+
+    CoreAPI -->|CRUD Operations| SystemA
+    CoreAPI -->|Query| SystemB
+
+
+Second Diagram:
+graph TD
+    subgraph Business Domains
+        ClientA[Client A - Web App]
+        ClientB[Client B - Mobile App]
+        ClientC[Client C - Third-party App]
+    end
+
+    subgraph API Layer
+        AIExperienceLayer[AI Copilot Layer]
+        LLMWorkflows[LLM Workflows]
+        Reasoning[Reasoning Agent]
+        Evaluation[Evaluation Agent]
+        Planning[Planning Agent]
+        ToolCalling[Tool Calling Agent]
+        CoreAPI[Core API Layer]
+    end
+
+    subgraph Backend Systems
+        SystemA[(System A - Legacy System)]
+        SystemB[(System B - Database)]
+        SystemC[(System C - Third-party Service)]
+    end
+
+    ClientA -->|Natural Language Request| AIExperienceLayer
+    ClientB -->|Natural Language Request| AIExperienceLayer
+    ClientC -->|Natural Language Request| AIExperienceLayer
+
+    AIExperienceLayer -->|LLM Execution| LLMWorkflows
+    LLMWorkflows -->|Reasoning Tasks| Reasoning
+    LLMWorkflows -->|Evaluation Tasks| Evaluation
+    LLMWorkflows -->|Planning Tasks| Planning
+    LLMWorkflows -->|Integration Tasks| ToolCalling
+
+    ToolCalling -->|Access Data| CoreAPI
+    ToolCalling -->|Integrate| SystemC
+
+    CoreAPI -->|CRUD Operations| SystemA
+    CoreAPI -->|Query| SystemB
+
+Third Diagram:
+graph TD
+    subgraph Business Domains
+        ClientA[Client A - Web App]
+        ClientB[Client B - Mobile App]
+        ClientC[Client C - Third-party App]
+    end
+
+    subgraph API Layer
+        AIExperienceLayer[AI Copilot Layer]
+        LLMWorkflows[LLM Workflows]
+        Reasoning[Reasoning Agent]
+        Evaluation[Evaluation Agent]
+        Planning[Planning Agent]
+        ToolCalling[Tool Calling Agent]
+    end
+
+    subgraph Datasource
+        LegacyData[(System A - Transaction Database w/ CRUD API)]
+        Database[(System B - Analytics Database)]
+        ThirdPartyData[(System C - Third-party Service)]
+    end
+
+    ClientA -->|Natural Language Request| AIExperienceLayer
+    ClientB -->|Natural Language Request| AIExperienceLayer
+    ClientC -->|Natural Language Request| AIExperienceLayer
+
+    AIExperienceLayer -->|LLM Execution| LLMWorkflows
+    LLMWorkflows -->|Reasoning Tasks| Reasoning
+    LLMWorkflows -->|Evaluation Tasks| Evaluation
+    LLMWorkflows -->|Planning Tasks| Planning
+    LLMWorkflows -->|Integration Tasks| ToolCalling
+
+    ToolCalling -->|CRUD Operations| LegacyData
+    ToolCalling -->|Query| Database
+    ToolCalling -->|Integrate| ThirdPartyData
+
 
 Slide 7: Benefit
 

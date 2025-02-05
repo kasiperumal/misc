@@ -1,24 +1,41 @@
-Usecases:
-Personalization in Experience API Layer
-Dynamic Product Recommendations:
-Proactive Financial Alerts
+Idea 1:
 
-Predictive Behavior Analysis in Experience API Layer
-Churn Prediction & Retention Strategies
-Future Cash Flow Prediction & Budget Adjustment
+Title: AI-Powered Personalized Banking Pages
+Subtitle: Enhancing Customer Experience with an Autonomic AI Agent
 
-Task Automation in Experience API Layer
-AI-Powered Dispute Resolution
-Self-Healing Banking Apps
+Title: The Challenge in Online Banking
 
-Workflow Optimization in Process API Layer
-Automated Compliance Auditing
-Smart Payment Routing
+Customers often struggle to find relevant information on banking websites.
+This leads to frustration, unnecessary contact center calls, or even switching to competitors.
+A lack of personalization impacts customer engagement and satisfaction.
 
-Autonomous Decision-Making in Process API Layer
-AI-Powered Loan Pricing
-Automated Credit Limit Adjustments
+Title: AI Solution Workflow – From Feedback to Personalized Pages
+graph TD;
+    A[Customer Visits Banking Site] -->|Cannot find info| B[Presses Dislike Button on the page & Gives Feedback];
+    B --> C[AI Agent w/ LLM Processes Feedback];
+    C --> D[Reasoning Step: Understand Customer Need];
+    D -->|If Relevant Info Exists| E[Retrieve Data from Knowledge Base];
+    D -->|If New Info Needed| F[Query Internal/External Banking APIs];
+    E --> G[Generate Personalized Page with Relevant Info];
+    F --> G;
+    G --> H[Compliance Agent Validates Page];
+    H -->|Approved| I[Display Personalized Page to Customer];
+    I -->|If Customer Likes Page| K[Store as Preferred Page for Customer];
 
-Real-Time Analytics in Process API Layer
-AI-Powered Liquidity Management
-Customer Sentiment Analysis
+Title: AI-Powered Personalization Framework
+
+Two diagrams (ReAct Pattern, Below one as diagram)
+
+AI Processing Engine: LLM-based feedback analysis.
+Knowledge Base & APIs: Retrieves data from banking systems, FAQs, and policies.
+Personalized Page Generator: Creates tailored customer experiences dynamically.
+Compliance Validator: Ensures regulatory approval before displaying pages.
+User Preferences Storage: Saves liked pages for future rendering.
+
+Title: Benefits of AI-Powered Personalization
+
+✅ Reduces Contact Center Workload – Fewer support calls, saving operational costs.
+✅ Enhances Customer Satisfaction – Quick access to relevant information.
+✅ Boosts Customer Retention – Personalized banking improves engagement.
+✅ Ensures Compliance – AI-driven validation keeps information accurate and secure.
+✅ Increases Efficiency – Automated workflow eliminates manual intervention.

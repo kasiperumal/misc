@@ -1,123 +1,44 @@
-Idea 1:
+sequenceDiagram
+    participant Banker
+    participant CreateAppAgent
+    participant LLMs
+    participant Backend
+    participant ValidateAppAgent
+    participant QRCodeGenAgent
 
-Title: AI-Powered Personalized Banking Pages
-Subtitle: Enhancing Customer Experience with an Autonomic AI Agent
+    Banker->>CreateAppAgent: Start conversation in natural language for account opening
+    CreateAppAgent->>LLMs: Understand natural language and derive intent
+    LLMs-->>CreateAppAgent: Extracted intent and relevant information
 
-Title: The Challenge in Online Banking
+    CreateAppAgent->>Banker: Collects information (ProductSelection, CDD, Primary & Secondary ID)
+    CreateAppAgent->>Backend: Fetch Home Address (based on ECN)
+    Backend-->>CreateAppAgent: Prefill the Home Address
 
-Customers often struggle to find relevant information on banking websites.
-This leads to frustration, unnecessary contact center calls, or even switching to competitors.
-A lack of personalization impacts customer engagement and satisfaction.
+    CreateAppAgent->>LLMs: Parse and validate incomplete/ambiguous address data
+    LLMs-->>CreateAppAgent: Resolved and validated information
 
-Title: AI Solution Workflow – From Feedback to Personalized Pages
-graph TD;
-    A[Customer Visits Banking Site] -->|Cannot find info| B[Presses Dislike Button on the page & Gives Feedback];
-    B --> C[AI Agent w/ LLM Processes Feedback];
-    C --> D[Reasoning Step: Understand Customer Need];
-    D -->|If Relevant Info Exists| E[Retrieve Data from Knowledge Base];
-    D -->|If New Info Needed| F[Query Internal/External Banking APIs];
-    E --> G[Generate Personalized Page with Relevant Info];
-    F --> G;
-    G --> H[Compliance Agent Validates Page];
-    H -->|Approved| I[Display Personalized Page to Customer];
-    I -->|If Customer Likes Page| K[Store as Preferred Page for Customer];
+    CreateAppAgent->>ValidateAppAgent: Extract Primary & Secondary ID (OCR)
+    ValidateAppAgent->>LLMs: Analyze extracted data (e.g., detect inconsistencies, fraud)
+    LLMs-->>ValidateAppAgent: Validated extracted ID data
+    ValidateAppAgent->>Backend: Validate Primary & Secondary ID
+    Backend-->>ValidateAppAgent: Validation Result
+    ValidateAppAgent-->>CreateAppAgent: Extracted & Validated ID Data
 
-Title: AI-Powered Personalization Framework
+    CreateAppAgent->>Banker: Provide application summary for review
+    Banker->>CreateAppAgent: Confirm application summary
 
-Two diagrams (ReAct Pattern, Below one as diagram)
+    CreateAppAgent->>QRCodeGenAgent: Generate QR Code for both applicants (Primary & Secondary)
 
-AI Processing Engine: LLM-based feedback analysis.
-Knowledge Base & APIs: Retrieves data from banking systems, FAQs, and policies.
-Personalized Page Generator: Creates tailored customer experiences dynamically.
-Compliance Validator: Ensures regulatory approval before displaying pages.
-User Preferences Storage: Saves liked pages for future rendering.
+    par Generate QR Code for Primary Applicant
+        QRCodeGenAgent->>Backend: Fetch QR Code data for Primary Applicant
+        Backend-->>QRCodeGenAgent: QR Code data for Primary Applicant
+        QRCodeGenAgent-->>CreateAppAgent: QR Code for Primary Applicant
+    end
 
-Title: Benefits of AI-Powered Personalization
+    par Generate QR Code for Secondary Applicant
+        QRCodeGenAgent->>Backend: Fetch QR Code data for Secondary Applicant
+        Backend-->>QRCodeGenAgent: QR Code data for Secondary Applicant
+        QRCodeGenAgent-->>CreateAppAgent: QR Code for Secondary Applicant
+    end
 
-✅ Reduces Contact Center Workload – Fewer support calls, saving operational costs.
-✅ Enhances Customer Satisfaction – Quick access to relevant information.
-✅ Boosts Customer Retention – Personalized banking improves engagement.
-✅ Ensures Compliance – AI-driven validation keeps information accurate and secure.
-✅ Increases Efficiency – Automated workflow eliminates manual intervention.
-
-
-Idea 2:
-
-**# SHRP Monitoring & Issue Creation Presentation**
-
-## **Slide 1: Title Slide**  
-### **SHRP Monitoring & Issue Creation**  
-#### **AI-Powered Risk Management in Banking**  
-*Presented by: [Your Name/Team]*  
-
----
-
-## **Slide 2: Problem Statement**  
-### **Challenges in SHRP Monitoring & Issue Creation**  
-- Manual monitoring is **time-consuming** and **error-prone**.  
-- Delays in **identifying and escalating risks** lead to compliance issues.  
-- Lack of **real-time alerts** increases the chances of undetected fraud.  
-- High dependency on **human review** reduces efficiency.  
-
----
-
-## **Slide 3: AI Solution Workflow**  
-### **Automated SHRP Monitoring & Issue Handling**  
-#### **Mermaid Diagram:**
-```mermaid
-graph TD;
-    A[Start SHRP Monitoring] --> B(Monitoring Agent: Detects Risk Events);
-    B --> C(Compliance Agent: Validates Regulations);
-    C --> D(Escalation Agent: Determines Severity);
-    D --> E(Automation Agent: Logs SHRP Issue);
-    E --> F(Communication Agent: Sends Alerts & Reports);
-    F --> G{Issue Resolved?};
-    G --Yes--> H[Close Issue];
-    G --No--> I[Escalate to Human Review];
-```
-
----
-
-## **Slide 4: Multi-Agent AI Architecture**  
-### **AI-Driven SHRP Risk Management**  
-#### **Mermaid Diagram:**
-```mermaid
-graph LR;
-    A[User/SHRP System] -->|Data Input| B[Monitoring Agent];
-    B --> C[Compliance Agent];
-    C --> D[Escalation Agent];
-    D -->|Logs Issue| E[Automation Agent];
-    E -->|Notifies| F[Communication Agent];
-    F --> G{Issue Status};
-    G --Resolved--> H[Close Case];
-    G --Escalated--> I[Manual Review];
-```
-
----
-
-## **Slide 5: Key Benefits**  
-### **Why Use AI for SHRP Monitoring?**  
-✅ **Real-time risk detection** – AI constantly monitors SHRP logs.  
-✅ **Automated compliance validation** – Ensures adherence to banking regulations.  
-✅ **Efficient risk triaging** – AI prioritizes and auto-resolves minor issues.  
-✅ **Faster SHRP issue creation** – AI logs and routes cases automatically.  
-✅ **Improved security & fraud prevention** – Detects threats before escalation.  
-✅ **Seamless communication & reporting** – AI sends real-time alerts to relevant teams.  
-
----
-
-## **Slide 6: Conclusion**  
-### **AI-Driven SHRP Monitoring for Proactive Risk Management**  
-- **Enhances efficiency & compliance** with automated risk handling.  
-- **Reduces human workload** through AI-driven issue escalation.  
-- **Improves security** by detecting risks in real-time.  
-- **Future-ready banking risk management** through AI-powered automation.  
-
----
-
-## **Slide 7: Q&A**  
-### **Thank You!**  
-🚀 **Any questions? Let’s discuss!**  
-
----
-
+    CreateAppAgent->>Banker: Render QR Codes for both applicants (one after another)

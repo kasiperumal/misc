@@ -6,39 +6,39 @@ sequenceDiagram
     participant ValidateAppAgent
     participant QRCodeGenAgent
 
-    Banker->>CreateAppAgent: 1. Start conversation<br>for account opening
-    CreateAppAgent->>LLMs: 2. Understand natural<br>language and derive intent
-    LLMs-->>CreateAppAgent: 3. Extracted intent<br>and relevant info
+    Banker->>CreateAppAgent: Start conversation<br>for account opening
+    CreateAppAgent->>LLMs: Understand natural<br>language and derive intent
+    LLMs-->>CreateAppAgent: Extracted intent<br>and relevant info
 
-    CreateAppAgent->>Banker: 4. Collect info<br>(ProductSelection, CDD,<br>Primary & Secondary ID)
-    CreateAppAgent->>Backend: 5. Fetch Home Address<br>(based on ECN)
-    Backend-->>CreateAppAgent: 6. Prefill<br>Home Address
+    CreateAppAgent->>Banker: Collect info<br>(ProductSelection, CDD,<br>Primary & Secondary ID)
+    CreateAppAgent->>Backend: Fetch Home Address<br>(based on ECN)
+    Backend-->>CreateAppAgent: Prefill<br>Home Address
 
-    CreateAppAgent->>LLMs: 7. Parse & validate<br>ambiguous address data
-    LLMs-->>CreateAppAgent: 8. Resolved<br>validated info
+    CreateAppAgent->>LLMs: Parse & validate<br>ambiguous address data
+    LLMs-->>CreateAppAgent: Resolved<br>validated info
 
-    CreateAppAgent->>ValidateAppAgent: 9. Extract Primary<br>& Secondary ID (OCR)
-    ValidateAppAgent->>LLMs: 10. Analyze extracted<br>data (e.g., detect fraud)
-    LLMs-->>ValidateAppAgent: 11. Validated<br>ID data
-    ValidateAppAgent->>Backend: 12. Validate<br>Primary & Secondary ID
-    Backend-->>ValidateAppAgent: 13. Validation<br>Result
-    ValidateAppAgent-->>CreateAppAgent: 14. Validated<br>ID Data
+    CreateAppAgent->>ValidateAppAgent: Extract Primary<br>& Secondary ID (OCR)
+    ValidateAppAgent->>LLMs: Analyze extracted<br>data (e.g., detect fraud)
+    LLMs-->>ValidateAppAgent: Validated<br>ID data
+    ValidateAppAgent->>Backend: Validate<br>Primary & Secondary ID
+    Backend-->>ValidateAppAgent: Validation<br>Result
+    ValidateAppAgent-->>CreateAppAgent: Validated<br>ID Data
 
-    CreateAppAgent->>Banker: 15. Provide application<br>summary for review
-    Banker->>CreateAppAgent: 16. Confirm<br>application summary
+    CreateAppAgent->>Banker: Provide application<br>summary for review
+    Banker->>CreateAppAgent: Confirm<br>application summary
 
-    CreateAppAgent->>QRCodeGenAgent: 17. Generate QR Codes<br>for applicants
+    CreateAppAgent->>QRCodeGenAgent: Generate QR Codes<br>for applicants
 
-    par 18. Generate Primary Applicant QR
-        QRCodeGenAgent->>Backend: 18.1 Fetch QR Code<br>data (Primary Applicant)
-        Backend-->>QRCodeGenAgent: 18.2 QR Code<br>data (Primary Applicant)
-        QRCodeGenAgent-->>CreateAppAgent: 18.3 QR Code<br>Primary Applicant
+    par Generate Primary Applicant QR
+        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Primary Applicant)
+        Backend-->>QRCodeGenAgent: QR Code<br>data (Primary Applicant)
+        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Primary Applicant
     end
 
-    par 19. Generate Secondary Applicant QR
-        QRCodeGenAgent->>Backend: 19.1 Fetch QR Code<br>data (Secondary Applicant)
-        Backend-->>QRCodeGenAgent: 19.2 QR Code<br>data (Secondary Applicant)
-        QRCodeGenAgent-->>CreateAppAgent: 19.3 QR Code<br>Secondary Applicant
+    par Generate Secondary Applicant QR
+        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Secondary Applicant)
+        Backend-->>QRCodeGenAgent: QR Code<br>data (Secondary Applicant)
+        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Secondary Applicant
     end
 
-    CreateAppAgent->>Banker: 20. Render QR Codes<br>for applicants<br>(one after another)
+    CreateAppAgent->>Banker: Render QR Codes<br>for applicants

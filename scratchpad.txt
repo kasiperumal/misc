@@ -6,39 +6,39 @@ sequenceDiagram
     participant ValidateAppAgent
     participant QRCodeGenAgent
 
-    Banker->>CreateAppAgent: Start conversation in natural language for account opening
-    CreateAppAgent->>LLMs: Understand natural language and derive intent
-    LLMs-->>CreateAppAgent: Extracted intent and relevant information
+    Banker->>CreateAppAgent: Start conversation<br>for account opening
+    CreateAppAgent->>LLMs: Understand natural<br>language and derive intent
+    LLMs-->>CreateAppAgent: Extracted intent<br>and relevant info
 
-    CreateAppAgent->>Banker: Collects information (ProductSelection, CDD, Primary & Secondary ID)
-    CreateAppAgent->>Backend: Fetch Home Address (based on ECN)
-    Backend-->>CreateAppAgent: Prefill the Home Address
+    CreateAppAgent->>Banker: Collect info<br>(ProductSelection, CDD,<br>Primary & Secondary ID)
+    CreateAppAgent->>Backend: Fetch Home Address<br>(based on ECN)
+    Backend-->>CreateAppAgent: Prefill<br>Home Address
 
-    CreateAppAgent->>LLMs: Parse and validate incomplete/ambiguous address data
-    LLMs-->>CreateAppAgent: Resolved and validated information
+    CreateAppAgent->>LLMs: Parse & validate<br>ambiguous address data
+    LLMs-->>CreateAppAgent: Resolved<br>validated info
 
-    CreateAppAgent->>ValidateAppAgent: Extract Primary & Secondary ID (OCR)
-    ValidateAppAgent->>LLMs: Analyze extracted data (e.g., detect inconsistencies, fraud)
-    LLMs-->>ValidateAppAgent: Validated extracted ID data
-    ValidateAppAgent->>Backend: Validate Primary & Secondary ID
-    Backend-->>ValidateAppAgent: Validation Result
-    ValidateAppAgent-->>CreateAppAgent: Extracted & Validated ID Data
+    CreateAppAgent->>ValidateAppAgent: Extract Primary<br>& Secondary ID (OCR)
+    ValidateAppAgent->>LLMs: Analyze extracted<br>data (e.g., detect fraud)
+    LLMs-->>ValidateAppAgent: Validated<br>ID data
+    ValidateAppAgent->>Backend: Validate<br>Primary & Secondary ID
+    Backend-->>ValidateAppAgent: Validation<br>Result
+    ValidateAppAgent-->>CreateAppAgent: Validated<br>ID Data
 
-    CreateAppAgent->>Banker: Provide application summary for review
-    Banker->>CreateAppAgent: Confirm application summary
+    CreateAppAgent->>Banker: Provide application<br>summary for review
+    Banker->>CreateAppAgent: Confirm<br>application summary
 
-    CreateAppAgent->>QRCodeGenAgent: Generate QR Code for both applicants (Primary & Secondary)
+    CreateAppAgent->>QRCodeGenAgent: Generate QR Codes<br>for applicants
 
-    par Generate QR Code for Primary Applicant
-        QRCodeGenAgent->>Backend: Fetch QR Code data for Primary Applicant
-        Backend-->>QRCodeGenAgent: QR Code data for Primary Applicant
-        QRCodeGenAgent-->>CreateAppAgent: QR Code for Primary Applicant
+    par Generate Primary Applicant QR
+        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Primary Applicant)
+        Backend-->>QRCodeGenAgent: QR Code<br>data (Primary Applicant)
+        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Primary Applicant
     end
 
-    par Generate QR Code for Secondary Applicant
-        QRCodeGenAgent->>Backend: Fetch QR Code data for Secondary Applicant
-        Backend-->>QRCodeGenAgent: QR Code data for Secondary Applicant
-        QRCodeGenAgent-->>CreateAppAgent: QR Code for Secondary Applicant
+    par Generate Secondary Applicant QR
+        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Secondary Applicant)
+        Backend-->>QRCodeGenAgent: QR Code<br>data (Secondary Applicant)
+        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Secondary Applicant
     end
 
-    CreateAppAgent->>Banker: Render QR Codes for both applicants (one after another)
+    CreateAppAgent->>Banker: Render QR Codes<br>for applicants<br>(one after another)

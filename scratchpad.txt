@@ -1,44 +1,63 @@
-sequenceDiagram
-    participant Banker
-    participant CreateAppAgent
-    participant LLMs
-    participant Backend
-    participant ValidateAppAgent
-    participant QRCodeGenAgent
 
-    Banker->>CreateAppAgent: Start conversation<br>for account opening
-    CreateAppAgent->>LLMs: Understand natural<br>language and derive intent
-    LLMs-->>CreateAppAgent: Extracted intent<br>and relevant info
+gradle.properties:
+org.gradle.parallel=true
 
-    CreateAppAgent->>Banker: Collect info<br>(ProductSelection, CDD,<br>Primary & Secondary ID)
-    CreateAppAgent->>Backend: Fetch Home Address<br>(based on ECN)
-    Backend-->>CreateAppAgent: Prefill<br>Home Address
 
-    CreateAppAgent->>LLMs: Parse & validate<br>ambiguous address data
-    LLMs-->>CreateAppAgent: Resolved<br>validated info
+junit-platform.properties file in src/test/resources:
+cucumber.execution.parallel.enabled=true
+ cucumber.execution.parallel.config.strategy=fixed
+ cucumber.execution.parallel.config.fixed.parallelism=4
 
-    CreateAppAgent->>ValidateAppAgent: Extract Primary<br>& Secondary ID (OCR)
-    ValidateAppAgent->>LLMs: Analyze extracted<br>data (e.g., detect fraud)
-    LLMs-->>ValidateAppAgent: Validated<br>ID data
-    ValidateAppAgent->>Backend: Validate<br>Primary & Secondary ID
-    Backend-->>ValidateAppAgent: Validation<br>Result
-    ValidateAppAgent-->>CreateAppAgent: Validated<br>ID Data
+CucumberTestRunner.java:
+import static io.cucumber.junit.platform.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+ @Suite @IncludeEngines("cucumber")
+ @SelectPackages("com.example.stepdefinitions") // Adjust with your package name
+ @ConfigurationParameter(key = PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, value = "true")
+ public class CucumberTestRunner { }
 
-    CreateAppAgent->>Banker: Provide application<br>summary for review
-    Banker->>CreateAppAgent: Confirm<br>application summary
+./gradlew test
 
-    CreateAppAgent->>QRCodeGenAgent: Generate QR Codes<br>for applicants
 
-    par Generate Primary Applicant QR
-        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Primary Applicant)
-        Backend-->>QRCodeGenAgent: QR Code<br>data (Primary Applicant)
-        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Primary Applicant
-    end
 
-    par Generate Secondary Applicant QR
-        QRCodeGenAgent->>Backend: Fetch QR Code<br>data (Secondary Applicant)
-        Backend-->>QRCodeGenAgent: QR Code<br>data (Secondary Applicant)
-        QRCodeGenAgent-->>CreateAppAgent: QR Code<br>Secondary Applicant
-    end
+import org.junit.platform.suite.api.*;
+import static io.cucumber.junit.platform.engine.Constants.*;
 
-    CreateAppAgent->>Banker: Render QR Codes<br>for applicants
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features/v1/regression")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/bdd")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example.test.abc.v1.test.hooks, com.example.test.abc.v1.stepdefs.common, com.example.test.abc.v1.stepdefs.local")
+@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@testType:abc")
+@ConfigurationParameter(key = MONOCHROME_PROPERTY_NAME, value = "true")
+public class tests {
+    // This class serves as a test runner for Cucumber tests
+}
+
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    
+    // Cucumber
+    testImplementation("io.cucumber:cucumber-java:7.14.0")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.0")
+    testImplementation("io.cucumber:cucumber-spring:7.14.0")
+    
+    // JUnit 5
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.platform:junit-platform-suite:1.10.0")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    // Enable parallel execution
+    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
+    systemProperty("cucumber.execution.parallel.enabled", "true")
+    systemProperty("cucumber.execution.parallel.config.strategy", "fixed")
+    systemProperty("cucumber.execution.parallel.config.fixed.parallelism", "4")
+}
+
+
+./gradlew test --tests "com.example.test.abc.v1.tests"

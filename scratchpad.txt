@@ -1,5 +1,5 @@
 Topic: Harness AI/ML for smarter anomaly detection in customer journey APIs
 Content:
-In today's digital landscape, seamless customer journey are critical to maintaining trust and efficiency. However, unexpected API failures can disrupt transactions and degrade user experience. Traditional monitoring methods often fall short in detecting subtle issues in real time.
+In today's digital landscape, seamless customer journey is critical for maintaining trust and efficiency. However, unexpected API failures can disrupt transactions and degrade user experience. Traditional monitoring methods often fall short in detecting subtle issues in real time.
 
 This session explores how AI/ML-driven anomaly detection can proactively identify and mitigate API-related issues across the customer journey. We will discuss how machine learning models can analyze transaction patterns, detect deviations, and trigger alerts before they impact users. By leveraging AI, banks can enhance API monitoring and overall system resilience.

@@ -1,4 +1,4 @@
-Patent 1 (Improvised):
+1 (Improvised):
 ———————————
 
 Slide 1: Problem Statement
@@ -207,7 +207,7 @@ sequenceDiagram
     note over Dep: If rejected, keep feature active
 
 
-Patent 2 (Improvised) ———————————— Slide 1: Problem Statement
+2 (Improvised) ———————————— Slide 1: Problem Statement
 * Static Recommendations & Delayed Compliance
     * Traditional banking systems provide generic product offers and rely on periodic compliance checks, leading to missed personalization opportunities and regulatory blind spots.
 * Fragmented Data Sources

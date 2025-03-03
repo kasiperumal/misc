@@ -1,5 +1,395 @@
-Topic: Harness AI/ML for smarter anomaly detection in customer journey APIs
-Content:
-In today's digital landscape, seamless customer journey is critical for maintaining trust and efficiency. However, unexpected API failures can disrupt transactions and degrade user experience. Traditional monitoring methods often fall short in detecting subtle issues in real time.
+Patent 1:
+———————
 
-This session explores how AI/ML-driven anomaly detection can proactively identify and mitigate API-related issues across the customer journey. We will discuss how machine learning models can analyze transaction patterns, detect deviations, and trigger alerts before they impact users. By leveraging AI, banks can enhance API monitoring and overall system resilience.
+
+Slide 1: Problem Statement
+* Stagnant Feature Set
+    * Online banking platforms often do not evolve quickly to match changing user needs or competitor offerings.
+* Overcrowded User Interface
+    * Many rarely-used or obsolete features remain visible, leading to customer confusion.
+* Inefficient Feedback Utilization
+    * Manual processes make it hard to continuously ingest feedback from multiple sources (social media, app reviews, etc.) in real time.
+
+Slide 2: Solution
+* AI-Driven Gap Analysis
+    * Competitor Analysis Agent gathers and compares rival banking features.
+    * Feedback Analysis Agent collects user feedback from diverse channels.
+    * App Feature Developer Agent generates new feature proposals with help from a Large Language Model (LLM).
+* Usage-Based Deprecation
+    * App Feature Deprecator Agent monitors clickstream data to flag underused features.
+    * Customers get the option to remove or hide these features—personalizing their interface.
+
+Slide 3: Online Banking Business Use Cases (with Examples)
+1. Personalized Interface Streamlining
+    * Example: A customer who never uses “bill splitting” for 12 months is prompted to remove it.
+2. Rapid Competitive Response
+    * Example: A rival launches “crypto wallet integration.” The AI system detects this gap and proposes a similar or improved feature.
+3. Continuous User-Centric Upgrades
+    * Example: App store reviews highlight clunky loan application processes. The system synthesizes feedback and generates a new, streamlined feature requirement.
+
+Slide 4: Novelty
+* Dynamic Feature Lifecycle
+    * Automates both feature introduction and removal, adapting the platform in near real-time.
+* Deep Language Model Insights
+    * Uses LLMs to interpret unstructured user feedback and competitor data, going beyond simple analytics.
+* Multi-Agent Architecture
+    * Specialized agents (competitor analysis, feedback analysis, feature development, deprecation) ensure an end-to-end, AI-driven workflow with minimal manual intervention.
+
+Slide 5: Business Benefits
+* Increased Customer Satisfaction
+    * Streamlined interfaces and timely feature additions improve user experience and loyalty.
+* Reduced Maintenance Costs
+    * Deprecating underused features frees up infrastructure and support resources.
+* Faster Time-to-Market
+    * AI automates significant parts of competitive research and feature prioritization, speeding up development cycles.
+* Data-Driven Strategy
+    * LLM-driven insights from competitor platforms and feedback channels guide strategic product decisions accurately and efficiently.
+
+Solution Diagram:
+————————
+flowchart TB
+    %% ----------------------------------------------------
+    %% C4 Diagram (Context/Container) with Multi-Agent Setup
+    %% ----------------------------------------------------
+
+    %% External Roles
+    customer((Customer)):::person
+    productOwner((Product Owner)):::person
+
+    %% External Systems
+    competitor((Competitor Platforms)):::externalSystem
+    feedback((Feedback Sources: App Stores,<br/>Social Media, Downtime Forums)):::externalSystem
+
+    %% System Boundary: Online Banking
+    subgraph OnlineBankingBoundary[Online Banking System Boundary]
+        CAAgent([Competitor Analysis Agent]):::component
+        FAAgent([Feedback Analysis Agent]):::component
+        AFDAgent([App Feature Developer Agent]):::component
+        DepAgent([App Feature Deprecator Agent]):::component
+        LLM([Large Language Model]):::component
+        OBPlatform([Online Banking Platform]):::system
+    end
+
+    %% ---------------------------
+    %% Relationships & Step Labels
+    %% ---------------------------
+
+    competitor -- "1.CompetitorData" --> CAAgent
+    feedback -- "2.ExternalFeedback" --> FAAgent
+
+    CAAgent -- "3.DataAnalysis" --> LLM
+    FAAgent -- "4.DataAnalysis" --> LLM
+
+    LLM -- "5.Insights" --> CAAgent
+    LLM -- "6.Insights" --> FAAgent
+
+    CAAgent -- "7.ProposeFeatures" --> AFDAgent
+    FAAgent -- "8.ProposeFeatures" --> AFDAgent
+
+    %% AFDAgent uses LLM for feature requirements
+    AFDAgent -- "9.Request Change Feature Requirement" --> LLM
+    LLM -- "10.Requirements Proposal" --> AFDAgent
+
+    %% Approval flow
+    AFDAgent -- "11.RequestApproval" --> productOwner
+    productOwner -- "12.ApproveFeatures" --> AFDAgent
+
+    %% Implementation
+    AFDAgent -- "13.Implement&Deploy" --> OBPlatform
+    customer -- "14.UsesPlatform" --> OBPlatform
+
+    %% Deprecation flow
+    OBPlatform -- "15.ClickstreamData" --> DepAgent
+    DepAgent -- "16.DataAnalysis" --> LLM
+    LLM -- "17.Insights" --> DepAgent
+    DepAgent -- "18.ProposeDeprecation" --> customer
+    customer -- "19.ApproveRemoval" --> DepAgent
+    DepAgent -- "20.Implement&Deploy" --> OBPlatform
+
+    %% Optional: Simple styling for clarity
+    classDef person fill:#ffe0b3,stroke:#333,color:#333
+    classDef externalSystem fill:#cce0ff,stroke:#333,color:#333
+    classDef system fill:#caffca,stroke:#333,color:#333
+    classDef component fill:#ffffcc,stroke:#333,stroke-width:1px,color:#333
+
+Competitor Analysis Agent Diagram:
+——————————————————
+
+sequenceDiagram
+    participant DS as External Data Source
+    participant CA as Competitor Analysis Agent
+    participant PM as Pydantic Validation (CompetitorDataModel)
+    participant LLM as Large Language Model
+    participant GA as GapAnalysisModel
+
+    DS->>CA: 1.Receive Raw Competitor Data
+    CA->>PM: 2.Validate with CompetitorDataModel
+    PM-->>CA: 3.Valid Data or Error
+
+    note over CA: Example Data: competitor_name=BankXYZ, features=[Instant Loan, Crypto Wallet], rating=4.5
+
+    CA->>LLM: 4.Send Prompt for Gap Analysis
+    note over CA,LLM: Prompt: "Compare BankXYZ features with ours. Identify missing features, competitor advantages, improvements."
+
+    LLM-->>CA: 5.Return JSON-like Analysis
+    note over CA: Example Response: missing_features=[Crypto Wallet], competitor_advantages=["Faster Loan"], improvement_suggestions=["Integrate Crypto"]
+
+    CA->>GA: 6.Parse LLM Output (GapAnalysisModel)
+    CA-->>CA: 7.Generate Feature Proposals
+    CA-->>CA: 8.Forward to App Feature Developer Agent
+
+Feedback Analysis Agent Diagram:
+——————————————————
+
+sequenceDiagram
+    participant FS as External Feedback Sources
+    participant FA as Feedback Analysis Agent
+    participant PM as Pydantic Validation (FeedbackDataModel)
+    participant LLM as Large Language Model
+    participant GA as GapAnalysisModel
+
+    FS->>FA: 1.Collect User Feedback (App Stores, Social Media)
+    FA->>PM: 2.Validate with FeedbackDataModel
+    PM-->>FA: 3.Valid Data or Error
+
+    note over FA: Example Data: source=AppStore, rating=2.0, review="App crashes often!"
+
+    FA->>LLM: 4.Send Prompt for Sentiment & Issue Analysis
+    note over FA,LLM: Prompt: "Analyze user feedback: 'App crashes often!' Identify key issues, sentiment, improvement suggestions."
+
+    LLM-->>FA: 5.Return JSON-like Analysis
+    note over FA: Example Response: sentiment="negative", issues=["stability"], suggestions=["Crash logging enhancements"]
+
+    FA->>GA: 6.Parse LLM Output (GapAnalysisModel)
+    FA-->>FA: 7.Generate Enhancement Ideas
+    FA-->>FA: 8.Forward to App Feature Developer Agent
+
+
+App Developer Agent Diagram:
+——————————————————
+sequenceDiagram
+    participant CA as Competitor Analysis Agent
+    participant FA as Feedback Analysis Agent
+    participant AF as App Feature Developer Agent
+    participant PM as Pydantic Validation (FeatureProposalModel)
+    participant LLM as Large Language Model
+    participant PO as Product Owner
+    participant OB as Online Banking Platform
+
+    CA-->>AF: 1. Send Competitor-Based Proposals
+    FA-->>AF: 2. Send Feedback-Based Proposals
+
+    AF->>PM: 3. Validate Proposals with FeatureProposalModel
+    PM-->>AF: 4. Validated or Error
+
+    note over AF: Example proposals: "Add Crypto Wallet", "Improve Loan Speed", "Fix Crash Issues"
+
+    AF->>LLM: 5. Send LLM Prompt to Refine/Merge Requirements
+    note over AF,LLM: Prompt: "Combine these proposals into a final feature set with clear requirements."
+
+    LLM-->>AF: 6. Return Merged Requirements
+    note over AF: Example LLM Output: "FeatureSet = { 'Crypto Wallet Integration', 'Loan Automation', 'Crash Fixes' }"
+
+    AF->>PO: 7. Request Approval
+    PO-->>AF: 8. Approve or Reject
+
+    AF->>OB: 9. Implement & Deploy (if approved)
+    note over AF: If rejected, proposals return to backlog for revision
+
+
+App Deprecator Agent Diagram:
+——————————————————
+sequenceDiagram
+    participant OB as Online Banking Platform
+    participant Dep as App Feature Deprecator Agent
+    participant PM as Pydantic Validation (UsageDataModel)
+    participant LLM as Large Language Model
+    participant CU as Customer
+
+    OB->>Dep: 1.Send Feature Usage Logs
+    Dep->>PM: 2.Validate Logs (UsageDataModel)
+    PM-->>Dep: 3.Valid Data or Error
+
+    note over Dep: Example usage: feature=CryptoWallet, usageCount=2, lastUsed=2024-02-01
+
+    Dep->>LLM: 4.Request Deprecation Analysis
+    note over Dep,LLM: Sample prompt: Analyze usage for CryptoWallet. Only 2 uses since 2024-01-01. Suggest removal or improvement
+    LLM-->>Dep: 5.Return Recommendation
+
+    note over Dep: Example recommendation: Remove if usage < 5 in 365 days, prompt customer first
+
+    Dep->>CU: 6.Propose Deprecation
+    CU-->>Dep: 7.Approve or Reject
+    Dep->>OB: 8.Implement Deprecation if Approved
+
+    note over Dep: If rejected, keep the feature active
+
+
+
+Patent 2:
+—————
+
+Slide 1: Problem Statement
+* Static, Non-Personalized Product Recommendations
+    * Traditional banking portals offer blanket promotions that often fail to match individual customer interests.
+* Slow Detection of Regulatory Issues
+    * Manual or periodic compliance checks lag behind real-time transactions and issues arising from user behavior or external feedback.
+* Fragmented Feedback Sources
+    * Comments and complaints from social media, app reviews, and system logs are rarely integrated promptly for compliance action.
+
+Slide 2: Solution
+* Multi-Agent Architecture (All LLM-Driven)
+    * Product Interest Agent analyzes clickstream/video data to infer customer product interest.
+    * Product Recommendation Agent refines offers using LLM insights for personalization.
+    * Compliance Monitoring Agent collects feedback from external channels and internal logs, leveraging a multi-modal LLM (text, video) to detect policy or regulatory breaches.
+* Real-Time Adaptation
+    * Banking platform updates offers on the homepage and escalates compliance issues automatically, providing up-to-date status notifications.
+
+Slide 3: Online Banking Business Use Cases (with Examples)
+1. Personalized Mortgage/Loan Offers
+    * Example: Customer frequently visits mortgage calculators; the system detects high interest in home loans and displays relevant promotions plus next steps to apply.
+2. Immediate Fraud/Compliance Alerts
+    * Example: A surge of social media complaints about ATM withdrawal errors triggers compliance checks. The system automatically flags a potential regulatory violation and opens a ticket.
+3. Upselling & Cross-Selling
+    * Example: A high-value customer with multiple accounts consistently visits investment pages. The platform proactively suggests wealth management packages or premium credit cards.
+
+Slide 4: Novelty
+1. Integrated Product & Compliance Agents
+    * Harmonizes sales strategies (recommendations) with legal and policy oversight (compliance).
+2. Real-Time, Multi-Modal LLM Analysis
+    * Combines text logs, video session captures, and user clickstream data to offer immediate, context-aware decisions.
+3. Customer-Centric Homepage Updates
+    * Dynamically modifies the user interface with personalized offers and ticket status notifications regarding any compliance concerns.
+
+Slide 5: Business Benefits
+* Increased Conversion & Engagement
+    * Targeted product offers boost customer uptake and loyalty.
+* Rapid Compliance & Risk Mitigation
+    * Automated detection and ticketing for potential violations reduce legal exposure and reputational harm.
+* Efficiency & Scalability
+    * Agents handle routine analysis and triage, minimizing manual overhead for customer service and compliance teams.
+* Enhanced Customer Trust
+    * Users see transparent updates on pending issues and personalized offers, fostering a sense of security and relevance.
+
+
+Solution Diagram:
+———————
+flowchart TB
+    %% ----------------------------------------------------
+    %% C4 Diagram (Context/Container) for Patent 2
+    %% Multi-Agent Architecture with LLM
+    %% ----------------------------------------------------
+
+    %% External Roles / Systems
+    customer((Customer)):::person
+    feedbackSources((Feedback Channels: App Store,<br/>Social Media, etc.)):::externalSystem
+    complianceTeam((Compliance Team)):::externalSystem
+
+    %% System Boundary: Online Banking
+    subgraph OnlineBankingBoundary[Online Banking System Boundary]
+        OBP([Online Banking Platform]):::system
+        PIA([Product Interest Agent]):::component
+        PRA([Product Recommendation Agent]):::component
+        CMA([Compliance Monitoring Agent]):::component
+        LLM([Large Language Model]):::component
+    end
+
+    %% ---------------------------
+    %% Relationships & Step Labels
+    %% ---------------------------
+
+    %% Customer Interactions
+    customer -- "1.Login & Use Platform" --> OBP
+
+    %% Product Interest Agent Flow
+    OBP -- "2.Clickstream Data" --> PIA
+    PIA -- "3.DataAnalysisRequest" --> LLM
+    LLM -- "4.Insights" --> PIA
+    PIA -- "5.ProductInterestFound" --> PRA
+
+    %% Product Recommendation Agent Flow
+    PRA -- "6.RequestRecommendation" --> LLM
+    LLM -- "7.RecommendationInsights" --> PRA
+    PRA -- "8.Render Personalized Offers" --> OBP
+
+    %% Compliance Monitoring Flow
+    feedbackSources -- "9.External Feedback" --> CMA
+    OBP -- "10.Internal Logs/Errors" --> CMA
+    CMA -- "11.DataAnalysisRequest" --> LLM
+    LLM -- "12.Insights" --> CMA
+    CMA -- "13.Check Compliance Issues" --> CMA
+    CMA -- "14.Raise High-Priority Ticket (if needed)" --> complianceTeam
+
+    %% Customer sees recommended products & ticket updates
+    customer -- "15.View Offers & Ticket Status Notifications in homepage" --> OBP
+
+    %% (Optional) Styles for clarity
+    classDef person fill:#ffe0b3,stroke:#333,color:#333
+    classDef externalSystem fill:#cce0ff,stroke:#333,color:#333
+    classDef system fill:#caffca,stroke:#333,color:#333
+    classDef component fill:#ffffcc,stroke:#333,color:#333
+
+
+Product Interest Agent:
+———————————
+sequenceDiagram
+    participant OB as Online Banking Platform
+    participant PIA as Product Interest Agent
+    participant LLM as Large Language Model
+    participant PRA as Product Recommendation Agent
+
+    OB->>PIA: 1.Receive Clickstream Data
+    note over PIA: Example usage: visited Mortgage=3, LoanCalc=1
+
+    PIA->>LLM: 2.Send Prompt for Interest Analysis
+    note over PIA,LLM: Prompt: "Analyze usage: Mortgage=3 visits, LoanCalc=1. Identify likely product interest."
+    LLM-->>PIA: 3.Return Insights
+    note over PIA: Example: "High interest in Mortgage, moderate interest in Personal Loans."
+
+    PIA->>PIA: 4.Determine Interest Level
+    PIA->>PRA: 5.Forward Interest Data
+
+Product Recommendation Agent:
+——————————————
+sequenceDiagram
+    participant PIA as Product Interest Agent
+    participant PRA as Product Recommendation Agent
+    participant LLM as Large Language Model
+    participant OBP as Online Banking Platform
+    participant CU as Customer
+
+    PIA->>PRA: 1.Receive Customer Interest Data
+    note over PRA: Example: Mortgage=High, Loan=Moderate
+
+    PRA->>LLM: 2.Request Product Recommendations
+    note over PRA,LLM: Prompt: "Given interest=Mortgage(High),Loan(Moderate), suggest best offers."
+
+    LLM-->>PRA: 3.Return Recommendation Insights
+    note over PRA: Example: "Recommend Mortgage Bundle, highlight Loan discount."
+
+    PRA->>PRA: 4.Finalize Offers
+    PRA->>OBP: 5.Render Personalized Offers
+    note over OBP: Homepage shows Mortgage Bundle banner, Loan discount option
+
+    OBP->>CU: 6.Customer Sees Tailored Products
+
+
+Compliance Monitoring Agent:
+——————————————
+sequenceDiagram
+    participant FS as Feedback Sources
+    participant OB as Online Banking Platform
+    participant CMA as Compliance Monitoring Agent
+    participant MML as Multi-Modal LLM
+    participant CT as Compliance Team
+
+    FS->>CMA: 1.External Feedback (social media, etc.)
+    OB->>CMA: 2.Internal Logs & Session Video
+    note over CMA: Example data: frequent login errors, suspicious session activity
+    CMA->>MML: 3.Request Compliance Analysis
+    note over CMA,MML: Prompt includes text logs & video frames to detect unauthorized usage
+    MML-->>CMA: 4.Return Insights
+    note over CMA: Possible compliance breach or fraud risk identified
+    CMA->>CMA: 5.Assess Severity
+    CMA->>CT: 6.Raise High-Priority Ticket if violation
+    note over CT: Compliance Team investigates escalated issues

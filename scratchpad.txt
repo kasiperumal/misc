@@ -181,3 +181,15 @@ Verification --> Authentication[Authentication Successful/Failed]
 - Proceed with technical prototype development for validation.
 
 Please let me know if you need further details or adjustments!
+
+
+Additionalusecase:
+
+Customer Onboarding and KYC
+
+Secure digital onboarding using visually verifiable QR codes on identification documents.
+Faster and secure customer verification processes without specialized scanners.
+Loan and Credit Documentation
+
+Ensures quick and secure verification of loan agreements and financial documentation.
+Strengthens document integrity in financial processes.

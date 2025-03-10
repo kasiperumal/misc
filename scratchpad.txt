@@ -1,47 +1,15 @@
-1. Secure Payment Transactions
+Secure Payment Transactions (Customers scan QR codes for secure mobile payments, including P2P and merchant payments)
 
-Use case: Customers scan QR codes for secure mobile payments (P2P, merchant payments).
+Account Authentication and Access (QR codes used to securely verify user identity for ATM withdrawals, account logins, or digital banking)
 
-Benefit: Prevents transaction fraud by visually indicating authenticity.
+Document Verification (Embedding QR codes on financial documents like loan contracts or insurance policies to confirm authenticity)
 
-2. Account Authentication and Access
+Secure Invoice & Bill Payments (Customers securely scan and pay bills from QR-enabled invoices, reducing fraud)
 
-Use case: QR codes verify user identity for ATM withdrawals, account logins, or secure access to digital banking.
+Fraud Prevention in Investments (QR code validation for investment offers to ensure legitimacy and protect investors)
 
-Benefit: Enhances security, reducing account takeovers and identity theft.
+Loan Application Verification (Secure QR codes confirm authenticity of loan approvals and offers)
 
-3. Document Verification
+Secure Cheque Processing (Embedding QR codes on cheques for digital verification, accelerating clearing, and reducing fraud)
 
-Use case: Embedding QR codes on critical financial documents (loan contracts, insurance policies) to confirm authenticity.
-
-Benefit: Prevents forgery, ensures trust, simplifies verification.
-
-4. Secure Invoice & Bill Payments
-
-Use case: QR-enabled invoices that customers scan to securely verify and pay bills.
-
-Benefit: Reduces phishing scams, ensures payment goes to the correct recipient.
-
-5. Fraud Prevention in Investments
-
-Use case: Validating QR codes in investment materials to assure legitimacy of offers and prevent fraudulent investment solicitations.
-
-Benefit: Protects customers from fraudulent schemes, enhancing investor confidence.
-
-6. Loan Application Verification
-
-Use case: Secure QR codes confirm validity of loan approvals or offers.
-
-Benefit: Minimizes fraudulent loan scams and misrepresentation.
-
-7. Secure Cheque Processing
-
-Use case: QR codes embedded on cheques for immediate digital verification of authenticity and payer identity.
-
-Benefit: Accelerates clearing process, prevents cheque fraud.
-
-8. Secure Onboarding & KYC Verification
-
-Use case: Using secure QR codes to authenticate new customer onboarding documents and Know Your Customer (KYC) procedures.
-
-Benefit: Streamlines compliance, reduces manual review effort, and increases security.
+Secure Onboarding & KYC Verification (Secure QR codes used to authenticate onboarding documents and streamline KYC compliance)

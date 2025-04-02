@@ -1,27 +1,19 @@
-sequenceDiagram
-    participant C as Customer
-    participant I as iOS Device
-    participant A as BankerUI
-    participant B as LaunchPad
-    participant S as QRCodeMS
-    participant D as MongoDB
+Bridget Questions:
 
-    %% QR Code Generation
-    A->>S: 1. Request QR code generation
-    S->>D: 2. Store QR metadata (qr_id, status=generated)
-    S-->>A: 3. Return QR code URL (e.g., https://your-backend.com/qr/redirect?qr_id=abc123)
-    A->>B: 4. Send QR code for display
-    B-->>C: 5. Display QR code
+How do you see GenAI reshaping customer experience in retail banking over the next 2–3 years?
 
-    %% QR Scan and Read Acknowledgment
-    C->>I: 6. Scan QR code
-    I->>S: 7. Open URL (https://your-backend.com/qr/redirect?qr_id=abc123)
-    S->>D: 8. Update QR metadata (qr_read_ack=true, qr_read_at)
-    S-->>A: 9. Notify QR read (webhook: qr_id, qr_read_ack=true)
-    S-->>I: 10. Redirect to deep link (myapp://open?qr_id=abc123)
+What use cases for GenAI are you most excited about in your bank?
 
-    %% App Open Acknowledgment
-    I->>I: 11. Open iOS app via deep link
-    I->>S: 12. POST /qr/app-opened (qr_id=abc123)
-    S->>D: 13. Update QR metadata (app_open_ack=true, app_opened_at)
-    S-->>A: 14. Notify app opened (webhook: qr_id, app_open_ack=true)
+What’s one challenge you didn’t expect when implementing GenAI initiatives at scale?
+
+How do you decide which emerging technologies are worth exploring vs. those to watch and wait?
+
+What does “future-ready” mean to you in the context of banking technology?
+
+How do you foster a culture of innovation while keeping the day-to-day operations stable?
+
+Have you seen any regional or generational trends that surprised you recently?
+
+Where do we stand with respect to competitor in terms of GenAI maturity and implementation?
+
+What’s one bold prediction you’d make about the future of banking tech in 2030?

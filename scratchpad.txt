@@ -1,2 +1,1 @@
-https://youtu.be/mEZlUjqHJZM?si=FRXrIxUE75CGXbVT
-https://youtu.be/mEZlUjqHJZM
+curl -o /dev/null -s -w "Time: %{time_total}s\nStatus: %{http_code}\n" https://example.com

@@ -1,49 +1,87 @@
-# Stop on any error
-$ErrorActionPreference = "Stop"
-
-# Ask for main branch name
-$mainBranch = Read-Host "Enter the main branch to merge into (e.g., develop)"
-$featureBranch = git rev-parse --abbrev-ref HEAD
-
-Write-Host "Current feature branch: $featureBranch"
-Write-Host "Target main branch: $mainBranch"
-
-# Fetch latest changes and switch to main branch
-git fetch origin
-git checkout $mainBranch
-git pull origin $mainBranch
-
-# Attempt fast-forward merge
-Write-Host "Attempting fast-forward merge of $featureBranch into $mainBranch..."
-$mergeResult = git merge --ff-only $featureBranch 2>&1
-
-if ($LASTEXITCODE -eq 0) {
-    Write-Host "✅ Fast-forward merge successful."
-
-    # Run Gradle build
-    Write-Host "🔨 Running Gradle build..."
-    & ./gradlew build
-
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "✅ Build successful."
-
-        # Push to origin
-        git push origin $mainBranch
-
-        # Create pull request
-        Write-Host "🚀 Creating pull request..."
-        gh pr create --base $mainBranch --head $featureBranch `
-            --title "Merge $featureBranch into $mainBranch" `
-            --body "Automated fast-forward merge and successful Gradle build."
-
-        Write-Host "✅ Pull request created successfully."
+pipeline {
+    agent any
+    parameters {
+        string(name: 'REPO_NAME', defaultValue: 'kasiperumal/misc', description: 'GitHub repo in format user/repo')
+        string(name: 'MAIN_BRANCH', defaultValue: 'develop', description: 'Target main branch')
+        string(name: 'FEATURE_BRANCH', defaultValue: 'develop-1', description: 'Source feature branch')
     }
-    else {
-        Write-Host "❌ Build failed after merge. Please check build output."
-        exit 1
+
+    environment {
+        GITHUB_API = "https://api.github.com"
+        GITHUB_TOKEN = credentials('GITHUB_TOKEN') // Injects GitHub token from Jenkins credentials
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                sh """
+                rm -rf repo && mkdir repo
+                cd repo
+                git clone https://github.com/${params.REPO_NAME}.git .
+                git config user.name "jenkins-bot"
+                git config user.email "jenkins@example.com"
+                """
+            }
+        }
+
+        stage('Merge & Build') {
+            steps {
+                dir('repo') {
+                    script {
+                        sh """
+                        git checkout ${params.FEATURE_BRANCH}
+                        git pull origin ${params.FEATURE_BRANCH}
+
+                        git checkout ${params.MAIN_BRANCH}
+                        git pull origin ${params.MAIN_BRANCH}
+
+                        echo "Attempting fast-forward merge..."
+                        git merge --ff-only ${params.FEATURE_BRANCH}
+                        """
+
+                        sh './gradlew build'
+                    }
+                }
+            }
+        }
+
+        stage('Push & Raise PR') {
+            steps {
+                dir('repo') {
+                    script {
+                        sh """
+                        git push origin ${params.MAIN_BRANCH}
+                        """
+
+                        def prTitle = "Merge ${params.FEATURE_BRANCH} into ${params.MAIN_BRANCH}"
+                        def prBody = "Automated PR created by Jenkins pipeline."
+                        def prData = """{
+                          "title": "${prTitle}",
+                          "head": "${params.MAIN_BRANCH}",
+                          "base": "${params.FEATURE_BRANCH}",
+                          "body": "${prBody}"
+                        }"""
+
+                        writeFile file: 'pr_payload.json', text: prData
+
+                        sh """
+                        curl -X POST -H "Authorization: token ${env.GITHUB_TOKEN}" \
+                          -H "Accept: application/vnd.github.v3+json" \
+                          ${env.GITHUB_API}/repos/${params.REPO_NAME}/pulls \
+                          -d @pr_payload.json
+                        """
+                    }
+                }
+            }
+        }
     }
 }
-else {
-    Write-Host "❌ Fast-forward merge not possible (branches have diverged). Aborting."
-    exit 1
-}
+
+Jenkins Setup: GitHub Token
+Go to: Jenkins → Manage Jenkins → Credentials → Global
+
+Add a "Secret Text" credential:
+
+ID: GITHUB_TOKEN
+
+Secret: Your GitHub Personal Access Token (with repo scope)

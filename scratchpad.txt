@@ -1,54 +1,88 @@
-name: Scheduled Merge: develop-1 → develop
+# Stop on any error
+$ErrorActionPreference = "Stop"
 
-on:
-  schedule:
-    - cron: '0 4 * * *'  # Runs daily at 9:30 AM IST (4:00 UTC)
-  workflow_dispatch:      # Allow manual trigger too
+# Prompt for input
+$mainBranch = Read-Host "Enter the main branch to merge into (e.g., develop)"
+$featureBranch = Read-Host "Enter the feature branch to merge from (e.g., develop-1)"
 
-jobs:
-  create-pr:
-    runs-on: ubuntu-latest
+# Prompt for GitHub token at runtime (simulating OAuth)
+$githubToken = Read-Host -AsSecureString "Enter your GitHub Personal Access Token (simulating OAuth)"
+$githubTokenPlain = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($githubToken))
 
-    steps:
-      - name: Checkout base branch
-        uses: actions/checkout@v4
-        with:
-          ref: develop
+# Extract repo name from git remote
+$remoteUrl = git config --get remote.origin.url
+if ($remoteUrl -match "github.com[:/](.+?)(\.git)?$") {
+    $repoName = $matches[1]
+} else {
+    Write-Host "❌ Could not determine GitHub repo name from remote URL."
+    exit 1
+}
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+Write-Host "Feature branch: $featureBranch"
+Write-Host "Main branch: $mainBranch"
+Write-Host "GitHub repo: $repoName"
 
-      - name: Fetch feature branch
-        run: |
-          git fetch origin develop-1:develop-1
+# Fetch and check out branches
+git fetch origin
+git checkout $mainBranch
+git pull origin $mainBranch
 
-      - name: Check for fast-forward possibility
-        id: check_ff
-        run: |
-          git checkout develop
-          if git merge-base --is-ancestor develop develop-1; then
-            echo "Can fast-forward merge"
-            echo "ff_possible=true" >> $GITHUB_OUTPUT
-          else
-            echo "Fast-forward not possible"
-            echo "ff_possible=false" >> $GITHUB_OUTPUT
-          fi
+# Merge with regular strategy (not fast-forward only)
+Write-Host "Attempting regular merge of $featureBranch into $mainBranch..."
+git merge $featureBranch 2>&1
 
-      - name: Create Pull Request if fast-forward is possible
-        if: steps.check_ff.outputs.ff_possible == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: 'Scheduled Merge: develop-1 → develop'
-          body: |
-            This PR merges `develop-1` into `develop` using a fast-forward strategy.
-            - Auto-created via GitHub Actions.
-            - Please review and merge if conflict-free.
-          base: develop
-          head: develop-1
-          draft: false
-          reviewers: |
-            kasiperumal
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "✅ Merge successful."
 
+    # Build the project
+    Write-Host "🔨 Running Gradle build..."
+    & ./gradlew build
+
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✅ Build successful."
+
+        # Push merged main branch
+        git push origin $mainBranch
+
+        # Prepare PR data
+        $prTitle = "Merge $featureBranch into $mainBranch"
+        $prBody = "Automated regular merge and successful Gradle build."
+        $jsonPayload = @{
+            title = $prTitle
+            head  = $featureBranch
+            base  = $mainBranch
+            body  = $prBody
+        } | ConvertTo-Json -Depth 3
+
+        $apiUrl = "https://api.github.com/repos/$repoName/pulls"
+        $headers = @{
+            Authorization = "token $githubTokenPlain"
+            Accept = "application/vnd.github.v3+json"
+            "User-Agent" = "PowerShell Script"
+        }
+
+        Write-Host "🚀 Creating pull request via GitHub API..."
+        try {
+            $response = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Post -Body $jsonPayload -ContentType "application/json"
+
+            if ($response.html_url) {
+                Write-Host "✅ Pull request created successfully:"
+                Write-Host $response.html_url
+            } else {
+                Write-Host "❌ Pull request creation failed: unexpected response."
+                exit 1
+            }
+        }
+        catch {
+            Write-Host "❌ Failed to create pull request: $($_.Exception.Message)"
+            exit 1
+        }
+
+    } else {
+        Write-Host "❌ Build failed after merge. Please check build output."
+        exit 1
+    }
+} else {
+    Write-Host "❌ Merge failed. Please resolve conflicts manually."
+    exit 1
+}

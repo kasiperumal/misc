@@ -1,19 +1,49 @@
-Bridget Questions:
+# Stop on any error
+$ErrorActionPreference = "Stop"
 
-How do you see GenAI reshaping customer experience in retail banking over the next 2–3 years?
+# Ask for main branch name
+$mainBranch = Read-Host "Enter the main branch to merge into (e.g., develop)"
+$featureBranch = git rev-parse --abbrev-ref HEAD
 
-What use cases for GenAI are you most excited about in your bank?
+Write-Host "Current feature branch: $featureBranch"
+Write-Host "Target main branch: $mainBranch"
 
-What’s one challenge you didn’t expect when implementing GenAI initiatives at scale?
+# Fetch latest changes and switch to main branch
+git fetch origin
+git checkout $mainBranch
+git pull origin $mainBranch
 
-How do you decide which emerging technologies are worth exploring vs. those to watch and wait?
+# Attempt fast-forward merge
+Write-Host "Attempting fast-forward merge of $featureBranch into $mainBranch..."
+$mergeResult = git merge --ff-only $featureBranch 2>&1
 
-What does “future-ready” mean to you in the context of banking technology?
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "✅ Fast-forward merge successful."
 
-How do you foster a culture of innovation while keeping the day-to-day operations stable?
+    # Run Gradle build
+    Write-Host "🔨 Running Gradle build..."
+    & ./gradlew build
 
-Have you seen any regional or generational trends that surprised you recently?
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✅ Build successful."
 
-Where do we stand with respect to competitor in terms of GenAI maturity and implementation?
+        # Push to origin
+        git push origin $mainBranch
 
-What’s one bold prediction you’d make about the future of banking tech in 2030?
+        # Create pull request
+        Write-Host "🚀 Creating pull request..."
+        gh pr create --base $mainBranch --head $featureBranch `
+            --title "Merge $featureBranch into $mainBranch" `
+            --body "Automated fast-forward merge and successful Gradle build."
+
+        Write-Host "✅ Pull request created successfully."
+    }
+    else {
+        Write-Host "❌ Build failed after merge. Please check build output."
+        exit 1
+    }
+}
+else {
+    Write-Host "❌ Fast-forward merge not possible (branches have diverged). Aborting."
+    exit 1
+}

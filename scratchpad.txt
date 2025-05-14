@@ -17,3 +17,4 @@ rules:
 spectral lint --ruleset ruleset.yaml schema.json
 
 find . -name "*.json" -print0 | xargs -0 spectral lint --ruleset ruleset.yaml
+for /R %f in (*.json) do spectral lint "%f" --ruleset ruleset.yaml --format json

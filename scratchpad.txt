@@ -18,3 +18,15 @@ spectral lint --ruleset ruleset.yaml schema.json
 
 find . -name "*.json" -print0 | xargs -0 spectral lint --ruleset ruleset.yaml
 for /R %f in (*.json) do spectral lint "%f" --ruleset ruleset.yaml --format json
+
+
+for /R %%f in (*.json) do (
+  spectral lint "%%f" --ruleset ruleset.yaml | find "error" > temp-error.txt
+  if %errorlevel%==0 (
+    echo ==== %%f ==== >> spectral-errors.txt
+    type temp-error.txt >> spectral-errors.txt
+    echo. >> spectral-errors.txt
+  )
+)
+del temp-error.txt
+

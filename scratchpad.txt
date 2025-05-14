@@ -1,14 +1,17 @@
-extends: ["spectral:oas"]
+extends: []
+
 rules:
   camel-case-properties:
     description: "Property names should be camelCase"
-    message: "{{property}} is not camelCase"
+    message: "Property '{{property}}' is not camelCase"
     severity: error
-    given: "$.properties[*]~"
+    given: "$.properties"
     then:
+      field: "@key"
       function: pattern
       functionOptions:
-        match: "^[a-z]+([A-Z][a-z0-9]+)*$"
+        match: "^[a-z]+([A-Z][a-z0-9]*)*$"
+
 
 
 spectral lint --ruleset ruleset.yaml schema.json

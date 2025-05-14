@@ -1,85 +1,16 @@
-Here are the answers to your questions based on the provided context about the **QR Code Scanner v4** system:
+extends: ["spectral:oas"]
+rules:
+  camel-case-properties:
+    description: "Property names should be camelCase"
+    message: "{{property}} is not camelCase"
+    severity: error
+    given: "$.properties[*]~"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z]+([A-Z][a-z0-9]+)*$"
 
----
 
-### 1. **How does the AI work?**
+spectral lint --ruleset ruleset.yaml schema.json
 
-The AI functions as a **Backend Security Agent** that validates QR code payloads during scanning. It uses:
-
-* **Threat Intelligence**: Cross-references real-time databases, blacklists, and heuristics.
-* **Generative AI**: Generates a **visual watermark** unique to the payload, enhancing authenticity.
-* **Signature Verification**: Confirms that payloads haven’t been tampered with by checking cryptographic signatures.
-
----
-
-### 2. **Is there something unique to how the model is trained?**
-
-Yes. The **AI Visual Watermark Generator** is likely based on a **Generative Adversarial Network (GAN)** trained to:
-
-* Embed distinct, tamper-evident visual markers into the QR code.
-* Reflect payload-specific metadata (like the content, signature, and timestamp).
-* Ensure the visual watermark is both human-observable and machine-verifiable.
-
-This approach provides a **visual verification layer** rarely seen in conventional QR systems.
-
----
-
-### 3. **How is it different from existing AI models?**
-
-Compared to existing models:
-
-* Most QR systems lack **AI-based security checks or visual authentication**.
-* This system **decouples generation from validation**, ensuring payloads are scanned and verified in real-time rather than just signed once.
-* Combines **AI + cryptography + UX feedback loop**, where the scanner may update the digital QR code post-validation (e.g., with a trust indicator and timestamp).
-
----
-
-### 4. **Are there unique outputs created by the AI?**
-
-Yes, there are two notable outputs:
-
-* **Visual Watermarks**: AI-generated, payload-specific watermarks embedded in the QR code.
-* **Real-Time Trust Feedback**: Enhanced scanners can display live validation results, including trust indicators and timestamps, especially for digital QR codes.
-
-These outputs are both **unique and verifiable**, enhancing trust for users and platforms.
-
----
-
-### 5. **Does having the AI output unlock useful new capabilities?**
-
-Absolutely. AI-driven outputs enable:
-
-* **Tamper detection** via embedded visual cues.
-* **Live feedback loops** for digital QR codes (trust status, timestamp).
-* **Offline validation** for physical QR codes using the embedded signature and watermark.
-* **Dynamic trust indicators** tailored to scanning context (digital vs. physical).
-
-This greatly improves **security**, **user trust**, and **brand protection**.
-
----
-
-### 6. **Does the AI require any unique hardware to function?**
-
-No special hardware is required for the AI itself, but:
-
-* **Enhanced scanners** (apps or devices) must support the **QR Exchange Protocol** for signature validation and trust updates.
-* Digital display environments may be needed to **render real-time trust indicators** on QR codes post-validation.
-
-Otherwise, standard web/mobile infrastructure suffices.
-
----
-
-### 7. **What is unique about customer experience?**
-
-The experience is enriched in several ways:
-
-* **Visual confidence**: Users immediately recognize trusted codes via AI-generated watermarks.
-* **Interactive validation**: Digital QR codes update with trust indicators after scanning.
-* **Security transparency**: Users see real-time validation results—safe, unsafe, or invalid.
-* **Consistency across media**: Whether physical or digital, the validation process is seamless and robust.
-
-In essence, customers are no longer just scanning QR codes—they're engaging with a **trust-certified digital artifact**.
-
----
-
-Let me know if you'd like these answers turned into a presentation or a patent filing summary.
+find . -name "*.json" -print0 | xargs -0 spectral lint --ruleset ruleset.yaml

@@ -1,32 +1,24 @@
-extends: []
+#!/bin/bash
 
-rules:
-  camel-case-properties:
-    description: "Property names should be camelCase"
-    message: "Property '{{property}}' is not camelCase"
-    severity: error
-    given: "$.properties"
-    then:
-      field: "@key"
-      function: pattern
-      functionOptions:
-        match: "^[a-z]+([A-Z][a-z0-9]*)*$"
+TO="recipient@example.com"
+SUBJECT="CSV Report (HTML Inline)"
+CSV_FILE="/path/to/your/file.csv"
 
+{
+echo "To: $TO"
+echo "Subject: $SUBJECT"
+echo "Content-Type: text/html"
+echo
+echo "<html><body><h3>CSV Report</h3><table border='1' cellpadding='5'>"
 
+# Convert CSV to HTML table rows
+while IFS=',' read -r -a cols; do
+    echo "<tr>"
+    for col in "${cols[@]}"; do
+        echo "<td>${col}</td>"
+    done
+    echo "</tr>"
+done < "$CSV_FILE"
 
-spectral lint --ruleset ruleset.yaml schema.json
-
-find . -name "*.json" -print0 | xargs -0 spectral lint --ruleset ruleset.yaml
-for /R %f in (*.json) do spectral lint "%f" --ruleset ruleset.yaml --format json
-
-
-for /R %%f in (*.json) do (
-  spectral lint "%%f" --ruleset ruleset.yaml | find "error" > temp-error.txt
-  if %errorlevel%==0 (
-    echo ==== %%f ==== >> spectral-errors.txt
-    type temp-error.txt >> spectral-errors.txt
-    echo. >> spectral-errors.txt
-  )
-)
-del temp-error.txt
-
+echo "</table></body></html>"
+} | sendmail -t

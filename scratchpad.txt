@@ -14,7 +14,7 @@ echo "<html><body><h3>CSV Report</h3><table border='1' cellpadding='5'>"
 # Convert CSV to HTML table rows using IFS and set
 while IFS=',' read -r line; do
     echo "<tr>"
-    IFS=',' set -- $line
+    IFS=',' eval 'set -- $line'  # force word-splitting by comma
     for col in "$@"; do
         echo "<td>${col}</td>"
     done

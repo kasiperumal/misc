@@ -1,1 +1,41 @@
-https://youtu.be/82U4LhoZNzM?si=Zimi77hWVW2xeSTN
+Account Open Summary View:
+
+Please create Geo bubble map with below specification,
+
+1. Data Visualization:
+    * Display a map with bubbles representing each branch location using latitude and longitude.
+    * The size or color of the bubbles can indicate the number of accounts opened and whether an anomaly is detected.
+        * Red - Account Open Anomaly
+        * Blue - No Anomaly
+2. Hover Interaction:
+    * When hovering over a bubble, display a pop-up with the following details:
+        * Date
+        * Branch Name
+        * Timezone
+        * Accounts Opened
+        * Account Open Anomaly status (Yes/No)
+
+Drill down Branch View:
+
+Please create moving bubble chart with below specification,
+
+1. Data Visualization:
+    * X-Axis: Milestone Names
+    * Y-Axis: Application Count
+    * Bubble Size: Proportional to the number of applications at that milestone
+    * Bubble Color:
+        * Red – Anomaly Reason ≠ "N/A"
+        * Blue – Anomaly Reason = "N/A"
+
+2. Time Interaction
+* Time Slider (Bottom):
+    * Range: 09:00 AM to 04:00 PM
+    * Interval: 1 hour
+    * Function: Changes the data to show milestone bubbles for the selected hour
+* Play/Pause(Bottom)
+
+3. Tooltip on Hover
+* Display:
+    * Milestone Name
+    * Application Volume
+    * Anomaly Reason (e.g., Customer Dropout, Technical Failure, N/A)

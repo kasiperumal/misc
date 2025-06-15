@@ -1,41 +1,21 @@
-Account Open Summary View:
+Option A: Using Python (if installed)
+bash# Navigate to your folder
+cd /path/to/your/html/folder
 
-Please create Geo bubble map with below specification,
+# Python 3
+python -m http.server 8000
 
-1. Data Visualization:
-    * Display a map with bubbles representing each branch location using latitude and longitude.
-    * The size or color of the bubbles can indicate the number of accounts opened and whether an anomaly is detected.
-        * Red - Account Open Anomaly
-        * Blue - No Anomaly
-2. Hover Interaction:
-    * When hovering over a bubble, display a pop-up with the following details:
-        * Date
-        * Branch Name
-        * Timezone
-        * Accounts Opened
-        * Account Open Anomaly status (Yes/No)
+# Python 2
+python -m SimpleHTTPServer 8000
+Then open: http://localhost:8000/fixed_bank_dashboard.html
+Option B: Using Node.js (if installed)
+bash# Install http-server globally
+npm install -g http-server
 
-Drill down Branch View:
+# Navigate to your folder and run
+cd /path/to/your/html/folder
+http-server
 
-Please create moving bubble chart with below specification,
-
-1. Data Visualization:
-    * X-Axis: Milestone Names
-    * Y-Axis: Application Count
-    * Bubble Size: Proportional to the number of applications at that milestone
-    * Bubble Color:
-        * Red – Anomaly Reason ≠ "N/A"
-        * Blue – Anomaly Reason = "N/A"
-
-2. Time Interaction
-* Time Slider (Bottom):
-    * Range: 09:00 AM to 04:00 PM
-    * Interval: 1 hour
-    * Function: Changes the data to show milestone bubbles for the selected hour
-* Play/Pause(Bottom)
-
-3. Tooltip on Hover
-* Display:
-    * Milestone Name
-    * Application Volume
-    * Anomaly Reason (e.g., Customer Dropout, Technical Failure, N/A)
+# Then open the URL shown in terminal
+Option C: Using Live Server (VS Code Extension)
+If using VS Code, install the "Live Server" extension and right-click your HTML file → "Open with Live Server"

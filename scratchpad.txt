@@ -1,15 +1,162 @@
-const currentMilestoneIndex = milestoneInfo.findIndex(milestone => milestone.id === app.milestone);
-if (currentMilestoneIndex !== -1 && currentMilestoneIndex < milestoneInfo.length - 1) {
-    // Move to next milestone in sequence
-    const nextMilestone = milestoneInfo[currentMilestoneIndex + 1];
-    app.milestone = nextMilestone.id;
+// Delta Change 1: Add completion time and drop reason to application creation
+// In the createApplication function, add these properties:
+
+// AFTER the existing properties:
+createdAt: Date.now(),
+lastProgress: Date.now(),
+milestoneEntryTime: Date.now(),
+dropProbability: 0.05,
+progressHistory: ['M1']
+
+// ADD these new properties:
+completedAt: null,
+dropReason: null
+
+// Delta Change 2: Update progressApplication function to handle completion and drop reasons
+// In the progressApplication function, find the drop logic and update it:
+
+// BEFORE:
+// if (Math.random() < app.dropProbability) {
+//     app.milestone = 'Dropped';
+//     app.lastProgress = Date.now();
+//     app.milestoneEntryTime = Date.now();
+//     app.progressHistory.push('Dropped');
+//     workflowStats.dropped++;
+//     return true;
+// }
+
+// AFTER:
+if (Math.random() < app.dropProbability) {
+    app.milestone = 'Dropped';
     app.lastProgress = Date.now();
     app.milestoneEntryTime = Date.now();
-    app.progressHistory.push(app.milestone);
+    app.completedAt = Date.now();
+    app.progressHistory.push('Dropped');
     
-    // Check if reached the final milestone (last item in milestoneInfo array)
-    if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
-        workflowStats.completed++;
-    }
+    // Add random drop reason
+    const dropReasons = ['Customer Drop', 'Technical Issue', 'Incomplete Documentation', 'Credit Issues', 'System Error'];
+    app.dropReason = dropReasons[Math.floor(Math.random() * dropReasons.length)];
+    
+    workflowStats.dropped++;
     return true;
 }
+
+// Also update the completion logic:
+// BEFORE:
+// if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
+//     workflowStats.completed++;
+// }
+
+// AFTER:
+if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
+    app.completedAt = Date.now();
+    workflowStats.completed++;
+}
+
+// Delta Change 3: Add tooltip functionality to updateApplications function
+// In the updateApplications function, find the bubble creation section and update it:
+
+// BEFORE:
+// bubbles.enter()
+//     .append('circle')
+//     .attr('class', 'application-bubble')
+//     .attr('r', applicationRadius)
+//     .attr('cx', d => d.x)
+//     .attr('cy', d => d.y)
+//     .style('fill', d => d.color || '#4a90e2')
+//     .style('stroke', 'white')
+//     .style('stroke-width', 1)
+//     .style('opacity', 0)
+//     .transition()
+//     .duration(300)
+//     .style('opacity', 0.7);
+
+// AFTER:
+bubbles.enter()
+    .append('circle')
+    .attr('class', 'application-bubble')
+    .attr('r', applicationRadius)
+    .attr('cx', d => d.x)
+    .attr('cy', d => d.y)
+    .style('fill', d => d.color || '#4a90e2')
+    .style('stroke', 'white')
+    .style('stroke-width', 1)
+    .style('opacity', 0)
+    .on('mouseover', function(event, d) {
+        const tooltip = d3.select('#tooltip');
+        
+        // Get milestone label
+        const milestoneLabel = milestoneInfo.find(m => m.id === d.milestone)?.label || d.milestone;
+        
+        // Format dates
+        const createdTime = new Date(d.createdAt).toLocaleString();
+        const completedTime = d.completedAt ? new Date(d.completedAt).toLocaleString() : 'In Progress';
+        
+        // Create tooltip content based on application status
+        let tooltipContent = `
+            <strong>Application #${d.id}</strong><br/>
+            <strong>Account Type:</strong> ${d.accountType ? d.accountType.charAt(0).toUpperCase() + d.accountType.slice(1) : 'N/A'}<br/>
+            <strong>Current Stage:</strong> ${milestoneLabel}<br/>
+            <strong>Created:</strong> ${createdTime}<br/>
+        `;
+        
+        if (d.milestone === 'Dropped') {
+            tooltipContent += `<strong>Drop Reason:</strong> ${d.dropReason}<br/>`;
+            tooltipContent += `<strong>Dropped:</strong> ${completedTime}`;
+        } else if (d.milestone === 'M9') {
+            tooltipContent += `<strong>Completed:</strong> ${completedTime}`;
+        } else {
+            tooltipContent += `<strong>Status:</strong> ${completedTime}`;
+        }
+        
+        tooltip.style('opacity', 1)
+            .html(tooltipContent)
+            .style('left', (event.pageX + 10) + 'px')
+            .style('top', (event.pageY - 10) + 'px');
+    })
+    .on('mouseout', function() {
+        d3.select('#tooltip').style('opacity', 0);
+    })
+    .transition()
+    .duration(300)
+    .style('opacity', 0.7);
+
+// Delta Change 4: Also add hover functionality to existing bubbles
+// After the enter() section, add this for existing bubbles:
+
+bubbles
+    .on('mouseover', function(event, d) {
+        const tooltip = d3.select('#tooltip');
+        
+        // Get milestone label
+        const milestoneLabel = milestoneInfo.find(m => m.id === d.milestone)?.label || d.milestone;
+        
+        // Format dates
+        const createdTime = new Date(d.createdAt).toLocaleString();
+        const completedTime = d.completedAt ? new Date(d.completedAt).toLocaleString() : 'In Progress';
+        
+        // Create tooltip content based on application status
+        let tooltipContent = `
+            <strong>Application #${d.id}</strong><br/>
+            <strong>Account Type:</strong> ${d.accountType ? d.accountType.charAt(0).toUpperCase() + d.accountType.slice(1) : 'N/A'}<br/>
+            <strong>Current Stage:</strong> ${milestoneLabel}<br/>
+            <strong>Created:</strong> ${createdTime}<br/>
+        `;
+        
+        if (d.milestone === 'Dropped') {
+            tooltipContent += `<strong>Drop Reason:</strong> ${d.dropReason}<br/>`;
+            tooltipContent += `<strong>Dropped:</strong> ${completedTime}`;
+        } else if (d.milestone === 'M9') {
+            tooltipContent += `<strong>Completed:</strong> ${completedTime}`;
+        } else {
+            tooltipContent += `<strong>Status:</strong> ${completedTime}`;
+        }
+        
+        tooltip.style('opacity', 1)
+            .html(tooltipContent)
+            .style('left', (event.pageX + 10) + 'px')
+            .style('top', (event.pageY - 10) + 'px');
+    })
+    .on('mouseout', function() {
+        d3.select('#tooltip').style('opacity', 0);
+    });

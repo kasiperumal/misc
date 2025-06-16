@@ -1,21 +1,15 @@
-Option A: Using Python (if installed)
-bash# Navigate to your folder
-cd /path/to/your/html/folder
-
-# Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
-Then open: http://localhost:8000/fixed_bank_dashboard.html
-Option B: Using Node.js (if installed)
-bash# Install http-server globally
-npm install -g http-server
-
-# Navigate to your folder and run
-cd /path/to/your/html/folder
-http-server
-
-# Then open the URL shown in terminal
-Option C: Using Live Server (VS Code Extension)
-If using VS Code, install the "Live Server" extension and right-click your HTML file → "Open with Live Server"
+const currentMilestoneIndex = milestoneInfo.findIndex(milestone => milestone.id === app.milestone);
+if (currentMilestoneIndex !== -1 && currentMilestoneIndex < milestoneInfo.length - 1) {
+    // Move to next milestone in sequence
+    const nextMilestone = milestoneInfo[currentMilestoneIndex + 1];
+    app.milestone = nextMilestone.id;
+    app.lastProgress = Date.now();
+    app.milestoneEntryTime = Date.now();
+    app.progressHistory.push(app.milestone);
+    
+    // Check if reached the final milestone (last item in milestoneInfo array)
+    if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
+        workflowStats.completed++;
+    }
+    return true;
+}

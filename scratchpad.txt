@@ -1,162 +1,223 @@
-// Delta Change 1: Add completion time and drop reason to application creation
-// In the createApplication function, add these properties:
+I'll analyze this Power Automate flow and provide you with step-by-step instructions to recreate it manually. This flow appears to be an alert acknowledgment system that integrates with Teams and SharePoint.
 
-// AFTER the existing properties:
-createdAt: Date.now(),
-lastProgress: Date.now(),
-milestoneEntryTime: Date.now(),
-dropProbability: 0.05,
-progressHistory: ['M1']
+## Flow Overview
+This flow creates an alert system that:
+1. Receives alerts via Teams webhook
+2. Posts an adaptive card in Teams for acknowledgment
+3. Tracks alerts in SharePoint
+4. Escalates unacknowledged alerts after 1 minute
 
-// ADD these new properties:
-completedAt: null,
-dropReason: null
+## Step-by-Step Recreation Instructions
 
-// Delta Change 2: Update progressApplication function to handle completion and drop reasons
-// In the progressApplication function, find the drop logic and update it:
+### Step 1: Create a New Flow
+1. Go to Power Automate
+2. Click "Create" → "Instant cloud flow"
+3. Name it "Post Alert & Acknowledge Response Flow"
+4. Choose "When a Teams webhook request is received" as the trigger
+5. Click "Create"
 
-// BEFORE:
-// if (Math.random() < app.dropProbability) {
-//     app.milestone = 'Dropped';
-//     app.lastProgress = Date.now();
-//     app.milestoneEntryTime = Date.now();
-//     app.progressHistory.push('Dropped');
-//     workflowStats.dropped++;
-//     return true;
-// }
-
-// AFTER:
-if (Math.random() < app.dropProbability) {
-    app.milestone = 'Dropped';
-    app.lastProgress = Date.now();
-    app.milestoneEntryTime = Date.now();
-    app.completedAt = Date.now();
-    app.progressHistory.push('Dropped');
-    
-    // Add random drop reason
-    const dropReasons = ['Customer Drop', 'Technical Issue', 'Incomplete Documentation', 'Credit Issues', 'System Error'];
-    app.dropReason = dropReasons[Math.floor(Math.random() * dropReasons.length)];
-    
-    workflowStats.dropped++;
-    return true;
+### Step 2: Configure the Trigger
+1. In the trigger, set:
+   - **Who can trigger the flow**: All
+   - Click "Show advanced options"
+   - Add the JSON schema:
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "$schema": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "body": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["type"]
+                }
+              }
+            }
+          }
+        },
+        "required": ["contentType", "content"]
+      }
+    }
+  }
 }
+```
 
-// Also update the completion logic:
-// BEFORE:
-// if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
-//     workflowStats.completed++;
-// }
+### Step 3: Add Parse Webhook Body Action
+1. Add action → "Compose"
+2. Rename it to "Parse Webhook Body"
+3. In Inputs, add: `@triggerBody()?['alertMessage']`
 
-// AFTER:
-if (currentMilestoneIndex + 1 === milestoneInfo.length - 1) {
-    app.completedAt = Date.now();
-    workflowStats.completed++;
+### Step 4: Initialize AlertId Variable
+1. Add action → "Initialize variable"
+2. Set:
+   - **Name**: AlertId
+   - **Type**: String
+   - **Value**: Click Expression and enter: `guid()`
+
+### Step 5: Capture Created Time
+1. Add action → "Compose"
+2. Rename it to "Capture CreatedTime"
+3. In Inputs, use Expression: `utcNow()`
+
+### Step 6: Create Three Parallel Branches
+After "Capture CreatedTime", you need to create three parallel branches:
+
+#### Branch 1: Post Adaptive Card and Wait for Response
+1. Add action → "Microsoft Teams" → "Post adaptive card and wait for a response"
+2. Configure:
+   - **Post as**: Flow bot
+   - **Post in**: Channel
+   - **Team**: Select your team (with ID: 5a493c66-8001-4086-a3d2-38fb60388381)
+   - **Channel**: Select your channel (with ID: 19:ab4b053e739c412ab4226cabfd4bbf37@thread.tacv2)
+   - **Message**: Use this adaptive card JSON:
+```json
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "🚨 New Alert",
+      "weight": "Bolder",
+      "size": "Large"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Message",
+          "value": "@{triggerBody()?['alertMessage']}"
+        },
+        {
+          "title": "Alert ID",
+          "value": "@{variables('AlertId')}"
+        },
+        {
+          "title": "Time",
+          "value": "@{outputs('Capture_CreatedTime')}"
+        },
+        {
+          "title": "Status",
+          "value": "Pending"
+        }
+      ]
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Acknowledge",
+          "data": {
+            "action": "acknowledge",
+            "alertId": "@{variables('AlertId')}"
+          }
+        }
+      ]
+    }
+  ]
 }
+```
+   - **Update message**: Thanks for your acknowledgement! This item is assigned to you.
 
-// Delta Change 3: Add tooltip functionality to updateApplications function
-// In the updateApplications function, find the bubble creation section and update it:
+#### Branch 2: Create SharePoint Item
+1. Click the "+" button after "Capture CreatedTime" to add a parallel branch
+2. Add action → "SharePoint" → "Create item"
+3. Configure:
+   - **Site Address**: https://experi123.sharepoint.com/sites/Experi
+   - **List Name**: Select the list with ID: d6ac8048-030b-4f89-bc02-1e80c27e936e
+   - Set fields:
+     - **AlertId**: Use dynamic content "AlertId" variable
+     - **AlertMessage**: `@{triggerBody()?['alertMessage']}`
+     - **Status**: Pending
+     - **CreatedTime**: Use dynamic content from "Capture CreatedTime"
 
-// BEFORE:
-// bubbles.enter()
-//     .append('circle')
-//     .attr('class', 'application-bubble')
-//     .attr('r', applicationRadius)
-//     .attr('cx', d => d.x)
-//     .attr('cy', d => d.y)
-//     .style('fill', d => d.color || '#4a90e2')
-//     .style('stroke', 'white')
-//     .style('stroke-width', 1)
-//     .style('opacity', 0)
-//     .transition()
-//     .duration(300)
-//     .style('opacity', 0.7);
+#### Branch 3: Delay and Check Status
+1. Add another parallel branch after "Capture CreatedTime"
+2. Add action → "Schedule" → "Delay"
+3. Set to 1 minute
 
-// AFTER:
-bubbles.enter()
-    .append('circle')
-    .attr('class', 'application-bubble')
-    .attr('r', applicationRadius)
-    .attr('cx', d => d.x)
-    .attr('cy', d => d.y)
-    .style('fill', d => d.color || '#4a90e2')
-    .style('stroke', 'white')
-    .style('stroke-width', 1)
-    .style('opacity', 0)
-    .on('mouseover', function(event, d) {
-        const tooltip = d3.select('#tooltip');
-        
-        // Get milestone label
-        const milestoneLabel = milestoneInfo.find(m => m.id === d.milestone)?.label || d.milestone;
-        
-        // Format dates
-        const createdTime = new Date(d.createdAt).toLocaleString();
-        const completedTime = d.completedAt ? new Date(d.completedAt).toLocaleString() : 'In Progress';
-        
-        // Create tooltip content based on application status
-        let tooltipContent = `
-            <strong>Application #${d.id}</strong><br/>
-            <strong>Account Type:</strong> ${d.accountType ? d.accountType.charAt(0).toUpperCase() + d.accountType.slice(1) : 'N/A'}<br/>
-            <strong>Current Stage:</strong> ${milestoneLabel}<br/>
-            <strong>Created:</strong> ${createdTime}<br/>
-        `;
-        
-        if (d.milestone === 'Dropped') {
-            tooltipContent += `<strong>Drop Reason:</strong> ${d.dropReason}<br/>`;
-            tooltipContent += `<strong>Dropped:</strong> ${completedTime}`;
-        } else if (d.milestone === 'M9') {
-            tooltipContent += `<strong>Completed:</strong> ${completedTime}`;
-        } else {
-            tooltipContent += `<strong>Status:</strong> ${completedTime}`;
-        }
-        
-        tooltip.style('opacity', 1)
-            .html(tooltipContent)
-            .style('left', (event.pageX + 10) + 'px')
-            .style('top', (event.pageY - 10) + 'px');
-    })
-    .on('mouseout', function() {
-        d3.select('#tooltip').style('opacity', 0);
-    })
-    .transition()
-    .duration(300)
-    .style('opacity', 0.7);
+### Step 7: Process Acknowledgment
+After the "Post adaptive card and wait for a response" action:
 
-// Delta Change 4: Also add hover functionality to existing bubbles
-// After the enter() section, add this for existing bubbles:
+1. Add a "Condition" action
+2. Set condition: 
+   - Choose dynamic content from the adaptive card response
+   - `@outputs('Post_adaptive_card_and_wait_for_a_response')?['body']?['data']?['action']`
+   - is equal to
+   - `acknowledge`
 
-bubbles
-    .on('mouseover', function(event, d) {
-        const tooltip = d3.select('#tooltip');
-        
-        // Get milestone label
-        const milestoneLabel = milestoneInfo.find(m => m.id === d.milestone)?.label || d.milestone;
-        
-        // Format dates
-        const createdTime = new Date(d.createdAt).toLocaleString();
-        const completedTime = d.completedAt ? new Date(d.completedAt).toLocaleString() : 'In Progress';
-        
-        // Create tooltip content based on application status
-        let tooltipContent = `
-            <strong>Application #${d.id}</strong><br/>
-            <strong>Account Type:</strong> ${d.accountType ? d.accountType.charAt(0).toUpperCase() + d.accountType.slice(1) : 'N/A'}<br/>
-            <strong>Current Stage:</strong> ${milestoneLabel}<br/>
-            <strong>Created:</strong> ${createdTime}<br/>
-        `;
-        
-        if (d.milestone === 'Dropped') {
-            tooltipContent += `<strong>Drop Reason:</strong> ${d.dropReason}<br/>`;
-            tooltipContent += `<strong>Dropped:</strong> ${completedTime}`;
-        } else if (d.milestone === 'M9') {
-            tooltipContent += `<strong>Completed:</strong> ${completedTime}`;
-        } else {
-            tooltipContent += `<strong>Status:</strong> ${completedTime}`;
-        }
-        
-        tooltip.style('opacity', 1)
-            .html(tooltipContent)
-            .style('left', (event.pageX + 10) + 'px')
-            .style('top', (event.pageY - 10) + 'px');
-    })
-    .on('mouseout', function() {
-        d3.select('#tooltip').style('opacity', 0);
-    });
+3. In the "Yes" branch:
+   - Add "SharePoint" → "Get items"
+   - Filter query: `AlertId eq '@{outputs('Post_adaptive_card_and_wait_for_a_response')?['body']?['data']?['alertId']}'`
+   - Add "Apply to each" on the results
+   - Inside the loop, add "SharePoint" → "Update item"
+   - Update Status to "Acknowledged"
+
+### Step 8: Handle Escalation
+After the Delay action:
+
+1. Add "SharePoint" → "Get items"
+   - Filter query: `AlertId eq '@{variables('AlertId')}'`
+
+2. Add "Apply to each" on the results
+
+3. Inside the loop, add a Condition:
+   - Check if `@items('Apply_to_each_2')?['Status']?['Value']` equals "Pending"
+
+4. In the "Yes" branch:
+   - Add "Microsoft Teams" → "Post card in a chat or channel"
+   - Use similar adaptive card but with Status showing "Escalated"
+   - Post to channel with ID: 19:4e303a23657f4350bdcbb49b1978c3dd@thread.tacv2
+   
+5. After posting the card:
+   - Add another "Get items" to retrieve the alert
+   - Add "Apply to each" and update the item status to "Escalated"
+
+### Step 9: Configure Connections
+You'll need to establish connections for:
+- Microsoft Teams
+- SharePoint (multiple connections might be needed based on your permissions)
+
+### Step 10: Flow Settings
+1. Click the flow name → Settings
+2. Configure:
+   - Run history retention: 30 days
+   - Retry policy: Exponential, 2 attempts, 5 minutes minimum interval
+
+### Important Notes:
+- Replace the SharePoint site URL and list IDs with your actual values
+- Replace Team and Channel IDs with your actual IDs
+- Ensure you have proper permissions for SharePoint and Teams
+- Test the flow thoroughly before enabling it in production
+
+The flow is currently set to "Disabled" state in the JSON, so remember to enable it once you've completed the setup and testing.

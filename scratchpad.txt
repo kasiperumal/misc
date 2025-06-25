@@ -1,3 +1,70 @@
+I'll update the instructions to include AcknowledgedTime and EscalatedTime columns. Here are the revised step-by-step instructions:
+
+## Flow 1: Alert Creation and Acknowledgment Flow
+
+### Step 1: Create the Main Flow
+1. Go to Power Automate
+2. Click "Create" → "Automated cloud flow"
+3. Name it "Alert Creation and Acknowledgment Flow"
+4. Search for trigger "When a new channel message is added"
+5. Click "Create"
+
+### Step 2: Configure the Trigger
+1. In the trigger, configure:
+   - **Team**: Select your team
+   - **Channel**: Select "Dummy" channel
+
+### Step 3: Initialize AlertId Variable
+1. Add action → "Initialize variable"
+2. Set:
+   - **Name**: AlertId
+   - **Type**: String
+   - **Value**: Click Expression and enter: `guid()`
+
+### Step 4: Capture Created Time
+1. Add action → "Compose"
+2. Rename it to "Capture CreatedTime"
+3. In Inputs, use Expression: `utcNow()`
+
+### Step 5: Create the Data Table
+1. Add action → Search for "Dataverse" → "Add a new row"
+2. If you haven't created the table yet:
+   - Go to Power Apps → Tables → New table
+   - Name: "AlertTracking"
+   - Add columns:
+     - **AlertId** (Text)
+     - **AlertMessage** (Multiline Text)
+     - **Status** (Choice: Pending, Acknowledged, Escalated)
+     - **CreatedTime** (Date and Time)
+     - **AcknowledgedBy** (Text)
+     - **AcknowledgedTime** (Date and Time)
+     - **EscalatedTime** (Date and Time)
+
+### Step 6: Create Two Parallel Branches
+
+#### Branch 1: Add Row to Table
+1. After "Capture CreatedTime", add action → "Dataverse" → "Add a new row"
+2. Configure:
+   - **Table name**: AlertTracking
+   - **AlertId**: Use dynamic content "AlertId" variable
+   - **AlertMessage**: Use dynamic content "Message text" from trigger
+   - **Status**: Pending
+   - **CreatedTime**: Use output from "Capture CreatedTime"
+   - **AcknowledgedBy**: Leave empty
+   - **AcknowledgedTime**: Leave empty
+   - **EscalatedTime**: Leave empty
+
+#### Branch 2: Post Adaptive Card
+1. Add a parallel branch after "Capture CreatedTime"
+2. Add action → "Microsoft Teams" → "Post adaptive card and wait for a response"
+3. Configure:
+   - **Post as**: Flow bot
+   - **Post in**: Channel
+   - **Team**: Select your team
+   - **Channel**: Select the channel for posting alerts
+   - **Message**: Use this adaptive card JSON:
+
+```json
 {
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
@@ -14,7 +81,7 @@
       "facts": [
         {
           "title": "Message",
-          "value": "@{triggerBody()?['alertMessage']}"
+          "value": "@{triggerBody()?['body']?['content']}"
         },
         {
           "title": "Alert ID",
@@ -26,9 +93,191 @@
         },
         {
           "title": "Status",
-          "value": "Escalated"
+          "value": "Pending"
+        }
+      ]
+    },
+    {
+      "type": "ActionSet",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Acknowledge",
+          "data": {
+            "action": "acknowledge",
+            "alertId": "@{variables('AlertId')}"
+          }
         }
       ]
     }
   ]
 }
+```
+   - **Update message**: Thanks for your acknowledgement! This alert has been assigned to you.
+   - **Should update card**: Yes
+
+### Step 7: Process Acknowledgment
+1. After the "Post adaptive card and wait for a response" action, add a "Condition"
+2. Set condition:
+   - `@outputs('Post_adaptive_card_and_wait_for_a_response')?['body']?['data']?['action']`
+   - is equal to
+   - `acknowledge`
+
+3. In the "Yes" branch:
+   - Add action → "Compose"
+   - Rename to "Capture AcknowledgedTime"
+   - In Inputs, use Expression: `utcNow()`
+
+4. Add action → "Dataverse" → "List rows"
+   - **Table name**: AlertTracking
+   - **Filter rows**: `alertid eq '@{outputs('Post_adaptive_card_and_wait_for_a_response')?['body']?['data']?['alertId']}'`
+   
+5. Add "Apply to each" on the results
+6. Inside the loop:
+   - Add "Dataverse" → "Update a row"
+   - **Table name**: AlertTracking
+   - **Row ID**: Use the unique identifier from the current item
+   - **Status**: Acknowledged
+   - **AcknowledgedBy**: Use expression: `@{outputs('Post_adaptive_card_and_wait_for_a_response')?['body']?['responder']?['displayName']}`
+   - **AcknowledgedTime**: Use output from "Capture AcknowledgedTime"
+
+## Flow 2: Escalation Monitoring Flow
+
+### Step 1: Create the Monitoring Flow
+1. Go to Power Automate
+2. Click "Create" → "Scheduled cloud flow"
+3. Name it "Alert Escalation Monitor"
+4. Set schedule:
+   - **Repeat every**: 1 Minute
+5. Click "Create"
+
+### Step 2: Get Current Time
+1. Add action → "Compose"
+2. Rename to "Get Current Time"
+3. In Inputs, use Expression: `utcNow()`
+
+### Step 3: Calculate Time Threshold
+1. Add action → "Compose"
+2. Rename to "Calculate 60 Minutes Ago"
+3. In Inputs, use Expression: `addMinutes(utcNow(), -60)`
+
+### Step 4: Query Pending Alerts
+1. Add action → "Dataverse" → "List rows"
+2. Configure:
+   - **Table name**: AlertTracking
+   - **Filter rows**: `status eq 'Pending' and createdtime le '@{outputs('Calculate_60_Minutes_Ago')}'`
+   - **Sort by**: createdtime asc
+
+### Step 5: Process Each Pending Alert
+1. Add "Apply to each" on the results
+2. Inside the loop:
+
+#### Capture Escalation Time
+1. Add action → "Compose"
+2. Rename to "Capture EscalatedTime"
+3. In Inputs, use Expression: `utcNow()`
+
+#### Update Status in Table
+1. Add "Dataverse" → "Update a row"
+2. Configure:
+   - **Table name**: AlertTracking
+   - **Row ID**: Use the unique identifier from current item
+   - **Status**: Escalated
+   - **EscalatedTime**: Use output from "Capture EscalatedTime"
+
+#### Post Escalation Card
+1. Add "Microsoft Teams" → "Post card in a chat or channel"
+2. Configure:
+   - **Post as**: Flow bot
+   - **Post in**: Channel
+   - **Team**: Select your team
+   - **Channel**: Select the escalation channel
+   - **Message**: Use this adaptive card JSON (without action buttons):
+
+```json
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "⚠️ ESCALATED ALERT",
+      "weight": "Bolder",
+      "size": "Large",
+      "color": "Attention"
+    },
+    {
+      "type": "TextBlock",
+      "text": "This alert was not acknowledged within 60 minutes",
+      "wrap": true,
+      "color": "Warning"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Message",
+          "value": "@{items('Apply_to_each')?['alertmessage']}"
+        },
+        {
+          "title": "Alert ID",
+          "value": "@{items('Apply_to_each')?['alertid']}"
+        },
+        {
+          "title": "Created Time",
+          "value": "@{items('Apply_to_each')?['createdtime']}"
+        },
+        {
+          "title": "Escalated Time",
+          "value": "@{outputs('Capture_EscalatedTime')}"
+        },
+        {
+          "title": "Status",
+          "value": "Escalated"
+        },
+        {
+          "title": "Time Since Creation",
+          "value": "Over 60 minutes"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Additional Enhancements
+
+#### Add Escalation Prevention Check
+To prevent re-escalating already escalated alerts, modify Step 4 in Flow 2:
+1. Update the filter in "List rows" to:
+   - **Filter rows**: `status eq 'Pending' and createdtime le '@{outputs('Calculate_60_Minutes_Ago')}' and escalatedtime eq null`
+
+#### Create a Monitoring Dashboard (Optional)
+1. Go to Power Apps → Create → Dashboard
+2. Add tiles to show:
+   - Total alerts by status
+   - Average acknowledgment time
+   - Alerts escalated in last 24 hours
+   - Top acknowledgers
+
+#### Add Reporting Capabilities
+Consider adding these calculated columns in your table:
+- **TimeToAcknowledge** (Calculated): AcknowledgedTime - CreatedTime
+- **TimeToEscalate** (Calculated): EscalatedTime - CreatedTime
+
+#### Error Handling Best Practices
+1. Add try-catch scopes around critical actions
+2. Add email notifications for flow failures
+3. Log errors to a separate error tracking table
+
+#### Performance Optimization Tips
+1. Index the following columns in your table:
+   - Status
+   - CreatedTime
+   - EscalatedTime
+   
+2. Consider archiving old alerts after a certain period
+3. Add batch processing for multiple pending alerts
+
+This updated solution now properly tracks both acknowledgment and escalation times, providing better audit trails and reporting capabilities.

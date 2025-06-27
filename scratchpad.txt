@@ -1,5 +1,5 @@
 Name: Calculate TimeToAcknowledge
 Inputs: div(sub(ticks(outputs('Capture_AcknowledgedTime')), ticks(items('Apply_to_each')?['trc_createdtime'])), 600000000)
 
-Name: Calculate TimeToAcknowledge
-Inputs: div(sub(ticks(outputs('Capture_AcknowledgedTime')), ticks(items('Apply_to_each')?['trc_createdtime'])), 600000000)
+Name: Calculate TimeToEscalate
+Inputs: div(sub(ticks(outputs('Capture_EscalatedTime')), ticks(items('Apply_to_each')?['trc_createdtime'])), 600000000)

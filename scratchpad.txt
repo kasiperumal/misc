@@ -1,5 +1,230 @@
-Name: Calculate TimeToAcknowledge
-Inputs: div(sub(ticks(outputs('Capture_AcknowledgedTime')), ticks(items('Apply_to_each')?['trc_createdtime'])), 600000000)
+I'll guide you through creating a comprehensive monitoring dashboard in Power Apps (Dynamics 365) for your AlertTracking table. Here are detailed step-by-step instructions:
 
-Name: Calculate TimeToEscalate
-Inputs: div(sub(ticks(outputs('Capture_EscalatedTime')), ticks(items('Apply_to_each')?['trc_createdtime'])), 600000000)
+## Step 1: Access Power Apps and Create Dashboard
+
+1. **Navigate to Power Apps**
+   - Go to [make.powerapps.com](https://make.powerapps.com)
+   - Select your environment (Technology-Enterprise)
+
+2. **Create a New Dashboard**
+   - Click "Solutions" in the left navigation
+   - Open your solution (or create a new one)
+   - Click "+ New" → "Dashboard" → "Power BI Dashboard" or "Classic Dashboard"
+   - For this guide, we'll use **Classic Dashboard** (4-column layout)
+   - Name: "Alert Monitoring Dashboard"
+
+## Step 2: Create Views for Dashboard Components
+
+Before adding tiles, create specific views for your data:
+
+### View 1: All Alerts View
+1. Go to Tables → AlertTracking → Views
+2. Click "+ New view"
+3. Name: "All Alerts for Dashboard"
+4. Add columns: AlertId, AlertMessage, Status, CreatedTime, AcknowledgedBy
+5. Save
+
+### View 2: Pending Alerts View
+1. Create new view: "Pending Alerts"
+2. Filter: Status equals "Pending"
+3. Sort: CreatedTime (oldest first)
+4. Save
+
+### View 3: Last 24 Hours Escalated
+1. Create new view: "Escalated Last 24 Hours"
+2. Filter: 
+   - Status equals "Escalated"
+   - EscalatedTime in the last 24 hours
+3. Save
+
+### View 4: Acknowledged Alerts
+1. Create new view: "Acknowledged Alerts with Time"
+2. Filter: Status equals "Acknowledged"
+3. Add columns: AlertId, AcknowledgedBy, TimeToAcknowledge
+4. Save
+
+## Step 3: Create Charts for Dashboard
+
+### Chart 1: Total Alerts by Status (Pie Chart)
+1. In AlertTracking table, go to "Charts"
+2. Click "+ New chart"
+3. Configure:
+   - Name: "Alerts by Status"
+   - Chart type: Pie
+   - Legend: Status
+   - Aggregate: Count of Alert ID
+4. Save
+
+### Chart 2: Average Acknowledgment Time (Bar Chart)
+1. Create new chart: "Average Acknowledgment Time"
+2. Configure:
+   - Chart type: Column
+   - X-axis: AcknowledgedBy
+   - Y-axis: TimeToAcknowledge (Average)
+   - Filter: Status equals "Acknowledged"
+3. Save
+
+### Chart 3: Escalation Trend (Line Chart)
+1. Create new chart: "Daily Escalations"
+2. Configure:
+   - Chart type: Line
+   - X-axis: EscalatedTime (by day)
+   - Y-axis: Count of records
+   - Filter: Status equals "Escalated"
+3. Save
+
+### Chart 4: Top Acknowledgers (Bar Chart)
+1. Create new chart: "Top Acknowledgers"
+2. Configure:
+   - Chart type: Bar
+   - Y-axis: AcknowledgedBy
+   - X-axis: Count of Alert ID
+   - Top: 10 records
+   - Sort: Descending by count
+3. Save
+
+## Step 4: Add Components to Dashboard
+
+1. **Open your Dashboard**
+   - Go to Dashboards → "Alert Monitoring Dashboard"
+   - Click "Edit"
+
+2. **Add Chart - Total Alerts by Status**
+   - Click "Insert Chart"
+   - Record Type: AlertTracking
+   - View: All Alerts for Dashboard
+   - Chart: Alerts by Status
+   - Click "Add"
+   - Resize to 2x2 tiles
+
+3. **Add List - Pending Alerts**
+   - Click "Insert List"
+   - Record Type: AlertTracking
+   - View: Pending Alerts
+   - Display: 5 records
+   - Click "Add"
+
+4. **Add Chart - Average Acknowledgment Time**
+   - Insert Chart → Average Acknowledgment Time
+   - Resize appropriately
+
+5. **Add Chart - Escalated in Last 24 Hours**
+   - Insert Chart → Daily Escalations
+   - Add to dashboard
+
+6. **Add Chart - Top Acknowledgers**
+   - Insert Chart → Top Acknowledgers
+   - Position in dashboard
+
+## Step 5: Add Stream Tiles for Real-time Metrics
+
+### Create Power Automate Flows for Metrics:
+
+1. **Flow for Current Pending Count**
+   ```
+   Trigger: Recurrence (every 5 minutes)
+   Action: List rows (AlertTracking)
+   Filter: trc_status eq 933330000
+   Action: Compose (length of value array)
+   Action: Update dashboard tile (if using Power BI)
+   ```
+
+2. **Flow for Average Response Time**
+   ```
+   Calculate average of TimeToAcknowledge for last 7 days
+   Update dashboard metric
+   ```
+
+## Step 6: Add Custom Web Resources (Optional)
+
+For more advanced visualizations:
+
+1. **Create HTML Web Resource**
+   ```html
+   <!DOCTYPE html>
+   <html>
+   <head>
+       <title>Alert Metrics</title>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+   </head>
+   <body>
+       <canvas id="metricsChart"></canvas>
+       <script>
+           // Add Chart.js code for custom visualization
+       </script>
+   </body>
+   </html>
+   ```
+
+2. **Add to Dashboard**
+   - Insert Web Resource
+   - Select your custom HTML
+   - Configure size
+
+## Step 7: Configure Dashboard Layout
+
+### Recommended Layout (4-column grid):
+
+```
+Row 1: [Status Pie Chart - 2x2] [Pending Alerts List - 2x2]
+Row 2: [Avg Response Time - 2x1] [24hr Escalations - 2x1]
+Row 3: [Top Acknowledgers - 4x1]
+```
+
+## Step 8: Add Refresh and Filters
+
+1. **Enable Auto-refresh**
+   - In dashboard properties
+   - Set refresh interval: 5 minutes
+
+2. **Add Global Filter**
+   - Add date range filter
+   - Filter by team/department if needed
+
+## Step 9: Create Power BI Dashboard (Alternative)
+
+For more advanced analytics:
+
+1. **In Power BI Desktop**
+   - Connect to Dataverse
+   - Select AlertTracking table
+   - Create visualizations:
+     - KPI tiles for key metrics
+     - Time-based heat maps
+     - Response time gauges
+
+2. **Publish to Power Apps**
+   - Publish report to Power BI service
+   - Embed in Model-driven app
+
+## Step 10: Set Permissions and Share
+
+1. **Set Dashboard Security**
+   - Configure who can view/edit
+   - Share with team members
+
+2. **Add to App Navigation**
+   - In your Model-driven app
+   - Add dashboard to sitemap
+   - Set as default dashboard (optional)
+
+## Bonus: Key Metrics Formulas
+
+For calculated metrics in tiles:
+
+**SLA Compliance Rate:**
+```
+(Count of alerts with TimeToAcknowledge < 30) / (Total acknowledged alerts) * 100
+```
+
+**Escalation Rate:**
+```
+(Count of escalated alerts) / (Total alerts) * 100
+```
+
+**Average Response Time Today:**
+```
+Average TimeToAcknowledge where CreatedTime = Today
+```
+
+This dashboard will provide real-time monitoring of your alert system with drill-down capabilities into specific alerts and comprehensive performance metrics.

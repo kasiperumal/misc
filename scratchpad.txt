@@ -1,207 +1,168 @@
-You're absolutely right! If all channels are in the same Teams workspace, you can directly link to the original message without creating HTML files. This is much simpler. Let me show you how to do this:
+I’ll provide the additional steps to send email notifications after posting the escalation to the Teams channel in Flow 2.
 
-## Simplified Approach - Direct Message Links
+## Additional Steps for Email Notification in Flow 2
 
-### Understanding Teams Message Links
+### After the “Post card in a chat or channel” action, add these steps:
 
-Teams messages have unique URLs that can be accessed across channels in the same team:
-- Format: `https://teams.microsoft.com/l/message/{channelId}/{messageId}`
-- These links open directly in Teams when clicked
+### Step 1: Add Send Email Action
 
-### Flow 1 Changes - Simplified Version
+1. **After “Post card in a chat or channel”**, click “+ New step”
+1. **Search for “Send an email”**
+1. **Choose one of these options:**
+- “Send an email (V2)” - Office 365 Outlook
+- “Send an email notification (V3)” - For simple notifications
+- “Send an email” - Gmail (if using Gmail)
 
-#### Step 1: Capture Message Link
+### Step 2: Configure Basic Email
 
-After the trigger "When a new channel message is added":
+**For Office 365 Outlook - Send an email (V2):**
 
-1. **Add Compose action** - "Create Message Link"
+1. **Configure the email fields:**
+   
+   **To:**
+- Add escalation recipients (e.g., managers, support team)
+- Can use semicolon to separate multiple emails: `manager@company.com; support@company.com`
+   
+   **Subject:**
+   
    ```
-   Name: Create Teams Message Link
-   Inputs: https://teams.microsoft.com/l/message/@{triggerBody()?['channelIdentity']?['channelId']}/@{triggerBody()?['id']}
+   🚨 ESCALATED: Alert @{items('Apply_to_each')?['trc_alertid']} - Unacknowledged for 60+ minutes
+   ```
+   
+   **Body:**
+   
+   ```html
+   <h2 style="color: #d73502;">⚠️ Alert Escalation Notice</h2>
+   
+   <p>An alert has been automatically escalated due to no acknowledgment within 60 minutes.</p>
+   
+   <table style="border-collapse: collapse; width: 100%;">
+     <tr>
+       <td style="padding: 8px; border: 1px solid #ddd;"><strong>Alert ID:</strong></td>
+       <td style="padding: 8px; border: 1px solid #ddd;">@{items('Apply_to_each')?['trc_alertid']}</td>
+     </tr>
+     <tr>
+       <td style="padding: 8px; border: 1px solid #ddd;"><strong>Alert Message:</strong></td>
+       <td style="padding: 8px; border: 1px solid #ddd;">@{items('Apply_to_each')?['trc_alertmessage']}</td>
+     </tr>
+     <tr>
+       <td style="padding: 8px; border: 1px solid #ddd;"><strong>Created Time:</strong></td>
+       <td style="padding: 8px; border: 1px solid #ddd;">@{formatDateTime(items('Apply_to_each')?['trc_createdtime'], 'yyyy-MM-dd HH:mm:ss')}</td>
+     </tr>
+     <tr>
+       <td style="padding: 8px; border: 1px solid #ddd;"><strong>Escalated Time:</strong></td>
+       <td style="padding: 8px; border: 1px solid #ddd;">@{formatDateTime(outputs('Capture_EscalatedTime'), 'yyyy-MM-dd HH:mm:ss')}</td>
+     </tr>
+     <tr>
+       <td style="padding: 8px; border: 1px solid #ddd;"><strong>Time Since Creation:</strong></td>
+       <td style="padding: 8px; border: 1px solid #ddd;">@{outputs('Calculate_TimeToEscalate')} minutes</td>
+     </tr>
+   </table>
+   
+   <p style="margin-top: 20px;"><strong>Action Required:</strong> Please review and address this escalated alert immediately.</p>
+   
+   <p style="color: #666; font-size: 12px;">This is an automated message from the Alert Management System.</p>
    ```
 
-2. **Add Compose action** - "Message Summary"
+### Step 3: Advanced Email Configuration (Optional)
+
+#### Option A: Dynamic Recipients Based on Alert Type
+
+1. **Before the email action**, add a “Switch” control:
+   
    ```
-   Name: Create Message Summary
-   Inputs: 
-   From: @{triggerBody()?['from']?['user']?['displayName']}
-   Time: @{formatDateTime(triggerBody()?['createdDateTime'], 'MM/dd HH:mm')}
-   Message: @{triggerBody()?['body']?['content']}
+   Switch on: @{items('Apply_to_each')?['trc_alertmessage']}
+   
+   Case 1: Contains "Critical"
+   - To: critical-team@company.com
+   
+   Case 2: Contains "Security"
+   - To: security-team@company.com
+   
+   Default:
+   - To: general-escalation@company.com
    ```
 
-#### Step 2: Store Message Link in Table
+#### Option B: Include Escalation History
 
-When creating the AlertTracking record, add these columns:
-- **OriginalMessageLink** (Text/URL)
-- **OriginalMessageAuthor** (Text)
-- **OriginalMessagePreview** (Text - first 100 chars)
+1. **Before sending email**, add “List rows”:
+- Table: AlertTracking
+- Filter: `trc_alertid eq '@{items('Apply_to_each')?['trc_alertid']}'`
+- Sort by: CreatedTime desc
+1. **In email body**, add history section:
+   
+   ```html
+   <h3>Alert History:</h3>
+   <ul>
+     <li>Created: @{formatDateTime(items('Apply_to_each')?['trc_createdtime'], 'MM/dd HH:mm')}</li>
+     <li>Escalated: @{formatDateTime(outputs('Capture_EscalatedTime'), 'MM/dd HH:mm')}</li>
+   </ul>
+   ```
 
-```
-OriginalMessageLink: @{outputs('Create_Teams_Message_Link')}
-OriginalMessageAuthor: @{triggerBody()?['from']?['user']?['displayName']}
-OriginalMessagePreview: @{substring(triggerBody()?['body']?['content'], 0, min(100, length(triggerBody()?['body']?['content'])))}
-```
-
-#### Step 3: Update Adaptive Card with Direct Link
-
-```json
-{
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-  "type": "AdaptiveCard",
-  "version": "1.4",
-  "body": [
-    {
-      "type": "TextBlock",
-      "text": "🚨 New Alert",
-      "weight": "Bolder",
-      "size": "Large"
-    },
-    {
-      "type": "FactSet",
-      "facts": [
-        {
-          "title": "Message",
-          "value": "@{triggerBody()?['body']?['content']}"
-        },
-        {
-          "title": "Alert ID",
-          "value": "@{variables('AlertId')}"
-        },
-        {
-          "title": "From",
-          "value": "@{triggerBody()?['from']?['user']?['displayName']}"
-        },
-        {
-          "title": "Time",
-          "value": "@{outputs('Capture_CreatedTime')}"
-        }
-      ]
-    },
-    {
-      "type": "TextBlock",
-      "text": "[Click here to view original message in Dummy channel](@{outputs('Create_Teams_Message_Link')})",
-      "wrap": true
-    },
-    {
-      "type": "ActionSet",
-      "actions": [
-        {
-          "type": "Action.Submit",
-          "title": "Acknowledge",
-          "data": {
-            "action": "acknowledge",
-            "alertId": "@{variables('AlertId')}"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-### Flow 2 Changes - Simplified Version
-
-In the escalation flow, when posting to the escalation channel:
-
-#### Update Escalation Adaptive Card
-
-```json
-{
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-  "type": "AdaptiveCard",
-  "version": "1.4",
-  "body": [
-    {
-      "type": "TextBlock",
-      "text": "⚠️ ESCALATED ALERT",
-      "weight": "Bolder",
-      "size": "Large",
-      "color": "Attention"
-    },
-    {
-      "type": "TextBlock",
-      "text": "This alert was not acknowledged within 60 minutes",
-      "wrap": true,
-      "color": "Warning"
-    },
-    {
-      "type": "FactSet",
-      "facts": [
-        {
-          "title": "Alert ID",
-          "value": "@{items('Apply_to_each')?['trc_alertid']}"
-        },
-        {
-          "title": "Original Author",
-          "value": "@{items('Apply_to_each')?['trc_originalmessageauthor']}"
-        },
-        {
-          "title": "Message Preview",
-          "value": "@{items('Apply_to_each')?['trc_originalmessagepreview']}..."
-        },
-        {
-          "title": "Created",
-          "value": "@{formatDateTime(items('Apply_to_each')?['trc_createdtime'], 'MM/dd HH:mm')}"
-        },
-        {
-          "title": "Time Elapsed",
-          "value": "@{outputs('Calculate_TimeToEscalate')} minutes"
-        }
-      ]
-    },
-    {
-      "type": "TextBlock",
-      "text": "**[⬅️ View Original Message in Dummy Channel](@{items('Apply_to_each')?['trc_originalmessagelink']})**",
-      "wrap": true,
-      "size": "Medium",
-      "weight": "Bolder",
-      "color": "Accent"
-    }
-  ]
-}
-```
-
-#### Update Email Notification
-
-In the email body, include the direct link:
-
-```html
-<p style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-left: 4px solid #0078d4;">
-  <strong>📌 Original Message:</strong><br>
-  From: @{items('Apply_to_each')?['trc_originalmessageauthor']}<br>
-  Preview: @{items('Apply_to_each')?['trc_originalmessagepreview']}...<br><br>
-  <a href="@{items('Apply_to_each')?['trc_originalmessagelink']}" 
-     style="background-color: #0078d4; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
-     View Full Message in Teams
-  </a>
-</p>
-```
-
-## Why This Approach is Better
-
-1. **No file creation needed** - Simpler and faster
-2. **Direct access** - Click link to jump to original message
-3. **Real-time** - Always shows current state of message
-4. **Less storage** - No files to manage
-5. **Native Teams experience** - Opens in Teams app
-
-## Additional Enhancement: Rich Message Context
-
-You can also capture and display more context:
+### Step 4: Add CC and Priority Settings
 
 ```
-Add to table:
-- OriginalChannelName: "Dummy"
-- OriginalTeamName: @{triggerBody()?['channelIdentity']?['teamDisplayName']}
-- HasAttachments: @{if(empty(triggerBody()?['attachments']), 'No', 'Yes')}
-- MessageType: @{triggerBody()?['messageType']}
+CC: @{if(greaterOrEquals(outputs('Calculate_TimeToEscalate'), 120), 'senior-management@company.com', '')}
+
+Importance: High
+
+Categories: Escalation, Alert
 ```
 
-## Note on Permissions
+### Step 5: Complete Flow Structure
 
-For this to work:
-- Users viewing the alert/escalation must have access to the Dummy channel
-- If Dummy channel is private, ensure alert recipients are members
-- The Teams message link will respect Teams permissions
+The escalation section should now look like:
 
-This approach is much cleaner and provides better user experience than creating HTML files!
+```
+Apply to each (Pending alerts older than 60 minutes)
+├── Capture EscalatedTime
+├── Calculate TimeToEscalate
+├── Update a row (Status → Escalated)
+├── Post card in Teams channel
+└── Send an email (V2) ← NEW
+    ├── To: escalation-team@company.com
+    ├── Subject: ESCALATED Alert
+    ├── Body: HTML formatted details
+    └── Importance: High
+```
+
+### Step 6: Email with Direct Link (Advanced)
+
+To include a direct link to the alert:
+
+1. **In email body**, add:
+   
+   ```html
+   <p><a href="https://[your-environment].crm.dynamics.com/main.aspx?etn=trc_alerttracking&id=@{items('Apply_to_each')?['trc_alerttrackingid']}&pagetype=entityrecord" 
+      style="background-color: #0078d4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+      View Alert in CRM
+   </a></p>
+   ```
+
+### Step 7: Error Handling for Email
+
+1. **Configure email action settings:**
+- Click Settings (⚙️) on the email action
+- Configure run after: Set to run even if previous fails
+- Retry policy: Fixed interval, 3 attempts
+1. **Add error notification:**
+- After email action, add Condition
+- Check if email failed
+- If yes, log to SharePoint or send backup notification
+
+### Step 8: Test the Email Notification
+
+1. **Create a test alert** that won’t be acknowledged
+1. **Temporarily change** the escalation time to 1 minute for testing
+1. **Monitor the flow** execution
+1. **Verify email** is received with correct formatting
+
+### Optional: Email Template Management
+
+For easier maintenance, consider:
+
+1. **Create HTML file** in SharePoint with email template
+1. **In flow**, use “Get file content” to retrieve template
+1. **Replace placeholders** with actual values using replace() function
+
+This enhancement ensures that escalated alerts are not only posted to Teams but also sent via email for maximum visibility and faster response.​​​​​​​​​​​​​​​​

@@ -22,3 +22,37 @@ Root cause analysis combining system logs and behavioral data.
 Actionable recommendations to improve user journey and reduce churn.
 
 A dashboard or report output that summarizes findings and trends for business and technical teams
+
+
+
+
+Problem Statement Title
+Proactive AI Agent for Early Detection of Production Issues in Digital Banking
+
+Problem Statement Description
+In digital banking systems, post-release issues—introduced via code or configuration changes—can disrupt services, impact customer trust, and increase operational burden. These issues often remain undetected until after they’ve caused visible impact.
+
+To enhance post-release observability and enable earlier detection of potential problems, there is a need to intelligently analyze both functional expectations and historical behavior patterns. Specifically, this involves using:
+
+BDD testing reports and their associated logs to understand expected scenario behaviors, and
+
+Historical production logs (prior to release) to establish normal system behavior under real-world load.
+
+The challenge is to monitor system behavior post-release and identify deviations—functional or operational—before they lead to service degradation.
+
+Expected Outcome
+A working AI Agent that:
+
+Ingests BDD testing reports along with their logs to map expected scenario behaviors.
+
+Analyzes pre-release production logs to model baseline system behavior.
+
+Continuously monitors real-time production logs (e.g., via Splunk) after a release.
+
+Detects anomalies or behavioral deviations by comparing live logs to learned baselines.
+
+Proactively alerts SRE or engineering teams for early intervention.
+
+Demonstrated reduction in Mean-Time-To-Resolution (MTTR).
+
+Solution should be generalizable across environments and scalable to multiple services.

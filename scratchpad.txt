@@ -1,29 +1,24 @@
-Got it! Here's the revised version with a title that includes "Agent":
+Problem Statement Title
+Customer Account Funnel Analysis Agent
 
----
+Problem Statement Description
+The current process for analyzing the customer account opening journey is manual, time-consuming, and resource-intensive. This analysis, which is performed daily, involves tracking customer progress through various funnel milestones to identify drop-offs (churn) and understand the root causes behind them. The key data sources include:
 
-### **Problem Statement Title**
+C2T Database: Contains milestone-level customer journey data.
 
-**AI Agent for Automated Customer Account Funnel Analysis**
+Splunk Logs: Capture system and error events relevant to the user journey.
 
----
+Glassbox: Provides behavioral data for user interaction analysis.
 
-### **Problem Statement Description**
+Due to the complexity and frequency of the analysis, there’s a need to automate this process using an AI-powered agent that can intelligently correlate data across these systems, identify patterns of churn, diagnose root causes, and recommend actionable steps to improve conversion.
 
-Manually analyzing the customer account opening funnel is a resource-intensive and time-consuming task that must be repeated daily. It involves tracking user progression across various milestones in the account open journey, identifying churn points, and diagnosing underlying issues—all using data from the **C2T Database** and **Splunk logs**.
+Expected Outcome
+An AI-based automated solution that analyzes the customer account funnel daily.
 
-This manual process delays actionable insights and hinders timely interventions. The challenge is to design and implement an **AI agent** that can automate this funnel analysis, operate on a **next-day basis**, and provide clear, actionable intelligence to optimize the customer onboarding experience.
+Identification of churn points in the customer account opening journey.
 
----
+Root cause analysis combining system logs and behavioral data.
 
-### **Expected Outcome**
+Actionable recommendations to improve user journey and reduce churn.
 
-* A fully automated **AI agent** that performs daily milestone-level funnel analysis.
-* Identification of **churn points** in the customer journey.
-* Discovery of **root causes** using log and behavioral data.
-* **Actionable recommendations** to reduce friction and improve conversion.
-* Seamless integration with **Splunk logs** and **C2T Database** for data ingestion and analysis.
-
----
-
-Let me know if you’d like an executive summary or solution architecture draft as a follow-up.
+A dashboard or report output that summarizes findings and trends for business and technical teams

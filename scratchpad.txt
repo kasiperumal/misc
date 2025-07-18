@@ -1,1 +1,29 @@
-Generate a detailed technical specification document suitable for development using GitHub Copilot that describes enhancing an existing JIRA MCP and AI agent. The enhancement involves creating a Product Owner Assistant AI Agent. It must accept various delivery milestones as inputs, track progress daily against JIRA epics (including subtasks or stories) managed by multiple Scrum teams in parallel sprints, and evaluate if deliveries align with set milestones. The solution should summarize daily progress when milestones are on track, and when off-track, clearly identify blockers, delays, or issues, prioritizing action items for the Product Owner.
+Got it! Here's the revised version with a title that includes "Agent":
+
+---
+
+### **Problem Statement Title**
+
+**AI Agent for Automated Customer Account Funnel Analysis**
+
+---
+
+### **Problem Statement Description**
+
+Manually analyzing the customer account opening funnel is a resource-intensive and time-consuming task that must be repeated daily. It involves tracking user progression across various milestones in the account open journey, identifying churn points, and diagnosing underlying issues—all using data from the **C2T Database** and **Splunk logs**.
+
+This manual process delays actionable insights and hinders timely interventions. The challenge is to design and implement an **AI agent** that can automate this funnel analysis, operate on a **next-day basis**, and provide clear, actionable intelligence to optimize the customer onboarding experience.
+
+---
+
+### **Expected Outcome**
+
+* A fully automated **AI agent** that performs daily milestone-level funnel analysis.
+* Identification of **churn points** in the customer journey.
+* Discovery of **root causes** using log and behavioral data.
+* **Actionable recommendations** to reduce friction and improve conversion.
+* Seamless integration with **Splunk logs** and **C2T Database** for data ingestion and analysis.
+
+---
+
+Let me know if you’d like an executive summary or solution architecture draft as a follow-up.

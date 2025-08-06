@@ -1,0 +1,68 @@
+{
+  "mcpServers": {
+    "jira": {
+      "command": "npx",
+      "args": [
+        "@aot-tech/jira-mcp-server"
+      ],
+      "env": {
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}",
+        "JIRA_BASE_URL": "${JIRA_BASE_URL}",
+        "JIRA_USER_EMAIL": "${JIRA_USER_EMAIL}",
+        "JIRA_TYPE": "cloud"
+      }
+    },
+    "confluence": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sargonpiraev/confluence-mcp-server"
+      ],
+      "env": {
+        "CONFLUENCE_CLIENT_ID": "${CONFLUENCE_CLIENT_ID}",
+        "CONFLUENCE_CLIENT_SECRET": "${CONFLUENCE_CLIENT_SECRET}"
+      }
+    },
+    "oracle": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@glama.ai/oracle-mcp-server"
+      ],
+      "env": {
+        "ORACLE_CONNECTION_STRING": "${ORACLE_CONNECTION_STRING}",
+        "ORACLE_USER": "${ORACLE_USER}",
+        "ORACLE_PASSWORD": "${ORACLE_PASSWORD}",
+        "ORACLE_DEFAULT_SCHEMA": "${ORACLE_DEFAULT_SCHEMA}"
+      }
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mongodb-js/mongodb-mcp-server"
+      ],
+      "env": {
+        "MDB_MCP_API_CLIENT_ID": "${MDB_MCP_API_CLIENT_ID}",
+        "MDB_MCP_API_CLIENT_SECRET": "${MDB_MCP_API_CLIENT_SECRET}",
+        "MDB_MCP_CONNECTION_STRING": "${MDB_MCP_CONNECTION_STRING}"
+      }
+    },
+    "splunk": {
+      "command": "npx",
+      "args": [
+        "@coretext-ai/qa-splunk-d24f6210-2b13-48ae-be2e-fc89afaee229"
+      ],
+      "env": {
+        "SPLUNK_API_KEY": "${SPLUNK_API_KEY}",
+        "SPLUNK_EMAIL": "${SPLUNK_EMAIL}"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}

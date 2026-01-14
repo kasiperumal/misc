@@ -1,0 +1,63 @@
+### Teradata → Power BI (Quick Summary)
+
+1. **Install Teradata Drivers**
+
+   * Install **Teradata Tools & Utilities (TTU)** – 64-bit
+   * Verify Teradata ODBC driver is available
+
+2. **Open Power BI Desktop**
+
+   * Home → **Get Data** → **Teradata Database**
+
+3. **Configure Connection**
+
+   * Enter **Server (hostname/IP)** and optional **Database**
+   * Choose mode:
+
+     * **Import** (recommended)
+     * **DirectQuery** (only if real-time needed)
+
+4. **Authenticate**
+
+   * Use **Username/Password** or **LDAP/Windows**
+
+5. **Select Data**
+
+   * Choose **views or aggregated tables**
+   * Avoid raw huge fact tables
+
+6. **Optimize in Power Query**
+
+   * Filter by date
+   * Remove unused columns
+   * Keep query folding intact
+
+7. **Model the Data**
+
+   * Create **star schema** (Fact → Dimensions)
+   * Use single-direction relationships
+
+8. **Create Measures**
+
+   * Use **DAX measures** (avoid calculated columns)
+
+9. **Build Dashboard**
+
+   * Use limited visuals
+   * Add slicers and KPIs
+
+10. **Publish to Power BI Service**
+
+    * Publish report to workspace
+
+11. **Configure Gateway (if on-prem Teradata)**
+
+    * Install **On-premises Data Gateway**
+    * Map Teradata datasource
+
+12. **Schedule Refresh**
+
+    * Set refresh timings
+    * Use **Incremental Refresh** for large data
+
+👉 **Best practice:** Pre-aggregate data in Teradata + Import mode for best performance.

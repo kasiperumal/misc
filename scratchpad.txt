@@ -1,22 +1,11 @@
-flowchart LR
-    A[Why Follow Your Purpose?] 
-
-    A --> B[Authenticity & Alignment]
-    B --> B1[Live true to values]
-    B --> B2[Avoid regret & emptiness]
-
-    A --> C[Energy & Resilience]
-    C --> C1[Purpose as energy source]
-    C --> C2[Push through setbacks]
-
-    A --> D[Meaning & Fulfillment]
-    D --> D1[Struggles feel worthwhile]
-    D --> D2[Achievements significant]
-
-    A --> E[Growth & Contribution]
-    E --> E1[Encourages learning]
-    E --> E2[Impact beyond self]
-
-    A --> F[Evolving Purpose]
-    F --> F1[Clarity through action]
-    F --> F2[Better than drifting aimlessly]
+1. Nightly build & S3 storage & python processing and call web hook of teams channel
+2. Nightly build & S3 storage & python processing and call HTTP web point of power automate (issue)
+3. Nightly build & S3 storage & python processing and one drive & power automate
+4. Nightly build & S3 storage & python processing and Direct Microsoft Graph to Teams channel
+    * Why not:
+        * Token management complexity
+        * Requires app registration
+        * Higher blast radius if compromised
+    * Use only if:
+        * You need rich Teams features
+        * Webhooks are restricted by policy

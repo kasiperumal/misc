@@ -1,11 +1,27 @@
-1. Nightly build & S3 storage & python processing and call web hook of teams channel
-2. Nightly build & S3 storage & python processing and call HTTP web point of power automate (issue)
-3. Nightly build & S3 storage & python processing and one drive & power automate
-4. Nightly build & S3 storage & python processing and Direct Microsoft Graph to Teams channel
-    * Why not:
-        * Token management complexity
-        * Requires app registration
-        * Higher blast radius if compromised
-    * Use only if:
-        * You need rich Teams features
-        * Webhooks are restricted by policy
+🗓️ Daily Focus Template 
+
+Date:
+Day Theme (optional):
+
+⸻
+
+🎯 Top 3 Priorities
+	•	☐ Prepare for Sathish Meeting
+	•	☐ CVE Demo Preparation
+	•	☐ BPMN Demo Preparation
+
+⸻
+
+⏰ Morning Focus (5–10 AM)
+	•	☐ BPMN Demo Preparation
+
+⸻
+
+🌙 Evening Check (1 min)
+	•	What went well:
+	•	One improvement for tomorrow:
+
+⸻
+
+⭐ Gratitude
+	•	

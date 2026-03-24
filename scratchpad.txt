@@ -1,1 +1,25 @@
 
+Proposal: Cross-Device Smart Resume for Digital Applications
+Wells Fargo | Digital Banking | March 2026 | Priority: P0 — Critical
+
+Problem Statement
+60–75% of digital banking applications are abandoned mid-flow. With ~1.2M annual digital applications, Wells Fargo loses an estimated 780,000 potential accounts per year to application friction.
+Wells Fargo's current Save & Retrieve feature fails because of five design flaws: (1) manual save required — closing the browser without clicking "Save" loses all progress, (2) painful retrieval — non-customers must find an emailed access code and re-enter name, DOB, and SSN; failed attempts permanently lock the application, (3) no device adaptation — desktop forms render identically on mobile with no camera-ready uploads or responsive layouts, (4) zero re-engagement — no push, SMS, or email reminders; recovery depends entirely on the customer remembering, and (5) no deep-linking — resuming drops you at the start of the form, not where you stopped, creating a "starting over" feeling that triggers a second abandonment.
+
+Proposed Solution
+A cloud-native application continuity platform with five capabilities: auto-save (every field persisted in real-time, no save button needed), step-level resume (reopen on any device, land exactly where you stopped), device-adaptive rendering (remaining fields reformat for phone/tablet/laptop), AI-powered re-engagement (ML-timed push/SMS/email nudges deep-linking to the exact incomplete step), and biometric identity continuity (Face ID/Touch ID replaces access codes across devices).
+
+Business Benefits
+
+Recover 78K–117K abandoned applications/year → $15M–$58M in account revenue
+Reduce acquisition cost by $40–60/account → $3M–$7M marketing savings
+Shift digital opening rate from 40% → 55%+ → $13M–$19M branch processing savings
+Close J.D. Power satisfaction gap (WF: 646 vs. industry avg: 666)
+Enable Fargo AI to proactively surface in-progress applications, extending existing GenAI investment
+
+
+Challenges & Risks
+RiskMitigationPII in cloud (SSN, income persisted across devices)AES-256 encryption, auto-purge at 30 days, zero-PII tokenization mirroring Fargo's existing architectureKYC/BSA compliance on device switchingBiometric step-up re-auth for sensitive fields; full device-chain audit trailLegacy backend silos (separate systems per product)API gateway abstraction; phased rollout — checking first, then cards, then lendingTCPA/FCC consent for proactive nudgesIn-app opt-in at first save; designed for FCC "revoke all" compliance from day one
+
+ROI Projection (3-Year)
+MetricYear 1Year 2Year 3Recovered accounts78,000105,000117,000Revenue from recoveries$15M–$25M$25M–$40M$35M–$58MCost savings (marketing + branch + call center)$9M$17M$28.5MTotal annual benefit$24M–$34M$42M–$57M$63M–$86MImplementation cost$8M–$12M——Payback period4–6 monthsCumulative 3-year net value$118M–$163M

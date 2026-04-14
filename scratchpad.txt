@@ -1,70 +1,102 @@
-## Conversational Struggle Detection System — Summary
+Idea:
+A system and method for dynamic, intent-driven tool registration in LLM agents using enterprise API gateways as a runtime tool discovery and activation layer
 
-The document outlines a patent concept for an AI system that detects when users are struggling in chat-based customer support and intervenes in real time to help them.
+Example:
 
-**The Core Problem**
+User:  "I need to work with the payments API"
 
-Current AI chatbots have no awareness of user frustration. Unlike web tools (e.g., Glassbox) that detect struggle through rage clicks or form errors, chat interfaces have no equivalent signals — only conversation text. This means bots can keep giving unhelpful responses while users get more and more frustrated.
+Claude: [calls discover_apis]
+        → sees "payments-v2" deployed in Apigee
 
-**The Proposed Solution**
+Claude: [calls activate_api_as_tools("payments-v2", "https://api.company.com")]
+        → registers: payments-v2__createPayment, payments-v2__getPayment, etc.
 
-A layered system that monitors conversations, calculates a "struggle score" (0–100), and automatically adjusts its responses. It works through six key components:
+Claude: "I've loaded the payments API. I can now:
+         • Create payments
+         • Get payment status
+         • Refund transactions
+         What would you like to do?"
 
-1. **Intent Engine** — understands what the user is trying to accomplish, even when phrased differently across messages
-2. **Task Graph Builder** — maps the conversation as a flow diagram to detect loops and dead ends (the key novel element)
-3. **Signal Detection Layer** — identifies repetition, user corrections ("No, that's wrong"), long conversations, and abandonment
-4. **Struggle Score Engine** — combines all signals into a single numeric score
-5. **Decision Engine** — determines whether to continue normally or trigger an intervention
-6. **Intervention Engine** — takes corrective action: clarifying questions, step-by-step guidance, UI shortcuts, or escalating to a human agent
 
-**What Makes It Novel**
+Architecture:
 
-The system goes beyond passive analytics — it acts. It also introduces the conversation task graph, which structures dialogue as a journey map rather than a linear transcript, making loop detection possible. It can also retain memory across sessions, recognising returning users who failed previously.
+Apigee Management API
+        ↓
+  Discover all deployed APIs (proxies, specs, products)
+        ↓
+  User selects which APIs to expose
+        ↓
+  Fetch OpenAPI/spec for selected APIs
+        ↓
+  Dynamically register as MCP tools
+        ↓
+  Claude uses them as tools
 
-**Business Value**
 
-Fewer support escalations, higher task completion rates, and reduced operational costs — particularly relevant for banking and fintech use cases like PIN resets or KYC flows.
+Prompt for copilot idea documentation:
 
----
+Here’s a comprehensive Copilot prompt that captures the patent idea:
 
-**Banking Use Cases**
+System:
+You are an expert patent strategist and software architect specializing in AI systems, LLM tooling, and enterprise API infrastructure. You deeply understand Model Context Protocol (MCP), API gateway patterns, and software patent law. Help me develop, refine, and document a novel patent idea with precise technical and legal clarity.
 
-These are scenarios where the struggle detection system would have immediate, high-value impact in a banking context.
+Invention Title:
+Dynamic Intent-Driven Tool Registration in LLM Agents Using Enterprise API Gateways as a Runtime Tool Discovery and Activation Layer
 
-*1. Debit/Credit Card PIN Reset*
-A customer locked out of their card tries to reset their PIN via chat. The bot keeps directing them to an ATM, but the customer is travelling abroad and has no ATM access. Without this system, the loop continues until the customer gives up and calls the branch. With it, the task graph detects the ATM → rejection → ATM loop, the score spikes, and the bot pivots to offer a digital PIN reset via the mobile app with OTP verification — resolving the issue without human involvement.
+Background & Problem Statement:
+Current MCP (Model Context Protocol) servers require all tools to be statically registered at server startup. This creates a fundamental limitation — the tool surface available to an LLM agent is fixed and finite before any conversation begins. In enterprise environments, organizations may have hundreds or thousands of APIs deployed across API gateways (such as Google Apigee, AWS API Gateway, Azure APIM). Pre-registering all of these as MCP tools is impractical, creates noise for the model, and violates the principle of least privilege. No existing system allows an LLM agent to discover, select, and activate API gateway endpoints as callable tools dynamically during an active inference session, driven by user intent.
 
-*2. KYC Document Upload Failures*
-A customer trying to complete video KYC or upload identity documents repeatedly says "I already uploaded my PAN card." The bot, unable to verify this in real time, keeps asking for the same document. The system detects the contradiction and repetition, intervenes, confirms what has already been received, and clearly tells the user what the next pending step is — for example, address proof or a selfie — eliminating the confusion entirely.
+Core Invention:
+A system and method where an LLM agent (Claude or any MCP-compatible model) dynamically expands its own callable tool registry mid-conversation by:
+	1.	Discovery — querying an enterprise API gateway’s management plane (e.g., Apigee Management API) to enumerate all deployed, active API proxies at runtime
+	2.	Selection — the LLM itself, based on user intent, selects which API(s) are relevant to the current task
+	3.	Activation — fetching the OpenAPI/Swagger specification for the selected API from in the gateway’s spec store, parsing it, and programmatically registering each endpoint as a typed, schema-validated MCP tool — without server restart or human intervention
+	4.	Execution — invoking the newly registered tools through the API gateway with proper authentication, routing, and observability inherited from the gateway layer
+	5.	Lazy Hydration — tools remain unregistered until needed, so the model’s tool surface expands on demand based on conversational context rather than being pre-loaded
 
-*3. Credit Card Dispute / Chargeback Filing*
-A customer wants to dispute a fraudulent transaction but the bot keeps offering generic "block your card" guidance instead of walking them through the dispute process. As the customer repeats "I didn't make this transaction" across multiple turns, the struggle score rises. The system recognises the unresolved intent, shifts approach, and guides the customer step-by-step through raising a chargeback — capturing the right transaction details, timelines, and merchant name — and confirms the dispute reference number at the end.
+Novel Claims to Explore:
+	∙	Claim 1 (System): A computer-implemented system comprising an MCP server, an API gateway management client, and a runtime tool registry, wherein the MCP server registers new callable tools dynamically during an active LLM inference session based on API proxy metadata retrieved from the API gateway
+	∙	Claim 2 (Method): A method for intent-driven tool activation wherein an LLM agent determines, from conversational context, which API capabilities are required, triggers discovery against an API gateway catalog, retrieves machine-readable API specifications, and registers corresponding tools into its active tool registry without process restart
+	∙	Claim 3 (Architecture): A layered architecture wherein an enterprise API gateway serves dual roles — as a runtime execution proxy for API calls and as a dynamic tool marketplace for LLM agents — enabling governed, observable, and access-controlled AI tool use at enterprise scale
+	∙	Claim 4 (Novelty): The combination of (a) LLM-initiated API discovery, (b) specification-driven tool schema generation at runtime, (c) zero-restart dynamic tool registration in MCP, and (d) API gateway as the authoritative tool catalog constitutes a novel, non-obvious invention with no identified prior art
 
-*4. Loan EMI Deferral or Moratorium Requests*
-Customers facing financial hardship often struggle to articulate that they want an EMI pause, not a loan closure or foreclosure. The bot may misclassify intent repeatedly. This system tracks the evolving intent across the conversation, detects that the customer keeps correcting the bot's understanding, and eventually re-routes to a correct, empathetic response — offering moratorium options, eligibility criteria, and application steps clearly.
+Key Differentiators from Prior Art:
+	∙	Existing MCP servers: static tool registration at startup only
+	∙	Existing OpenAPI-to-tool generators (openapi-mcp-server, etc.): require pre-configuration, not runtime discovery
+	∙	Existing API gateway AI integrations: treat gateway as execution layer only, not as a discovery/catalog layer for LLM tools
+	∙	Existing LLM agent frameworks (LangChain, AutoGPT): do not integrate with enterprise API gateway management planes for tool discovery
 
-*5. Fixed Deposit Premature Withdrawal*
-A customer wants to break an FD urgently but the chatbot keeps explaining FD renewal options instead. The customer says "No, I need the money now" multiple times. The task graph shows a persistent loop between FD query and renewal responses with no resolution. The system intervenes, acknowledges the premature withdrawal intent, explains the penalty implications clearly, and either completes the action or hands off to a relationship manager if the amount exceeds a threshold.
+Technical Components:
+	∙	MCP Server (@modelcontextprotocol/sdk) with two seed tools: discover_apis and activate_api_as_tools
+	∙	Apigee Management REST API for proxy enumeration and spec retrieval
+	∙	OpenAPI/Swagger parser (@apidevtools/swagger-parser) for runtime schema generation
+	∙	Zod for type-safe input schema construction per endpoint
+	∙	GCP Bearer token auth propagated from gateway management plane to gateway runtime
+	∙	In-session spec caching to avoid redundant fetches
+	∙	Tool naming convention: {proxyName}__{operationId} for collision-free namespacing
 
-*6. UPI / NEFT / IMPS Transaction Failure*
-A customer's money has been debited but not credited to the beneficiary. They keep asking "where is my money?" and the bot keeps pointing to standard processing timelines. The system detects growing frustration — repetition, corrections, session length — and escalates with a structured response: confirming the debit, raising a transaction trace request, and giving the customer a reference ID and expected resolution timeline rather than leaving them in limbo.
+Tasks — help me with any or all of the following:
+	1.	Identify any prior art or existing patents that could challenge these claims
+	2.	Strengthen the independent claims language to maximize defensibility
+	3.	Suggest additional dependent claims that add depth (e.g., covering caching, multi-gateway support, role-based tool activation, audit logging)
+	4.	Draft the Abstract for a provisional patent application (USPTO format)
+	5.	Draft the Brief Summary of the Invention section
+	6.	Suggest alternative embodiments that broaden the patent’s coverage (e.g., AWS API Gateway, Azure APIM, Kong)
+	7.	Identify the broadest defensible claim — what is the highest-level abstraction of this invention that is still novel?
+	8.	Flag any claim language that a patent examiner might reject under 35 U.S.C. § 101 (abstract idea / software patent eligibility) and suggest how to reframe
 
-*7. Account Opening Drop-offs*
-A new customer is trying to open a savings account digitally but gets stuck at the video KYC step or the nominee declaration section. They abandon and return the next day. The cross-session memory capability of this system recognises the returning user, identifies exactly where they dropped off, and proactively picks up from that step — rather than starting the journey from scratch and causing further frustration.
+You can paste this directly into GitHub Copilot Chat, ChatGPT, or any AI assistant to start building out the full patent documentation. Want me to now run this and generate the provisional patent draft?​​​​​​​​​​​​​​​​
 
-*8. Salary Account Queries for Corporate Employees*
-Employees of a corporate client often ask the same questions in slightly different ways — "when will salary be credited?", "salary not received", "salary account issue" — and get generic responses. The system detects intent clustering around the same unresolved topic, raises the struggle score, and either provides a precise answer based on the employer's salary credit schedule or escalates to the corporate banking team.
 
----
-
-**How This Differs from Evals and LLM-as-Judge**
-
-At first glance, this system might seem similar to existing evaluation frameworks, but there are fundamental differences across purpose, timing, and mechanism.
-
-*Evals* are offline, batch processes. They assess how well a model performs across a fixed dataset — after conversations have already happened. They answer the question "how good is our model generally?" They do not touch live users and cannot fix anything in the moment. This system, by contrast, operates in real time, within a single live conversation, and its entire purpose is to change the outcome for that specific user right now.
-
-*LLM-as-Judge* is a technique where a separate language model reviews a conversation or response and scores it for quality, relevance, or correctness. While powerful for automated quality assessment, it has three key limitations this system is designed to overcome. First, it is still largely retrospective — judging what was said, not steering what comes next. Second, it evaluates response quality in isolation, not user journey progression. A response can be linguistically correct and still leave a user completely stuck in a loop, which LLM-as-Judge would likely miss. Third, it has no intervention capability — it produces a verdict, not an action.
-
-This system is fundamentally different because it is **diagnostic and prescriptive, not just evaluative**. The struggle score is not meant to grade the bot — it is a trigger for changing behaviour mid-conversation. The task graph adds a structural layer that neither evals nor LLM-as-judge use: it tracks *where the user is in their journey*, not just *what was said*. That distinction — journey state versus response quality — is what allows this system to catch failure patterns like loops and dead ends that traditional evaluation methods are blind to.
-
-In short: evals and LLM-as-judge tell you what went wrong after the fact. This system detects it as it unfolds and does something about it.
+Prompt for build:
+Build a Model Context Protocol (MCP) server that integrates with Apigee API Gateway to enable dynamic API discovery and on-demand tool registration for use with Claude (or any MCP-compatible LLM client).
+Core Behavior:
+The MCP server should expose two built-in tools at startup — discover_apis and activate_api_as_tools. The user or Claude should first call discover_apis to list all currently deployed and active API proxies from Apigee, then call activate_api_as_tools with a selected API name to dynamically fetch its OpenAPI specification from the Apigee Spec Store (with a fallback to a well-known /openapi.json path on the proxy), parse the spec, and register each endpoint as an individual MCP tool at runtime — without restarting the server.
+Apigee Integration:
+Use the Apigee Management REST API (https://apigee.googleapis.com/v1/organizations/{org}) authenticated via a GCP Bearer token. Support both listing API proxies (/apis) and fetching specs from the Apigee Spec Store (/specs/folder/home). Filter the proxy list to only show deployed proxies by checking /apis/{name}/deployments. Support both Apigee X and Apigee Edge management API variants.
+Dynamic Tool Registration:
+When an API is activated, parse its OpenAPI/Swagger spec using @apidevtools/swagger-parser. For each path and HTTP method (GET, POST, PUT, PATCH, DELETE), generate an MCP tool with: a name in the format {proxyName}__{operationId} (falling back to {method}_{path_slugified}), a description from the operation summary, a Zod input schema derived from path/query parameters and request body, and a handler that constructs and executes the HTTP request against the Apigee gateway base URL with proper auth headers.
+Tech Stack:
+Node.js, @modelcontextprotocol/sdk, zod, @apidevtools/swagger-parser, environment variables for APIGEE_ORG, APIGEE_TOKEN, and APIGEE_GATEWAY_BASE_URL. Use StdioServerTransport for local MCP use.
+Project Deliverables:
+Provide a complete, runnable project including package.json, apigee-mcp-server.js (main entry), an .env.example file, a README.md with setup and usage instructions, and inline error handling for missing specs, failed API calls, and auth errors. Include a caching layer so that once a spec is fetched for a proxy, it is not re-fetched within the same session.

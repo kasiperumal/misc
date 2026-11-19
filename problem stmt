@@ -1,3 +1,21 @@
+-----/Brief problem stmt----
+
+Top Recommendation: Pre-Merge Banking Compliance & Security Gatekeeper
+
+This project showcases custom slash commands, isolated subagents, domain skills, and hooks in a single end-to-end flow.
+• The Problem: Developers push changes to payment or customer-data APIs without catching subtle PII logging, hardcoded secrets, missing audit trails, or deprecated internal library usage until late in CI/CD or manual security review.
+• The Architecture:
+	• Main Orchestrator (/bank-pr-review): A custom slash command that inspects git diff and delegates parallel checks to specialized subagents so the main context window stays clean.
+	• Subagent 1 (pci-pii-auditor): Scans diffs and logs for unmasked PANs (card numbers), SSNs, or PII leaking into application logs.
+	• Subagent 2 (sox-audit-checker): Verifies that state-changing financial endpoints (transfers, ledger updates) emit immutable audit events and enforce idempotency keys.
+	• Skill (wells-internal-standards): A reusable SKILL.md encoding mock internal banking rules (e.g., approved TLS versions, mandatory Spring Boot/Java security headers, structured JSON logging format).
+	• Post-Tool Hook: Automatically runs a mock secret-scanner or linter script whenever Claude edits a file, feeding errors back into the agent loop to self-heal.
+• Demo Deliverable (1-Day Scope): Create a sample Java/Spring Boot or Node.js payment service repo with 3–4 intentional compliance bugs, run /bank-pr-review, and show Claude catching the violations, explaining the regulatory risk, and auto-generating a compliant patch + audit summary markdown.
+
+
+------ complete documentation------
+
+
 
 Here is a complete, ready-to-share Project Blueprint & Execution Guide for your 3-person team. You can paste this directly into Confluence, Notion, or a README.md in your training repository.
 

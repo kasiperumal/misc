@@ -1,0 +1,292 @@
+
+Here is a complete, ready-to-share Project Blueprint & Execution Guide for your 3-person team. You can paste this directly into Confluence, Notion, or a README.md in your training repository.
+
+Project Blueprint: Automated Banking Compliance & Security PR Gatekeeper
+
+Training Track: Advanced Claude Code Workflows, Subagents, Skills & Hooks
+Target Domain: Tier-1 Banking Engineering (Wells Fargo Productivity & Risk Reduction)
+Team Size: 3 Members | Timeline: 1 Day (8 Hours)
+
+1. Executive Summary & Business Value
+
+In regulated banking environments, developer velocity frequently slows down during manual InfoSec, PCI-DSS, and SOX compliance reviews. Catching issues like unmasked PII in logs or missing ledger audit events late in CI/CD creates expensive rework.
+Our Solution: A shift-left Pre-Merge PR Gatekeeper powered by Claude Code. Before a developer opens a PR, they run /review-pr. An orchestrator command delegates parallel compliance checks to isolated subagents equipped with internal banking skills, generates a pass/fail compliance report, and safely auto-remediates blockers with test verification hooks.
+
+Key Claude Code Concepts Demonstrated
+
+1. Custom Slash Command (/review-pr): Deterministic main workflow orchestrator.
+2. Isolated Subagents (.claude/agents/): Parallel, read-only auditors (pci-pii-auditor, sox-audit-checker, sec-config-auditor) that keep the main context window clean.
+3. Domain Skills (.claude/skills/): Reusable banking compliance standards (SKILL.md) automatically applied during audits and fixes.
+4. Lifecycle Hooks (.claude/settings.json): Automated test/lint guardrails that run after any code modification to ensure self-healing fixes don't break builds.
+
+2. System Architecture
+
+text
+Developer runs: /review-pr
+       │
+       ▼
+┌──────────────────────────────────────────────────────────┐
+│  MAIN ORCHESTRATOR (.claude/commands/review-pr.md)       │
+│  1. Captures `git diff main...HEAD`                      │
+│  2. Spawns 3 Subagents in parallel via Task tool         │
+└──────┬──────────────────────┬──────────────────────┬─────┘
+       │                      │                      │
+       ▼                      ▼                      ▼
+┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+│ Subagent 1   │       │ Subagent 2   │       │ Subagent 3   │
+│ PCI / PII    │       │ SOX Audit    │       │ AppSec &     │
+│ Auditor      │       │ Checker      │       │ Config Guard │
+│ (Read-Only)  │       │ (Read-Only)  │       │ (Read-Only)  │
+└──────┬───────┘       └──────┬───────┘       └──────┬───────┘
+       │                      │                      │
+       └──────────────────────┼──────────────────────┘
+                              │ (All 3 load SKILL.md rules)
+                              ▼
+┌──────────────────────────────────────────────────────────┐
+│  SYNTHESIS & REMEDIATION                                 │
+│  3. Generates `PR_GATEKEEPER_REPORT.md` (BLOCK/WARN/PASS)│
+│  4. Proposes/applies compliant code patches              │
+└─────────────────────────────┬────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────┐
+│  POST-TOOL HOOK (.claude/settings.json)                  │
+│  5. Automatically triggers unit tests & secret scanner   │
+└──────────────────────────────────────────────────────────┘
+Use code with caution.
+
+3. Repository Structure
+
+text
+wells-pr-gatekeeper-demo/
+├── .claude/
+│   ├── settings.json                         # Hooks & tool permissions
+│   ├── commands/
+│   │   └── review-pr.md                      # Main orchestrator slash command
+│   ├── agents/
+│   │   ├── pci-pii-auditor.md                # Subagent 1: Data privacy & masking
+│   │   ├── sox-audit-checker.md              # Subagent 2: Ledger & idempotency
+│   │   └── sec-config-auditor.md             # Subagent 3: Crypto, TLS & secrets
+│   └── skills/
+│       └── banking-compliance/
+│           └── SKILL.md                      # Shared Wells Fargo coding/regulatory rules
+├── src/                                      # Mock Wire-Transfer Microservice
+│   └── ...                                   # (Contains 4 intentional compliance bugs)
+├── tests/                                    # Unit tests (run by PostToolUse hook)
+├── PR_GATEKEEPER_REPORT.md                   # Generated output artifact
+└── README.md                                 # Setup & demo walkthrough
+Use code with caution.
+
+4. Explicit 3-Member Work Split
+
+To avoid Git merge conflicts and maximize parallel output, split the work across 3 clear ownership lanes:
+
+Member	Role & Ownership	Concrete Deliverables
+Member 1	Orchestration & Mock Banking Service Lead	• Build mock wire-transfer-service (in Java/Spring Boot, Python, or Node.js) on a feature branch with 4 intentional compliance bugs.
+• Write working unit tests for the service.
+• Build the main orchestrator .claude/commands/review-pr.md.
+Member 2	Subagents & Compliance Skills Lead	• Author .claude/skills/banking-compliance/SKILL.md (PCI-DSS masking rules, SOX audit schema, TLS/crypto standards).
+• Build the 3 isolated subagents in .claude/agents/ with strict read-only tool boundaries (Read, Grep, Glob).
+Member 3	Hooks, Automation & Demo Lead	• Configure .claude/settings.json (PostToolUse hook to auto-run unit tests on file edits + permission guardrails).
+• Integrate headless CI mode test (claude -p "/review-pr").
+• Run end-to-end integration testing, write README.md, and prepare the 5-minute live demo script.
+
+
+5. Starter Configuration Files (Copy-Paste Ready)
+
+
+A. Shared Compliance Skill (.claude/skills/banking-compliance/SKILL.md) — Member 2
+
+markdown
+---
+name: banking-compliance
+description: Enforce internal banking PCI-DSS, SOX, and Application Security standards on payment and customer services.
+---
+
+# Banking Engineering Compliance Standards
+
+## 1. PCI-DSS & PII Data Protection (CRITICAL)
+- **Never** log raw Primary Account Numbers (PAN), SSNs, routing numbers, or customer full names.
+- All account/card numbers in logs must use `MaskingUtil.maskAccount(value)` showing only the last 4 digits (`****1234`).
+- Exception stack traces must not expose raw request payloads containing customer DTOs.
+
+## 2. SOX Financial Integrity & Auditability (CRITICAL)
+- Every state-changing financial endpoint (`POST /transfer`, `POST /debit`, `POST /credit`) **must**:
+  1. Require and validate an `X-Idempotency-Key` header.
+  2. Emit an immutable structured event via `AuditEventPublisher.publish(...)` containing `transactionId`, `actorId`, `timestamp`, and `amount`.
+
+## 3. Application Security & Cryptography (HIGH)
+- Hardcoded API keys, tokens, or credentials are strictly prohibited.
+- Deprecated cryptographic algorithms (`MD5`, `SHA-1`, `DES`, `ECB` mode) are banned; use `SHA-256` or `AES-GCM`.
+- Outbound HTTP clients must enforce TLS 1.2+.
+Use code with caution.
+
+B. Subagent Example (.claude/agents/pci-pii-auditor.md) — Member 2
+
+(Create sox-audit-checker.md and sec-config-auditor.md using the same pattern.)
+markdown
+---
+name: pci-pii-auditor
+description: Audits code diffs for PCI-DSS and PII logging violations. Read-only specialist.
+tools: Read, Grep, Glob
+model: sonnet
+---
+
+You are a Banking Data Privacy & PCI-DSS Auditor. Load and apply the `banking-compliance` skill.
+
+Review the provided git diff and surrounding files strictly for:
+1. Unmasked PANs, SSNs, account numbers, or PII written to loggers (`log.info`, `console.log`, `print`, etc.).
+2. Sensitive fields serialized into exception messages.
+
+Output format (keep concise):
+- **Status:** PASS or BLOCKER
+- **Findings:** File path, line number, exact code snippet, regulatory rule violated, and required fix.
+Use code with caution.
+
+C. Main Orchestrator Command (.claude/commands/review-pr.md) — Member 1
+
+markdown
+---
+description: Run pre-merge banking compliance and security gatekeeper workflow
+allowed-tools: Bash(git diff:*), Bash(git status:*), Bash(git branch:*), Task, Read, Edit, Write
+---
+
+You are the Pre-Merge Banking Compliance Gatekeeper. Execute the following workflow strictly in order:
+
+1. **Gather PR Context:**
+   - Run `git diff main...HEAD` to inspect all changes on the current feature branch.
+   - If there are no changes against `main`, inform the user and stop.
+
+2. **Parallel Subagent Audit:**
+   - Spawn all three subagents in parallel using the `Task` tool, passing them the exact `git diff` output and list of modified files:
+     - `pci-pii-auditor`
+     - `sox-audit-checker`
+     - `sec-config-auditor`
+
+3. **Compile Gatekeeper Report:**
+   - Wait for all three subagents to complete.
+   - Write a structured report to `PR_GATEKEEPER_REPORT.md` containing:
+     - **Final Merge Verdict:** `BLOCKED` (if any BLOCKER exists) or `APPROVED`
+     - **Summary Table** across PCI/PII, SOX Audit, and AppSec
+     - **Detailed Remediation Checklist** with exact file paths and line numbers
+
+4. **Interactive Auto-Remediation:**
+   - Display a concise summary in the terminal.
+   - If `BLOCKED`, ask the user: *"Would you like me to automatically apply compliant fixes for these blockers and run the test suite?"*
+   - If confirmed, apply the fixes following the `banking-compliance` skill (triggering the verification hook).
+Use code with caution.
+
+D. Automated Verification Hook (.claude/settings.json) — Member 3
+
+(Adjust the test command to mvn test, pytest, or npm test based on your mock repo language.)
+json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm test --silent || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}
+Use code with caution.
+(Note: Exiting with code 2 on test failure automatically feeds stderr back to Claude Code so it self-corrects any broken patch.)
+
+6. Hour-by-Hour Execution Schedule (1-Day Plan)
+
+
+Time Block	Member 1 (Service & Orchestrator)	Member 2 (Skills & Subagents)	Member 3 (Hooks, CI & Demo)
+Hrs 1–2	Scaffold wire-transfer-service on main with passing unit tests.	Write .claude/skills/banking-compliance/SKILL.md.	Set up repo structure, .claude/settings.json hooks, and verify hook triggers on edit.
+Hrs 3–4	Create branch feat/wire-v2 and inject 4 intentional bugs (raw account log, missing idempotency key, missing audit event, MD5 hash).	Create all 3 subagents in .claude/agents/ with read-only permissions.	Build headless CI test script (claude -p "/review-pr") & verify subagent isolation.
+Hrs 5–6	Implement .claude/commands/review-pr.md and merge all branches together.	Test subagents individually against feat/wire-v2 diff and tune prompts to eliminate false positives.	Test full /review-pr -> PR_GATEKEEPER_REPORT.md -> auto-fix -> hook test loop.
+Hrs 7–8	Rehearse live demo execution & edge cases.	Document compliance rules & architecture diagram in README.md.	Finalize 5-minute presentation walkthrough & before/after metrics.
+
+
+7. 5-Minute Live Demo Script (For Training Showcase)
+
+1. Show the Problem (1 min): Display git diff main...HEAD on feat/wire-v2 showing a realistic payment PR with subtle PII logging and a missing SOX audit event.
+2. Trigger the Gatekeeper (1.5 mins): Run /review-pr. Point out in the terminal how the main command spawns 3 parallel read-only subagents without bloating the main context window.
+3. Inspect the Report (1 min): Open PR_GATEKEEPER_REPORT.md showing the BLOCKED verdict mapped to specific banking rules from SKILL.md.
+4. Self-Healing Fix + Hook Guardrail (1.5 mins): Approve Claude's auto-remediation prompt. Show Claude patching the code and the PostToolUse hook automatically firing unit tests to verify the fix is safe to merge.
+Which programming language (Java/Spring Boot, Python, or Node.js) will your team use for the mock wire-transfer service? I can generate the exact starter source code with the 4 planted compliance bugs and unit tests for Member 1.
+
+
+
+--------- scaffold claude prompt------
+
+Act as a Principal Banking Platform Architect and DevOps Engineer. I need you to scaffold a complete, runnable 1-day training lab repository called `wells-pr-gatekeeper-demo` for a 3-member engineering team at Wells Fargo.
+
+### Objective
+Build a "Shift-Left Banking Compliance & Security PR Gatekeeper" using **Spring Boot (Java 17, Maven)** and **Claude Code's native extensibility features** (Custom Slash Commands, Isolated Read-Only Subagents, Domain Skills, and Lifecycle Hooks).
+
+Execute all steps below in order to build the repository from scratch:
+
+---
+
+### Step 1: Scaffold the Base Spring Boot Application (`main` branch)
+Initialize a Git repository with a default branch named `main`. Create a clean, compiling Spring Boot 3.3.5 Maven project (`com.wellsfargo.demo.wire`) with `spring-boot-starter-web` and `spring-boot-starter-test`.
+
+Create the following baseline files on `main`:
+1. `WireTransferApplication.java`: Standard Spring Boot entry point.
+2. `model/TransferRequest.java` (record): `sourceAccountNumber`, `destinationAccountNumber`, `customerSsn`, `amount` (`BigDecimal`), `initiatedBy`.
+3. `model/TransferResponse.java` (record): `transactionId`, `status`, `checksum`.
+4. `util/MaskingUtil.java`: Static utility `maskAccount(String value)` that masks all characters except the last 4 (e.g., `****1234`), returning `****` if null or length <= 4.
+5. `util/AuditEventPublisher.java`: Spring `@Component` with a `publish(String transactionId, String actorId, BigDecimal amount)` method that logs structured `SOX_EVENT` audit records.
+6. `controller/TransferController.java` & `service/TransferService.java`: Clean, compliant baseline versions (using `X-Idempotency-Key`, `MaskingUtil`, `AuditEventPublisher`, and `SHA-256`).
+7. `src/test/java/com/wellsfargo/demo/wire/TransferServiceTest.java`: JUnit 5 unit tests verifying valid wire transfer execution and account masking.
+
+---
+
+### Step 2: Create the Claude Code Architecture (`.claude/` directory) on `main`
+Create the complete `.claude/` configuration directory:
+
+1. **Shared Compliance Skill (`.claude/skills/banking-compliance/SKILL.md`):**
+   - **Rule 1 (PCI-DSS & PII - BLOCKER):** Never log raw PANs, account numbers, SSNs, or PII. Must use `MaskingUtil.maskAccount(...)`. Never expose customer DTOs in exception messages.
+   - **Rule 2 (SOX Financial Integrity - BLOCKER):** State-changing financial endpoints (`POST /api/v1/transfers`, `/debit`, `/credit`) must require and validate a non-blank `X-Idempotency-Key` header and must call `AuditEventPublisher.publish(...)`.
+   - **Rule 3 (AppSec & Cryptography - BLOCKER):** No hardcoded secrets/tokens. Deprecated hashes/ciphers (`MD5`, `SHA-1`, `DES`, `ECB`) are banned; must use `SHA-256` or `AES-GCM`.
+
+2. **Three Isolated Read-Only Subagents (`.claude/agents/`):**
+   Configure each with `tools: Read, Grep, Glob` and instructions to load the `banking-compliance` skill and output a concise structured finding (`Status: PASS | BLOCKER`, `File & Line`, `Rule Violated`, `Required Fix`):
+   - `pci-pii-auditor.md`: Audits for PII/PCI logging leaks and sensitive exception exposure.
+   - `sox-audit-checker.md`: Audits for missing `X-Idempotency-Key` validation and missing `AuditEventPublisher` calls.
+   - `sec-config-auditor.md`: Audits for weak cryptography (MD5/SHA-1), hardcoded secrets, and insecure configurations.
+
+3. **Main Orchestrator Command (`.claude/commands/review-pr.md`):**
+   - Gather `git diff main...HEAD`.
+   - Spawn all 3 subagents (`pci-pii-auditor`, `sox-audit-checker`, `sec-config-auditor`) in parallel via the `Task` tool.
+   - Synthesize results into `PR_GATEKEEPER_REPORT.md` with an executive verdict (`BLOCKED` or `APPROVED`), a summary table, and line-by-line remediation items.
+   - Prompt the developer to auto-apply compliant patches using the `banking-compliance` skill.
+
+4. **Lifecycle Hook (`.claude/settings.json`):**
+   - Configure a `PostToolUse` hook matching `Edit|Write` that runs `mvn test -q || exit 2` so any code modification is automatically verified against the JUnit test suite, feeding errors back to Claude if tests fail.
+
+---
+
+### Step 3: Write a Comprehensive `README.md` (on `main`)
+Generate a detailed, polished `README.md` tailored for our 3-member Wells Fargo training team containing:
+1. **Business Context & Problem Statement:** Why shift-left automated compliance matters in Tier-1 banking.
+2. **Architecture Diagram (ASCII):** Showing how `/review-pr` orchestrates parallel subagents, loads `SKILL.md`, writes `PR_GATEKEEPER_REPORT.md`, and triggers the Maven `PostToolUse` hook.
+3. **Explicit 3-Member Team Work Split & Hour-by-Hour Schedule:**
+   - **Member 1:** Spring Boot Service, Intentional Bug Branch & Main Orchestrator (`/review-pr`).
+   - **Member 2:** Compliance `SKILL.md` & the 3 Read-Only Subagents (`pci-pii-auditor`, `sox-audit-checker`, `sec-config-auditor`).
+   - **Member 3:** `.claude/settings.json` Maven Hooks, Headless CI mode (`claude -p "/review-pr"`), E2E Verification & Demo Lead.
+4. **Quickstart & Live Demo Runbook:** Step-by-step commands to run baseline tests, switch to `feat/wire-v2`, run `/review-pr`, inspect `PR_GATEKEEPER_REPORT.md`, apply self-healing fixes, and verify hook execution.
+
+Commit everything cleanly to `main`.
+
+---
+
+### Step 4: Create Feature Branch `feat/wire-v2` with 4 Planted Compliance Bugs
+Create and checkout a new branch `feat/wire-v2` from `main`. Modify `TransferController.java` and `TransferService.java` to introduce **4 realistic compliance violations** (simulating a rushed developer PR):
+1. **Bug #1 (PCI/PII):** `TransferService` logs raw `sourceAccountNumber`, `destinationAccountNumber`, and `customerSsn` via `log.info(...)`.
+2. **Bug #2 (SOX Idempotency):** `TransferController.initiateTransfer(...)` removes the `@RequestHeader("X-Idempotency-Key")` parameter and validation.
+3. **Bug #3 (SOX Audit):** `TransferService` omits the `auditEventPublisher.publish(...)` call before returning the response.
+4. **Bug #4 (Weak Crypto):** `TransferService` replaces `SHA-256` with `MessageDigest.getInstance("MD5")` for payload checksum generation.
+
+Commit these changes to `feat/wire-v2`. Verify that `mvn test` passes on `feat/wire-v2` (confirming functional tests pass even though compliance rules are violated) and display a final summary of the repository status.
